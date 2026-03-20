@@ -1,0 +1,30 @@
+<div class="flex h-screen bg-gray-100">
+  <div class="w-64 bg-white border-r p-4 shadow-sm">
+    <h3 class="font-bold mb-4">Elements</h3>
+    <button (click)="addField('text')" mat-stroked-button class="w-full mb-2">Text Input</button>
+    <button (click)="addField('checkbox')" mat-stroked-button class="w-full mb-2">Checkbox</button>
+  </div>
+
+  <div class="flex-1 p-10 overflow-y-auto">
+    <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md min-h-[500px]">
+      <h2 class="text-2xl font-semibold mb-6 border-b pb-2">Untitled Form</h2>
+      
+      <div *ngFor="let field of formFields; let i = index" class="mb-6 p-4 border border-dashed rounded relative group hover:border-indigo-400">
+        <button (click)="removeField(i)" class="absolute top-2 right-2 text-red-500 hidden group-hover:block">
+          <mat-icon>delete</mat-icon>
+        </button>
+
+        <label class="block font-medium mb-1">{{field.label}}</label>
+        
+        <input *ngIf="field.type === 'text'" type="text" [placeholder]="field.placeholder" 
+               class="w-full p-2 border rounded bg-gray-50">
+               
+        <mat-checkbox *ngIf="field.type === 'checkbox'">Option Label</mat-checkbox>
+      </div>
+
+      <div *ngIf="formFields.length === 0" class="text-center text-gray-400 mt-20">
+        Drag an element or click a tool to start building.
+      </div>
+    </div>
+  </div>
+</div>
