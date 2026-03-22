@@ -1,0 +1,49 @@
+<h2 mat-dialog-title class="text-lg font-semibold text-center w-full">
+  Field Validations
+</h2>
+
+<mat-dialog-content class="dialog-content">
+
+  <div class="flex flex-col gap-4">
+
+    <div *ngFor="let v of validationOptions" class="mb-3">
+
+      <!-- ✅ Checkbox validations -->
+      <div *ngIf="v.value === true || v.value === false">
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input type="checkbox" [(ngModel)]="v.value" />
+          <span>{{ v.label }}</span>
+        </label>
+      </div>
+
+      <!-- ✅ Input-based validations -->
+      <div *ngIf="v.value !== true && v.value !== false">
+        <label class="block text-sm mb-1 font-medium">
+          {{ v.label }}
+        </label>
+
+        <input
+          type="number"
+          [(ngModel)]="v.value"
+          class="border p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          placeholder="Enter value"
+        />
+      </div>
+
+    </div>
+
+  </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="p-3 border-t flex gap-3">
+
+  <button mat-button (click)="cancel()">
+    Cancel
+  </button>
+
+  <button mat-raised-button color="primary" (click)="save()">
+    Save
+  </button>
+
+</mat-dialog-actions>
