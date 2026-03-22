@@ -1,0 +1,13 @@
+<label class="block mb-2 font-medium">
+  {{ fieldConfig.label }}
+</label>
+@if (control.hasError('required')) {
+  <mat-error>This field is required</mat-error>
+}
+<mat-radio-group [formControl]="control">
+  @for (option of fieldConfig.config.options; track option) {
+    <mat-radio-button [value]="option" class="block">
+      {{ option }}
+    </mat-radio-button>
+  }
+</mat-radio-group>

@@ -1,0 +1,25 @@
+<label class="block mb-2 text-sm font-semibold text-gray-700">
+  {{ fieldConfig.label }}
+</label>
+@if(control.hasError('required')){
+  <mat-error>Required</mat-error>
+}
+<div
+  (click)="fileInput.click()"
+  class="flex items-center justify-between px-4 py-2 border border-gray-300 rounded-lg cursor-pointer hover:border-[#a900a9] transition"
+>
+  <span class="text-gray-500 text-sm">
+    {{ control.value?.name || 'Choose a file...' }}
+  </span>
+
+  <span class="text-[#a900a9] text-sm font-medium">
+    Browse
+  </span>
+</div>
+
+<input
+  type="file"
+  #fileInput
+  class="hidden"
+  (change)="onFileChange($event)"
+/>
