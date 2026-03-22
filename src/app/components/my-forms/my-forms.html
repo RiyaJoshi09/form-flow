@@ -1,0 +1,60 @@
+<div class="heading-sec">
+  <h1>My Forms</h1>
+  <p>Manage and track your data collection</p>
+</div>
+
+<div class="summary">
+  <div class="cards">
+    <div class="details">
+      <h3>Total Forms</h3>
+      <h1>{{ totalForms }}</h1>
+    </div>
+    <mat-icon>description</mat-icon>
+  </div>
+  <div class="cards">
+    <div class="details">
+      <h3>Total Active Forms</h3>
+      <h1>{{ totalActive }}</h1>
+    </div>
+    <mat-icon>check_circle</mat-icon>
+  </div>
+  <div class="cards">
+    <div class="details">
+      <h3>Total Responses</h3>
+      <h1>{{ totalRes }}</h1>
+    </div>
+    <mat-icon>bar_chart</mat-icon>
+  </div>
+</div>
+
+<div class="form-data-table">
+  <table>
+    <tr>
+      <th>Form-Title</th>
+      <th>Responses</th>
+      <th>Created_At</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+
+    @for (form of forms; track form.id) {
+      <tr>
+        <td>{{ form.title }}</td>
+        <td>{{ form.responses }}</td>
+        <td>{{ form.created_at }}</td>
+        <td>
+          <span [class.active]="form.status === 'active'" [class.draft]="form.status === 'draft'">
+            {{ form.status }}
+          </span>
+        </td>
+        <td>
+          <div class="actions">
+            <mat-icon>edit</mat-icon>
+            <mat-icon>share</mat-icon>
+            <mat-icon (click)="deleteForm(form.id)" class="!text-red-500 hover:text-red-700 cursor-pointer">delete</mat-icon>
+          </div>
+        </td>
+      </tr>
+    }
+  </table>
+</div>
