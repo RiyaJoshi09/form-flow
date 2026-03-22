@@ -2,7 +2,7 @@
   {{ fieldConfig.label }}
 </label>
 
-<div>
+<div class="flex flex-col">
   @for (option of fieldConfig.config.options; track option) {
     <mat-checkbox
       [checked]="control.value.includes(option)"

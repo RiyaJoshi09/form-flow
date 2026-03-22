@@ -14,7 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 export class Textarea {
   // @Input() fieldConfig!: TextField;
   // @Input() control!: FormControl;
-  
+
   control = new FormControl('', {
     nonNullable: true,
     validators: [Validators.required],
@@ -26,4 +26,15 @@ export class Textarea {
     label: 'Your Bio',
     order: 1,
   };
+
+  // changeData() {
+  //   this.fieldConfig = {
+  //     id: 'bio',
+  //     type: FieldType.TEXTAREA,
+  //     label: 'Your Comments',
+  //     order: 1,
+  //   };
+
+  //   this.control.removeValidators(Validators.required);
+  // }
 }
