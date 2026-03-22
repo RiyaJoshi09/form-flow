@@ -1,0 +1,127 @@
+.dashboard{
+    display: flex;
+}
+
+/* navbar */
+
+.navbar {
+    height: 70px;
+    width: 100%;
+    background-color: #f8fafc; /* light clean background */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;   /* ✅ vertically center */
+    padding: 0 25px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+/* Logo */
+.navbar h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+
+/* Dashboard text */
+.navbar h3 {
+    font-size: 15px;
+    color: #64748b;
+    margin-left: 20px;
+    font-weight: 500;
+}
+
+/* Right section */
+.nav-profile {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Button */
+.create {
+    background-color: #334155;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.create:hover {
+    background-color: #1e293b;
+}
+
+/* Icon styling */
+.nav-profile mat-icon {
+    font-size: 26px;   
+    height: 26px;
+    width: 26px;
+    line-height: 26px;
+    color: #334155;
+}
+
+.nav-profile mat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e2e8f0;
+    border-radius: 50%;
+    padding: 8px;   
+    box-sizing: content-box;
+}
+
+
+/* .sidebar */
+
+.sidebar {
+    width: 220px;
+    height: 100vh;
+    background-color: #f1f5f9;
+    padding: 20px 10px;
+}
+
+/* Remove default ul style */
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* List item */
+.sidebar ul li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    color: #475569;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+/* Hover */
+.sidebar ul li:hover {
+    background-color: #e2e8f0;
+}
+
+/* Icon */
+.sidebar ul li mat-icon {
+    font-size: 22px;
+    color: inherit;
+}
+
+/* Text */
+.sidebar ul li span {
+    font-size: 14px;
+}
+
+.main-content{
+    background-color: white;
+    height: 100vh;
+    width: 85%;
+    padding: 20px;
+}
