@@ -1,13 +1,11 @@
 <mat-form-field appearance="outline" class="w-full">
-  <mat-label>{{ fieldConfig.label }}</mat-label>
-
   <textarea
     matInput
     rows="4"
     [formControl]="control">
   </textarea>
 
-  @if (control.hasError('required')) {
+  @if (control?.hasError('required')) {
     <mat-error>This field is required</mat-error>
   }
 </mat-form-field>
