@@ -66,10 +66,29 @@ export class FormBuilder {
       id: Date.now().toString(),
       title: this.formTitle,
       sections: this.formSections,
+      status: 'active',
+      responses: 0,
       createdAt: new Date(),
     };
+    const rawData = localStorage.getItem('formflow_forms');
+    let existingForms: any[] = [];
 
-    localStorage.setItem('formflow_forms', JSON.stringify(formToSave));
+    try {
+      // Only parse if rawData isn't null or empty
+      existingForms = rawData ? JSON.parse(rawData) : [];
+      
+      // Safety check: ensure existingForms is actually an array
+      if (!Array.isArray(existingForms)) {
+        existingForms = [];
+      }
+    } catch (e) {
+      console.error("Error parsing local storage", e);
+      existingForms = [];
+    }
+
+    existingForms.push(formToSave);
+
+    localStorage.setItem('formflow_forms', JSON.stringify(existingForms));
 
     alert('Form Saved Successfully!');
     this.router.navigate(['/']);
@@ -102,11 +121,13 @@ export class FormBuilder {
       placeholder: field.placeholder || '',
     };
     this.formSections[sectionIndex].fields.push(newField);
+    this.formSections = [...this.formSections];
   }
 
   removeField(sectionIndex: number, fieldIndex: number) {
     // To remove field from canvas
     this.formSections[sectionIndex].fields.splice(fieldIndex, 1);
+    this.formSections = [...this.formSections];
   }
 
   editField(sectionIndex: number, fieldIndex: number) {
@@ -123,6 +144,7 @@ export class FormBuilder {
       if (result) {
         //Update field with new data once saved
         this.formSections[sectionIndex].fields[fieldIndex] = result;
+        this.formSections = [...this.formSections];
       }
     });
   }
