@@ -7,12 +7,12 @@ import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { EditField } from '../edit-field/edit-field';
 import { FormsModule } from '@angular/forms';
 import { MatMenuModule } from '@angular/material/menu';
-import { InputText } from '../../components/cards/input-text/input-text';
-import { FileUpload } from '../../components/cards/file-upload/file-upload';
-import { CheckBox } from '../../components/cards/check-box/check-box';
-import { SelectCard } from '../../components/cards/select-card/select-card';
-import { Textarea } from '../../components/cards/textarea/textarea';
-import { RadioButton } from '../../components/cards/radio-button/radio-button';
+import { BuilderInputText } from '../../components/builder-cards/builder-input-text/builder-input-text';
+import { BuilderCheckBox } from '../../components/builder-cards/builder-check-box/builder-check-box';
+import { BuilderFileUpload } from '../../components/builder-cards/builder-file-upload/builder-file-upload';
+import { BuilderRadioButton } from '../../components/builder-cards/builder-radio-button/builder-radio-button';
+import { BuilderSelectCard } from '../../components/builder-cards/builder-select-card/builder-select-card';
+import { BuilderTextarea } from '../../components/builder-cards/builder-textarea/builder-textarea';
 
 @Component({
   selector: 'app-form-builder',
@@ -25,12 +25,12 @@ import { RadioButton } from '../../components/cards/radio-button/radio-button';
     MatDialogModule,
     FormsModule,
     MatMenuModule,
-    InputText,
-    FileUpload,
-    CheckBox,
-    SelectCard,
-    Textarea,
-    RadioButton
+    BuilderInputText,
+    BuilderCheckBox,
+    BuilderFileUpload,
+    BuilderRadioButton,
+    BuilderSelectCard,
+    BuilderTextarea
   ],
   templateUrl: './form-builder.html',
   styleUrl: './form-builder.css',
