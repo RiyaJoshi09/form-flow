@@ -12,9 +12,9 @@ import { FieldType } from '../../../enums/field-type.enum';
   styleUrl: './check-box.css',
 })
 export class CheckBox {
-  // @Input() fieldConfig!: CheckboxField;
-  // @Input() control!: FormControl;
-
+  @Input() fieldConfig!: CheckboxField;
+  @Input() control!: FormControl;
+  /*
   control = new FormControl<string[]>([], {
     nonNullable: true,
     validators: [Validators.required],
@@ -29,7 +29,7 @@ export class CheckBox {
       options: ['Java', 'Angular', 'React'],
     },
   };
-
+  */
   onChange(option: string, checked: boolean) {
     const current = this.control.value;
 

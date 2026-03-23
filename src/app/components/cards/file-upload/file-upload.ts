@@ -26,8 +26,8 @@ export class FileUpload {
   //   order: 1,
   // };
 
-  // onFileChange(event: Event) {
-  //   const file = (event.target as HTMLInputElement).files?.[0] || null;
-  //   this.control.setValue(file);
-  // }
+  onFileChange(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0] || null;
+    this.control.setValue(file);
+  }
 }
