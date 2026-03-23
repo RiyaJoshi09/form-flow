@@ -62,7 +62,8 @@ export class FormBuilder {
       id: Date.now().toString(), //change it
       type: field.type,
       label: field.label,
-      placeholder: field.placeholder //validations yet to add
+      placeholder: field.placeholder, //validations yet to add
+      validations: {}
     };
     this.formSections[sectionIndex].fields.push(newField);
   }
