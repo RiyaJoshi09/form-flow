@@ -4,16 +4,16 @@
   [formControl]="control"
   [type]="fieldConfig.type.toString()"/>
 
-  @if (control?.hasError('required')) {
+  @if (control.hasError('required')) {
     <mat-error> This field is required </mat-error>
   }
-  @if (control?.hasError('email')) {
+  @if (control.hasError('email')) {
     <mat-error> Given Value is not an email </mat-error>
   }
-  @if (control?.hasError('minlength')) {
+  @if (control.hasError('minlength')) {
     <mat-error> Minimum length not met </mat-error>
   }
-  @if (control?.hasError('maxlength')) {
+  @if (control.hasError('maxlength')) {
     <mat-error> Maximum length exceeded </mat-error>
   }
 </mat-form-field>

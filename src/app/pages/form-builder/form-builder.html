@@ -46,22 +46,22 @@
               </div>
 
               <div class="pointer-events-none opacity-80">
-                <app-input-text *ngIf="field.type === 'text' || field.type === 'number'" [fieldConfig]="field"></app-input-text>
+                <app-builder-input-text *ngIf="field.type === 'text' || field.type === 'number'" [bluePrint]="field"></app-builder-input-text>
                 
-                <app-file-upload *ngIf="field.type === 'file-upload'" [fieldConfig]="field">
-                </app-file-upload>
+                <app-builder-file-upload *ngIf="field.type === 'file-upload'" [bluePrint]="field">
+                </app-builder-file-upload>
 
-                <app-check-box *ngIf="field.type === 'checkbox'" [fieldConfig]="field">
-                </app-check-box>
+                <app-builder-check-box *ngIf="field.type === 'checkbox'" [bluePrint]="field">
+                </app-builder-check-box>
 
-                <app-radio-button *ngIf="field.type === 'radio-button'" [fieldConfig]="field">
-                </app-radio-button>
+                <app-builder-radio-button *ngIf="field.type === 'radio-button'" [bluePrint]="field">
+                </app-builder-radio-button>
 
-                <app-select-card *ngIf="field.type === 'select-card'" [fieldConfig]="field">
-                </app-select-card>
+                <app-builder-select-card *ngIf="field.type === 'select-card'" [bluePrint]="field">
+                </app-builder-select-card>
 
-                <app-textarea *ngIf="field.type === 'text-area'" [fieldConfig]="field">
-                </app-textarea>
+                <app-builder-textarea *ngIf="field.type === 'text-area'" [bluePrint]="field">
+                </app-builder-textarea>
              
               </div>
 
