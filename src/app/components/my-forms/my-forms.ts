@@ -16,10 +16,19 @@ export class MyForms {
   totalRes=0;
   
   ngOnInit(){
+    this.getFormData();
     this.loadSummary();
   }
 
+  getFormData(){
+    let formData=localStorage.getItem('formflow_forms');
+    if(formData){
+      console.log(JSON.parse(formData));
+    }
+  }
+
   loadSummary(){
+
     this.totalForms=this.forms.length;
     
     this.totalActive = this.forms.filter(f => f.status === 'active').length;
