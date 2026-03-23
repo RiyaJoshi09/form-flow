@@ -41,7 +41,7 @@
       <tr>
         <td>{{ form.title }}</td>
         <td>{{ form.responses }}</td>
-        <td>{{ form.created_at }}</td>
+        <td>{{ form.createdAt  | date:'dd/MM/yyyy hh:mm a' }}</td>
         <td>
           <span [class.active]="form.status === 'active'" [class.draft]="form.status === 'draft'">
             {{ form.status }}

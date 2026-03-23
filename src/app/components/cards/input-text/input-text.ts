@@ -12,9 +12,9 @@ import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angu
   styleUrl: './input-text.css',
 })
 export class InputText {
-  // @Input() fieldConfig!: TextField;
-  // @Input() control!: FormControl;
-
+  @Input() fieldConfig!: TextField;
+  @Input() control!: FormControl;
+  /*
   control = new FormControl('', {
     nonNullable: true,
     validators: [Validators.required, Validators.minLength(3), Validators.email],
@@ -25,5 +25,5 @@ export class InputText {
     label: 'Email',
     order: 1,
   };
-  
+  */
 }

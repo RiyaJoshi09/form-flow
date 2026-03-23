@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FieldType } from '../../../enums/field-type.enum';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -12,20 +12,20 @@ import { MatInputModule } from '@angular/material/input';
   styleUrl: './textarea.css',
 })
 export class Textarea {
-  // @Input() fieldConfig!: TextField;
-  // @Input() control!: FormControl;
+  @Input() fieldConfig!: TextareaField;
+  @Input() control!: FormControl;
 
-  control = new FormControl('', {
-    nonNullable: true,
-    validators: [Validators.required],
-  });
+  // control = new FormControl('', {
+  //   nonNullable: true,
+  //   validators: [Validators.required],
+  // });
 
-  fieldConfig: TextareaField = {
-    id: 'bio',
-    type: FieldType.TEXTAREA,
-    label: 'Your Bio',
-    order: 1,
-  };
+  // fieldConfig: TextareaField = {
+  //   id: 'bio',
+  //   type: FieldType.TEXTAREA,
+  //   label: 'Your Bio',
+  //   order: 1,
+  // };
 
   // changeData() {
   //   this.fieldConfig = {
