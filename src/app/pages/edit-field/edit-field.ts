@@ -47,6 +47,34 @@ export class EditField {
       ];
     }
 
+    if (this.field.type === 'radio-button') {
+      this.validationOptions = [
+        {key: 'required', label: 'Required (must select one option)', value: false}
+      ];
+    }
+
+    if (this.field.type === 'select-card') {
+      this.validationOptions = [
+        {key: 'required', label: 'Required', value: false}
+      ];
+    }
+
+    if (this.field.type === 'file-upload') {
+      this.validationOptions = [
+        {key: 'required', label: 'Required', value: false},
+        {key: 'maxSize', label: 'Max File Size (KB)', value: null},
+        {key: 'fileType', label: 'Allowed File Types (e.g. pdf, jpg)', value: ''}
+      ];
+    }
+
+    if (this.field.type === 'text-area') {
+      this.validationOptions = [
+        {key: 'required', label: 'Required', value: false},
+        {key: 'minLength', label: 'Min Length', value: null},
+        {key: 'maxLength', label: 'Max Length', value: null}
+      ];
+    }
+
     if (this.field.validations) {
       this.validationOptions.forEach(opt => {
         if (this.field.validations[opt.key] !== undefined) {
@@ -60,7 +88,7 @@ export class EditField {
     const validations : any = {};
 
     this.validationOptions.forEach(opt => {
-      if (opt.value !== null && opt.value !== false) {
+      if (opt.value !== null && opt.value !== false && opt.value !== '') {
         validations[opt.key] = opt.value === true ? true : opt.value;
       }
     });
