@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { FieldType } from '../../../enums/field-type.enum';
 import { FileUploadField } from '../../../interfaces/InputField';
@@ -11,23 +11,23 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   styleUrl: './file-upload.css',
 })
 export class FileUpload {
-  // @Input() fieldConfig!: TextField;
-  // @Input() control!: FormControl;
+  @Input() fieldConfig!: FileUploadField;
+  @Input() control!: FormControl;
 
-  control = new FormControl<File | null>(null, {
-    nonNullable: true,
-    validators: [Validators.required],
-  });
+  // control = new FormControl<File | null>(null, {
+  //   nonNullable: true,
+  //   validators: [Validators.required],
+  // });
 
-  fieldConfig: FileUploadField = {
-    id: 'resume',
-    type: FieldType.FILE_UPLOAD,
-    label: 'Upload Resume',
-    order: 1,
-  };
+  // fieldConfig: FileUploadField = {
+  //   id: 'resume',
+  //   type: FieldType.FILE_UPLOAD,
+  //   label: 'Upload Resume',
+  //   order: 1,
+  // };
 
-  onFileChange(event: Event) {
-    const file = (event.target as HTMLInputElement).files?.[0] || null;
-    this.control.setValue(file);
-  }
+  // onFileChange(event: Event) {
+  //   const file = (event.target as HTMLInputElement).files?.[0] || null;
+  //   this.control.setValue(file);
+  // }
 }

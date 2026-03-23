@@ -5,14 +5,17 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { EditField } from '../edit-field/edit-field';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, Validators } from '@angular/forms';
 import { MatMenuModule } from '@angular/material/menu';
 import { InputText } from '../../components/cards/input-text/input-text';
 import { FileUpload } from '../../components/cards/file-upload/file-upload';
+import { CheckBox } from '../../components/cards/check-box/check-box';
+import { config } from 'rxjs';
 
 @Component({
   selector: 'app-form-builder',
-  imports: [RouterLink,
+  imports: [
+    RouterLink,
     RouterOutlet,
     MatIconModule,
     MatCheckboxModule,
@@ -21,7 +24,9 @@ import { FileUpload } from '../../components/cards/file-upload/file-upload';
     FormsModule,
     MatMenuModule,
     InputText,
-    FileUpload],
+    FileUpload,
+    CheckBox,
+  ],
   templateUrl: './form-builder.html',
   styleUrl: './form-builder.css',
 })
@@ -31,39 +36,42 @@ export class FormBuilder {
     {
       id: Date.now().toString(),
       title: 'Add Section Title',
-      fields: []
-    }
+      fields: [],
+    },
   ];
-  constructor(private dialog: MatDialog, private router: Router) { }
+  constructor(
+    private dialog: MatDialog,
+    private router: Router,
+  ) {}
 
   elements = [
     { type: 'text', label: 'Text Input', placeholder: 'Enter hint...' },
     //{ type: 'number', label: 'Number Input', placeholder: '0' },
-    //{ type: 'checkbox', label: 'Checkbox', placeholder: '' }
+    // { type: 'checkbox', label: 'Checkbox', placeholder: '' },
   ];
 
-  ngOnInit() { }
+
+  ngOnInit() {}
 
   saveForm() {
     const formToSave = {
       id: Date.now().toString(),
       title: this.formTitle,
       sections: this.formSections,
-      createdAt: new Date()
+      createdAt: new Date(),
     };
 
     localStorage.setItem('formflow_forms', JSON.stringify(formToSave));
 
     alert('Form Saved Successfully!');
     this.router.navigate(['/']);
-
   }
 
-  addSection(){
+  addSection() {
     this.formSections.push({
       id: Date.now().toString(),
       title: `Add Section Title`,
-      fields: []
+      fields: [],
     });
   }
 
@@ -71,7 +79,7 @@ export class FormBuilder {
     if (this.formSections.length > 1) {
       this.formSections.splice(index, 1);
     } else {
-      alert("A form must have at least one section.");
+      alert('A form must have at least one section.');
     }
   }
 
@@ -98,15 +106,15 @@ export class FormBuilder {
 
     const dialogRef = this.dialog.open(EditField, {
       width: '400px',
-      data: {...this.formSections[sectionIndex].fields[fieldIndex]},
-      panelClass: 'custom-dialog-container'
+      data: { ...this.formSections[sectionIndex].fields[fieldIndex] },
+      panelClass: 'custom-dialog-container',
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         //Update field with new data once saved
         this.formSections[sectionIndex].fields[fieldIndex] = result;
       }
-    })
+    });
   }
 }

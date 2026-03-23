@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FieldType } from '../../../enums/field-type.enum';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -13,20 +13,20 @@ import { MatSelectModule } from '@angular/material/select';
 })
 export class SelectCard {
   
-  // @Input() fieldConfig!: TextField;
-  // @Input() control!: FormControl;
+  @Input() fieldConfig!: SelectField;
+  @Input() control!: FormControl;
 
-  control = new FormControl('', {
-    nonNullable: true,
-    validators: [Validators.required],
-  });
-  fieldConfig: SelectField = {
-    id: 'role',
-    type: FieldType.SELECT,
-    label: 'Select Role',
-    order: 1,
-    config: {
-      options: ['Admin', 'User', 'Guest'],
-    },
-  };
+  // control = new FormControl('', {
+  //   nonNullable: true,
+  //   validators: [Validators.required],
+  // });
+  // fieldConfig: SelectField = {
+  //   id: 'role',
+  //   type: FieldType.SELECT,
+  //   label: 'Select Role',
+  //   order: 1,
+  //   config: {
+  //     options: ['Admin', 'User', 'Guest'],
+  //   },
+  // };
 }

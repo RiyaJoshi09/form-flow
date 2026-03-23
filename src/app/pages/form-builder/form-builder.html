@@ -46,15 +46,14 @@
               </div>
 
               <div class="pointer-events-none opacity-80">
-                <app-input-text *ngIf="field.type === 'text' || field.type === 'number'" [fieldConfig]="field">
-                </app-input-text>
-                <!--
-                <app-file-upload *ngIf="field.type === 'file'" [fieldConfig]="field">
+                <app-input-text *ngIf="field.type === 'text' || field.type === 'number'" [fieldConfig]="field"></app-input-text>
+                
+                <!-- <app-file-upload *ngIf="field.type === 'file'" [fieldConfig]="field" [control]="control">
                 </app-file-upload>
 
-                <app-checkbox *ngIf="field.type === 'checkbox'" [fieldConfig]="field">
-                </app-checkbox>
-              -->
+                <app-check-box *ngIf="field.type === 'checkbox'" [fieldConfig]="field" [control]="control" >
+                </app-check-box> -->
+             
               </div>
 
               <div class="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
