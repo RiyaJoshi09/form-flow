@@ -7,17 +7,21 @@ import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { EditField } from '../edit-field/edit-field';
 import { FormsModule } from '@angular/forms';
 import { MatMenuModule } from '@angular/material/menu';
+import { InputText } from '../../components/cards/input-text/input-text';
+import { FileUpload } from '../../components/cards/file-upload/file-upload';
 
 @Component({
   selector: 'app-form-builder',
-  imports:  [ RouterLink,
+  imports: [RouterLink,
     RouterOutlet,
     MatIconModule,
     MatCheckboxModule,
     CommonModule,
     MatDialogModule,
     FormsModule,
-    MatMenuModule],
+    MatMenuModule,
+    InputText,
+    FileUpload],
   templateUrl: './form-builder.html',
   styleUrl: './form-builder.css',
 })
@@ -34,11 +38,26 @@ export class FormBuilder {
 
   elements = [
     { type: 'text', label: 'Text Input', placeholder: 'Enter hint...' },
-    { type: 'number', label: 'Number Input', placeholder: '0' },
-    { type: 'checkbox', label: 'Checkbox', placeholder: '' }
+    //{ type: 'number', label: 'Number Input', placeholder: '0' },
+    //{ type: 'checkbox', label: 'Checkbox', placeholder: '' }
   ];
 
   ngOnInit() { }
+
+  saveForm() {
+    const formToSave = {
+      id: Date.now().toString(),
+      title: this.formTitle,
+      sections: this.formSections,
+      createdAt: new Date()
+    };
+
+    localStorage.setItem('formflow_forms', JSON.stringify(formToSave));
+
+    alert('Form Saved Successfully!');
+    this.router.navigate(['/']);
+
+  }
 
   addSection(){
     this.formSections.push({
@@ -62,24 +81,11 @@ export class FormBuilder {
       id: Date.now().toString(), //change it
       type: field.type,
       label: field.label,
-      placeholder: field.placeholder, //validations yet to add
-      validations: {}
+      validations: {},
+      options: field.options || [],
+      placeholder: field.placeholder || '',
     };
     this.formSections[sectionIndex].fields.push(newField);
-  }
-  saveForm() {
-    const formToSave = {
-      id: Date.now().toString(),
-      title: this.formTitle,
-      sections: this.formSections,
-      createdAt: new Date()
-    };
-
-    localStorage.setItem('formflow_forms', JSON.stringify(formToSave));
-
-    alert('Form Saved Successfully!');
-    this.router.navigate(['/']);
-
   }
 
   removeField(sectionIndex: number, fieldIndex: number) {
@@ -87,15 +93,13 @@ export class FormBuilder {
     this.formSections[sectionIndex].fields.splice(fieldIndex, 1);
   }
 
-  editField(sectionIndex: number, fieldIndex: number): void {
+  editField(sectionIndex: number, fieldIndex: number) {
     // open edit dialog box and edit the copy of it until saved
-    const targetField = this.formSections[sectionIndex].fields[fieldIndex];
-
-    const fieldCopy = JSON.parse(JSON.stringify(targetField));
 
     const dialogRef = this.dialog.open(EditField, {
       width: '400px',
-      data: fieldCopy
+      data: {...this.formSections[sectionIndex].fields[fieldIndex]},
+      panelClass: 'custom-dialog-container'
     });
 
     dialogRef.afterClosed().subscribe(result => {

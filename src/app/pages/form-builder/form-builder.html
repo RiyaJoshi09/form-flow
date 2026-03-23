@@ -13,38 +13,62 @@
 
   <div class="flex flex-1 overflow-hidden">
     <div class="w-64 bg-white border-r p-4 overflow-y-auto">
-       <h3 class="text-sm font-semibold text-gray-500 uppercase mb-4">Form Elements</h3>
-       <div *ngFor="let tool of elements" 
-            class="p-4 border rounded-lg cursor-pointer hover:bg-indigo-50 mb-3"
-            (click)="addField(tool, 0)"> {{ tool.label }}
-       </div>
-       <p class="text-xs text-gray-400 mt-4 italic">Note: Fields will be added to Section 1 by default. Drag function is yet to add.</p>
+      <h3 class="text-sm font-semibold text-gray-500 uppercase mb-4">Form Elements</h3>
+      <div *ngFor="let tool of elements" class="p-4 border rounded-lg cursor-pointer hover:bg-indigo-50 mb-3"
+        (click)="addField(tool, 0)"> {{ tool.label }}
+      </div>
+      <p class="text-xs text-gray-400 mt-4 italic">Note: Fields will be added to Section 1 by default. Drag function is
+        yet to add.</p>
     </div>
 
     <div class="flex-1 p-10 overflow-y-auto">
       <div class="max-w-3xl mx-auto flex flex-col gap-10">
-        
-        <div *ngFor="let section of formSections; let sIndex = index" 
-             class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
-          
+
+        <div *ngFor="let section of formSections; let sectionIndex = index"
+          class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
+
           <div class="bg-gray-50 p-4 border-b flex justify-between items-center">
-            <input [(ngModel)]="section.title" class="bg-transparent font-bold text-lg border-none focus:ring-1 focus:ring-indigo-300 rounded px-2">
-            <button mat-icon-button color="warn" (click)="removeSection(sIndex)" [disabled]="formSections.length === 1">
+            <input [(ngModel)]="section.title"
+              class="bg-transparent font-bold text-lg border-none focus:ring-1 focus:ring-indigo-300 rounded px-2">
+            <button mat-icon-button color="warn" (click)="removeSection(sectionIndex)" [disabled]="formSections.length === 1">
               <mat-icon>delete_sweep</mat-icon>
             </button>
           </div>
 
           <div class="p-6 min-h-[150px]">
-            <div *ngFor="let field of section.fields; let fIndex = index" class="group relative p-4 mb-4 bg-white border rounded-lg hover:border-indigo-300">
-              <div class="absolute right-2 top-2 hidden group-hover:flex gap-1">
-                <button (click)="editField(sIndex, fIndex)" mat-icon-button color="primary"><mat-icon>edit</mat-icon></button>
-                <button (click)="removeField(sIndex, fIndex)" mat-icon-button color="warn"><mat-icon>delete</mat-icon></button>
+            <div *ngFor="let field of section.fields; let fieldIndex = index" class="group relative p-6 mb-6 bg-white border border-slate-200 rounded-2xl hover:border-indigo-200
+            hover:shadow-md transition-all">
+
+              <div class="mb-4">
+                <input [(ngModel)]="field.label"
+                  class="text-xs font-bold text-slate-500 uppercase tracking-widest bg-transparent border-none focus:ring-1 focus:ring-indigo-100 rounded w-full p-1"
+                  placeholder="CLICK TO EDIT LABEL">
               </div>
-              <label class="block text-sm font-semibold mb-2">{{ field.label }}</label>
-              <input class="w-full p-2 border rounded bg-gray-50" [type]="field.type" disabled>
+
+              <div class="pointer-events-none opacity-80">
+                <app-input-text *ngIf="field.type === 'text' || field.type === 'number'" [fieldConfig]="field">
+                </app-input-text>
+                <!--
+                <app-file-upload *ngIf="field.type === 'file'" [fieldConfig]="field">
+                </app-file-upload>
+
+                <app-checkbox *ngIf="field.type === 'checkbox'" [fieldConfig]="field">
+                </app-checkbox>
+              -->
+              </div>
+
+              <div class="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button (click)="editField(sectionIndex, fieldIndex)" class="p-1.5 text-slate-400 hover:text-indigo-600">
+                  <mat-icon class="text-sm">settings</mat-icon>
+                </button>
+                <button (click)="removeField(sectionIndex, fieldIndex)" class="p-1.5 text-slate-400 hover:text-red-500">
+                  <mat-icon class="text-sm">delete</mat-icon>
+                </button>
+              </div>
             </div>
 
-            <div *ngIf="section.fields.length === 0" class="text-center py-10 border-2 border-dashed border-gray-100 text-gray-400">
+            <div *ngIf="section.fields.length === 0"
+              class="text-center py-10 border-2 border-dashed border-gray-100 text-gray-400">
               No fields in this section.
             </div>
           </div>
