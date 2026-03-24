@@ -48,12 +48,6 @@ export class MyForms {
 
 
   shareForm(id: number){
-  //   const link= `${window.location.origin}/form/${id}`;
-  //   this.dialog.open(ShareDialog, {
-  //   width: '400px',
-  //   data: { link: link }
-  // });
-
   const link = `${window.location.origin}/form/${id}`;
 
   console.log("Dialog open ho raha hai");

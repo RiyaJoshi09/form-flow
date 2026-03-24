@@ -1,10 +1,10 @@
 <div class="flex flex-col">
-  @for (option of bluePrint.options; track option) {
+  @for (option of fieldData.options; track option) {
     <mat-checkbox>
       {{ option }}
     </mat-checkbox>
   }
-  @if(bluePrint.validation?.required){
+  @if(fieldData.validations?.required){
     <mat-error>Required Field</mat-error>
   }
 </div>
