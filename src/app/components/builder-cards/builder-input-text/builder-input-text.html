@@ -1,7 +1,7 @@
 <mat-form-field appearance="outline" class="w-full">
   <input
     matInput
-    [type]="fieldData.type?.toString() ?? 'text'"
+    [type]="type"
     [placeholder]="fieldData.placeholder ?? 'input here...'"
   />
 </mat-form-field>
@@ -13,4 +13,7 @@
 }
 @if (fieldData.validations?.maxLength) {
   <mat-error>Input must have minlength : {{ fieldData.validations?.maxLength }}</mat-error>
+}
+@if (fieldData.validations?.email) {
+  <mat-error>Email Type Field</mat-error>
 }
