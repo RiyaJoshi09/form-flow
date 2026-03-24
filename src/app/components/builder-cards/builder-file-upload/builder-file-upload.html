@@ -3,14 +3,12 @@
   class="flex items-center justify-between px-4 py-2 border border-gray-300 rounded-lg cursor-pointer hover:border-[#a900a9] transition"
 >
   <span class="text-gray-500 text-sm">
-    {{ bluePrint.placeholder }}
+    {{ fieldData.placeholder }}
   </span>
 
   <span class="text-[#a900a9] text-sm font-medium"> Browse </span>
 </div>
-
-@if (bluePrint.validation?.required) {
+<input type="file" #fileInput class="hidden" />
+@if (fieldData.validations?.required) {
   <mat-error>Required Field</mat-error>
 }
-
-<input type="file" #fileInput class="hidden" />

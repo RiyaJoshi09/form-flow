@@ -13,5 +13,5 @@ export interface BuilderFieldSchema {
     type?: FieldType,
     placeholder?: string,
     options?: string[],
-    validation?:ValidationRules
+    validations?:ValidationRules
 }

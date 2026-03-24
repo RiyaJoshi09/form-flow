@@ -1,0 +1,17 @@
+<div class="top">
+<h2 mat-dialog-title class="title">Share Form</h2>
+<mat-icon class="close" (click)="closeDialog()">close</mat-icon>
+</div>
+<div mat-dialog-content class="content">
+
+  <p class="subtitle">Copy Link</p>
+
+  <div class="link-box">
+    <input [value]="link" readonly />
+    
+      <mat-icon (click)="copyLink()">content_copy</mat-icon>
+    
+  </div>
+
+</div>
+

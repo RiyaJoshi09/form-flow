@@ -2,10 +2,17 @@ import { Component } from '@angular/core';
 import { FORMS_DATA } from '../../data/form-data';
 import { MatIcon } from '@angular/material/icon';
 import { DatePipe } from '@angular/common';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ShareDialog } from '../share-dialog/share-dialog';
+
+import { FormService } from '../../services/form-service';
+
+import { RouterLink } from '@angular/router';
+
 
 @Component({
   selector: 'app-my-forms',
-  imports: [MatIcon, DatePipe],
+  imports: [RouterLink, MatIcon, DatePipe, MatDialogModule],
   templateUrl: './my-forms.html',
   styleUrl: './my-forms.css',
 })
@@ -15,6 +22,8 @@ export class MyForms {
   totalForms=0;
   totalActive=0;
   totalRes=0;
+
+  constructor(private dialog:MatDialog, private formService: FormService){}
   
   ngOnInit(){
     this.getFormData();
@@ -22,25 +31,36 @@ export class MyForms {
   }
 
   getFormData(){
-    let formData=localStorage.getItem('formflow_forms');
-    if(formData){
-      console.log(JSON.parse(formData));
-      this.forms=JSON.parse(formData);
-    }
+     this.formService.getAllForms().subscribe((data:any)=>{
+      console.log(data);
+      this.forms=data;
+    });
+
   }
 
   loadSummary(){
-
     this.totalForms=this.forms.length;
-    
-    this.totalActive = this.forms.filter(f => f.status === "active").length;
-
-    this.totalRes = this.forms.reduce((sum, form) => sum + form.responses, 0);
+    this.totalActive = this.forms.length;
+    this.totalRes = 0;
   }
 
   deleteForm(id : number){
     this.forms = this.forms.filter(form => form.id !== id);
     localStorage.setItem('formflow_forms', JSON.stringify(this.forms));
     this.loadSummary();
+  }
+
+
+  shareForm(id: number){
+  const link = `${window.location.origin}/form/${id}`;
+
+  console.log("Dialog open ho raha hai");
+
+  this.dialog.open(ShareDialog, {
+    width: '500px',
+    height: '150px',
+    data: { link: link }
+  });
+
   }
 }
