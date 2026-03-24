@@ -1,10 +1,10 @@
 <mat-radio-group>
-  @for (option of bluePrint.options; track option) {
+  @for (option of fieldData.options; track option) {
     <mat-radio-button>
       {{ option }}
     </mat-radio-button>
   }
 </mat-radio-group>
-@if (bluePrint.validation?.required) {
+@if (fieldData.validations?.required) {
   <mat-error>Required Field</mat-error>
 }

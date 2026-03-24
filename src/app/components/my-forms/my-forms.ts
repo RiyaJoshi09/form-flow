@@ -4,11 +4,15 @@ import { MatIcon } from '@angular/material/icon';
 import { DatePipe } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ShareDialog } from '../share-dialog/share-dialog';
+
 import { FormService } from '../../services/form-service';
+
+import { RouterLink } from '@angular/router';
+
 
 @Component({
   selector: 'app-my-forms',
-  imports: [MatIcon, DatePipe, MatDialogModule],
+  imports: [RouterLink, MatIcon, DatePipe, MatDialogModule],
   templateUrl: './my-forms.html',
   styleUrl: './my-forms.css',
 })
