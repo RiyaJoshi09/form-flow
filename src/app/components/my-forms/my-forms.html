@@ -39,25 +39,18 @@
 
     @for (form of forms; track form.id) {
 
-      <tr>
-        <td>{{ form.title }}</td>
-        <td>{{ 0 }}</td>
-        <td>{{ form.createdAt  | date:'dd/MM/yyyy hh:mm a' }}</td>
-        <td>
-          active
-        </td>
-        <td>
-          <div class="actions">
-            </div>
-            </td>
-            </tr>
     <tr>
       <td>{{ form.title }}</td>
-      <td>{{ form.responses }}</td>
+      <td>{{ form.responses || 0 }}</td>
       <td>{{ form.createdAt | date:'dd/MM/yyyy hh:mm a' }}</td>
       <td>
         <span [class.active]="form.status === 'active'" [class.draft]="form.status === 'draft'">
-          {{ form.status }}
+          @if(form.published==true){
+            published
+          }
+          @else{
+            draft
+          }
         </span>
       </td>
       <td>

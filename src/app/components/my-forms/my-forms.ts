@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FORMS_DATA } from '../../data/form-data';
 import { MatIcon } from '@angular/material/icon';
 import { DatePipe } from '@angular/common';
@@ -23,30 +23,30 @@ export class MyForms {
   totalActive=0;
   totalRes=0;
 
-  constructor(private dialog:MatDialog, private formService: FormService){}
+  constructor(private dialog:MatDialog, private formService: FormService, private cd:ChangeDetectorRef){}
   
   ngOnInit(){
     this.getFormData();
-    this.loadSummary();
   }
 
   getFormData(){
      this.formService.getAllForms().subscribe((data:any)=>{
       console.log(data);
       this.forms=data;
+      this.loadSummary();
+      this.cd.detectChanges();
     });
 
   }
 
   loadSummary(){
     this.totalForms=this.forms.length;
-    this.totalActive = this.forms.length;
+    this.totalActive = this.forms.filter((f:any)=> f.published==true).length;
     this.totalRes = 0;
   }
 
   deleteForm(id : number){
     this.forms = this.forms.filter(form => form.id !== id);
-    localStorage.setItem('formflow_forms', JSON.stringify(this.forms));
     this.loadSummary();
   }
 
