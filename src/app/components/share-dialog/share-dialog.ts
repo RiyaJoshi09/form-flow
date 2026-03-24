@@ -21,7 +21,7 @@ link: string = '';
 
   ngAfterViewInit() {
     this.link = this.data.link;
-    this.cd.detectChanges(); // 🔥 important
+    this.cd.detectChanges();
   }
 
   copyLink() {
