@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { BuilderFieldSchema } from '../../../interfaces/builder-field-schema';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
@@ -10,4 +10,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 })
 export class BuilderFileUpload {
   @Input() bluePrint!:BuilderFieldSchema;
+  fieldData: BuilderFieldSchema = this.bluePrint;
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['bluePrint']) {
+      const current = changes['bluePrint'].currentValue;
+      this.updateUI(current);
+    }
+  }
+  updateUI(data: BuilderFieldSchema) {
+    this.fieldData = data;
+  }
 }
