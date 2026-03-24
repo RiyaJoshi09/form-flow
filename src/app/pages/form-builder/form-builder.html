@@ -12,7 +12,7 @@
   </div>
 
   <div class="flex flex-1 overflow-hidden">
-    <div class="w-64 bg-white border-r p-4 overflow-y-auto" cdkDropList #sidebarList="cdkDropList"
+    <div class="w-64 bg-white border-r p-4 overflow-y-auto" cdkDropList id="sidebar" #sidebarList="cdkDropList"
       [cdkDropListConnectedTo]="sectionsIds" [cdkDropListData]="elements" [cdkDropListSortingDisabled]="true">
       <h3 class="text-sm font-semibold text-gray-500 uppercase mb-4">Form Elements</h3>
       <div *ngFor="let tool of elements" cdkDrag [cdkDragData]="tool"
@@ -28,22 +28,32 @@
     </div>
 
     <div class="flex-1 p-10 overflow-y-auto">
-      <div class="max-w-3xl mx-auto flex flex-col gap-10">
+      <div class="max-w-3xl mx-auto flex flex-col gap-10" cdkDropList [cdkDropListData]="formSections" (cdkDropListDropped)="onSectionDrop($event)">
 
-        <div *ngFor="let section of formSections; let sectionIndex = index"
+        <div *ngFor=" let section of formSections; let sectionIndex=index" cdkDrag
           class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
 
           <div class="bg-gray-50 p-4 border-b flex justify-between items-center">
+            <mat-icon cdkDragHandle class="cursor-move text-gray-400">
+              drag_indicator
+            </mat-icon>
             <input [(ngModel)]="section.title"
               class="bg-transparent font-bold text-lg border-none focus:ring-1 focus:ring-indigo-300 rounded px-2">
-            <button mat-icon-button color="warn" (click)="removeSection(sectionIndex)"
-              [disabled]="formSections.length === 1">
-              <mat-icon>delete_sweep</mat-icon>
-            </button>
+            <div class="flex gap-1">
+              <button mat-icon-button color="primary" (click)="duplicateSection(sectionIndex)"
+                title="Duplicate Section">
+                <mat-icon>content_copy</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="removeSection(sectionIndex)"
+                [disabled]="formSections.length === 1">
+                <mat-icon>delete_sweep</mat-icon>
+              </button>
+            </div>
           </div>
 
           <div class="p-6 min-h-[150px]" cdkDropList [id]="section.id" [cdkDropListData]="section.fields"
-            [cdkDropListConnectedTo]="[sidebarList]" (cdkDropListDropped)="onDrop($event, sectionIndex)">
+            [cdkDropListConnectedTo]="[sidebarList, ...sectionsIds]"
+            (cdkDropListDropped)="onDrop($event, sectionIndex)">
             <div *ngFor="let field of section.fields; let fieldIndex = index" cdkDrag class="group relative p-6 mb-6 bg-white border border-slate-200 rounded-2xl hover:border-indigo-200
             hover:shadow-md transition-all">
 
@@ -76,6 +86,10 @@
               </div>
 
               <div class="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button (click)="duplicateField(sectionIndex, fieldIndex)"
+                  class="p-1.5 text-slate-400 hover:text-indigo-600">
+                  <mat-icon class="text-sm">content_copy</mat-icon>
+                </button>
                 <button (click)="editField(sectionIndex, fieldIndex)"
                   class="p-1.5 text-slate-400 hover:text-indigo-600">
                   <mat-icon class="text-sm">settings</mat-icon>
@@ -84,7 +98,8 @@
                   <mat-icon class="text-sm">delete</mat-icon>
                 </button>
               </div>
-              <div *cdkDragPlaceholder class="border-2 border-dashed border-indigo-100 bg-indigo-50/30 rounded-2xl h-32 mb-6"></div>
+              <div *cdkDragPlaceholder
+                class="border-2 border-dashed border-indigo-100 bg-indigo-50/30 rounded-2xl h-32 mb-6"></div>
             </div>
 
             <div *ngIf="section.fields.length === 0"

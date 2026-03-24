@@ -38,25 +38,35 @@
     </tr>
 
     @for (form of forms; track form.id) {
-      <tr>
-        <td>{{ form.title }}</td>
-        <td>{{ form.responses }}</td>
-        <td>{{ form.createdAt  | date:'dd/MM/yyyy hh:mm a' }}</td>
-        <td>
-          <span [class.active]="form.status === 'active'" [class.draft]="form.status === 'draft'">
-            {{ form.status }}
-          </span>
-        </td>
-        <td>
-          <div class="actions">
+
+    <tr>
+      <td>{{ form.title }}</td>
+      <td>{{ form.responses || 0 }}</td>
+      <td>{{ form.createdAt | date:'dd/MM/yyyy hh:mm a' }}</td>
+      <td>
+        <span [class.active]="form.status === 'active'" [class.draft]="form.status === 'draft'">
+          @if(form.published==true){
+            published
+          }
+          @else{
+            draft
+          }
+        </span>
+      </td>
+      <td>
+        <div class="actions">
+          <button mat-icon-button [routerLink]="['/edit-form', form.id]">
+
             <mat-icon>edit</mat-icon>
-            <button mat-icon-button (click)="shareForm(form.id)" class="!cursor-pointer">
+          </button>
+          <button mat-icon-button (click)="shareForm(form.id)" class="!cursor-pointer">
             <mat-icon>share</mat-icon>
-            </button>
-            <mat-icon (click)="deleteForm(form.id)" class="!text-red-500 hover:text-red-700 cursor-pointer">delete</mat-icon>
-          </div>
-        </td>
-      </tr>
+          </button>
+          <mat-icon (click)="deleteForm(form.id)"
+            class="!text-red-500 hover:text-red-700 cursor-pointer">delete</mat-icon>
+        </div>
+      </td>
+    </tr>
     }
   </table>
 </div>
