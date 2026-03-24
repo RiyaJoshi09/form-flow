@@ -13,7 +13,7 @@ import { BuilderFileUpload } from '../../components/builder-cards/builder-file-u
 import { BuilderRadioButton } from '../../components/builder-cards/builder-radio-button/builder-radio-button';
 import { BuilderSelectCard } from '../../components/builder-cards/builder-select-card/builder-select-card';
 import { BuilderTextarea } from '../../components/builder-cards/builder-textarea/builder-textarea';
-import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-form-builder',
@@ -161,7 +161,8 @@ export class FormBuilder {
         event.previousIndex,
         event.currentIndex
       );
-    } else {
+    } 
+    else if (event.previousContainer.id === 'sidebarList') {
       //Sidebar to Canvas
       const field = event.previousContainer.data[event.previousIndex];
 
@@ -176,6 +177,22 @@ export class FormBuilder {
 
       this.formSections[sectionIndex].fields.splice(event.currentIndex, 0, newField);
     }
+    else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+    }
+  }
+
+  onSectionDrop(event: CdkDragDrop<any[]>) {
+    moveItemInArray(
+      this.formSections,
+      event.previousIndex,
+      event.currentIndex
+    );
   }
 
   /*
