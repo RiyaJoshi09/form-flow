@@ -13,6 +13,7 @@ import { BuilderFileUpload } from '../../components/builder-cards/builder-file-u
 import { BuilderRadioButton } from '../../components/builder-cards/builder-radio-button/builder-radio-button';
 import { BuilderSelectCard } from '../../components/builder-cards/builder-select-card/builder-select-card';
 import { BuilderTextarea } from '../../components/builder-cards/builder-textarea/builder-textarea';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-form-builder',
@@ -30,7 +31,8 @@ import { BuilderTextarea } from '../../components/builder-cards/builder-textarea
     BuilderFileUpload,
     BuilderRadioButton,
     BuilderSelectCard,
-    BuilderTextarea
+    BuilderTextarea,
+    DragDropModule
   ],
   templateUrl: './form-builder.html',
   styleUrl: './form-builder.css',
@@ -110,6 +112,36 @@ export class FormBuilder {
     }
   }
 
+  get sectionsIds(): string[]{
+    return this.formSections.map(s=>s.id);
+  }
+
+  onDrop(event:CdkDragDrop<any[]>, sectionIndex: number){
+    if (event.previousContainer === event.container){
+      // Rearrange
+      moveItemInArray(
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+    } else {
+      //Sidebar to Canvas
+      const field = event.previousContainer.data[event.previousIndex];
+
+      const newField = {
+        id: this.formSections[sectionIndex].fields.length + 1, //change it
+        type: field.type,
+        label: field.label,
+        validations: {},
+        options: field.options || [],
+        placeholder: field.placeholder || '',
+      };
+
+      this.formSections[sectionIndex].fields.splice(event.currentIndex, 0, newField);
+    }
+  }
+
+  /*
   addField(field: any, sectionIndex: number) {
     // To add field to canvas
     const newField = {
@@ -123,6 +155,7 @@ export class FormBuilder {
     this.formSections[sectionIndex].fields.push(newField);
     this.formSections = [...this.formSections];
   }
+  */
 
   removeField(sectionIndex: number, fieldIndex: number) {
     // To remove field from canvas
