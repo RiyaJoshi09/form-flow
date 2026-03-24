@@ -1,10 +1,10 @@
 <mat-form-field appearance="outline" class="w-full">
-  <textarea matInput rows="4"> </textarea>
+  <textarea matInput rows="4" [placeholder]="fieldData.placeholder ?? 'Input here...'"> </textarea>
 </mat-form-field>
 @if (fieldData.validations?.required) {
   <mat-error>Required Field</mat-error>
 }
-@if (fieldData.validations?.minLength != 0) {
+@if (fieldData.validations?.minLength ?? 0) {
   <mat-error>Input must have minlength : {{ fieldData.validations?.minLength }}</mat-error>
 }
 @if (fieldData.validations?.maxLength) {
