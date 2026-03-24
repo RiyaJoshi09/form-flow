@@ -4,6 +4,7 @@ import { MatIcon } from '@angular/material/icon';
 import { DatePipe } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ShareDialog } from '../share-dialog/share-dialog';
+import { FormService } from '../../services/form-service';
 
 @Component({
   selector: 'app-my-forms',
@@ -18,7 +19,7 @@ export class MyForms {
   totalActive=0;
   totalRes=0;
 
-  constructor(private dialog:MatDialog){}
+  constructor(private dialog:MatDialog, private formService: FormService){}
   
   ngOnInit(){
     this.getFormData();
@@ -26,17 +27,17 @@ export class MyForms {
   }
 
   getFormData(){
-    let formData=localStorage.getItem('formflow_forms');
-    if(formData){
-      console.log(JSON.parse(formData));
-      this.forms=JSON.parse(formData);
-    }
+     this.formService.getAllForms().subscribe((data:any)=>{
+      console.log(data);
+      this.forms=data;
+    });
+
   }
 
   loadSummary(){
     this.totalForms=this.forms.length;
-    this.totalActive = this.forms.filter(f => f.status === "active").length;
-    this.totalRes = this.forms.reduce((sum, form) => sum + form.responses, 0);
+    this.totalActive = this.forms.length;
+    this.totalRes = 0;
   }
 
   deleteForm(id : number){

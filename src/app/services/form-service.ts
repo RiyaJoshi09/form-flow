@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -6,8 +7,12 @@ import { Injectable } from '@angular/core';
 export class FormService {
   url = "http://localhost:8081/formflow/"
 
+  constructor(private http: HttpClient){}
+
   createForm() {}
-  getAllForms() {}
+  getAllForms() {
+    return this.http.get(this.url+"allForm");
+  }
   getFormById() {}
   getFormByStatus() {}
 }
