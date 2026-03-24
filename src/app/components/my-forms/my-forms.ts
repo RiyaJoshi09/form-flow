@@ -2,10 +2,12 @@ import { Component } from '@angular/core';
 import { FORMS_DATA } from '../../data/form-data';
 import { MatIcon } from '@angular/material/icon';
 import { DatePipe } from '@angular/common';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ShareDialog } from '../share-dialog/share-dialog';
 
 @Component({
   selector: 'app-my-forms',
-  imports: [MatIcon, DatePipe],
+  imports: [MatIcon, DatePipe, MatDialogModule],
   templateUrl: './my-forms.html',
   styleUrl: './my-forms.css',
 })
@@ -15,6 +17,8 @@ export class MyForms {
   totalForms=0;
   totalActive=0;
   totalRes=0;
+
+  constructor(private dialog:MatDialog){}
   
   ngOnInit(){
     this.getFormData();
@@ -30,11 +34,8 @@ export class MyForms {
   }
 
   loadSummary(){
-
     this.totalForms=this.forms.length;
-    
     this.totalActive = this.forms.filter(f => f.status === "active").length;
-
     this.totalRes = this.forms.reduce((sum, form) => sum + form.responses, 0);
   }
 
@@ -42,5 +43,25 @@ export class MyForms {
     this.forms = this.forms.filter(form => form.id !== id);
     localStorage.setItem('formflow_forms', JSON.stringify(this.forms));
     this.loadSummary();
+  }
+
+
+  shareForm(id: number){
+  //   const link= `${window.location.origin}/form/${id}`;
+  //   this.dialog.open(ShareDialog, {
+  //   width: '400px',
+  //   data: { link: link }
+  // });
+
+  const link = `${window.location.origin}/form/${id}`;
+
+  console.log("Dialog open ho raha hai");
+
+  this.dialog.open(ShareDialog, {
+    width: '500px',
+    height: '150px',
+    data: { link: link }
+  });
+
   }
 }

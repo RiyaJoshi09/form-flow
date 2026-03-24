@@ -50,7 +50,9 @@
         <td>
           <div class="actions">
             <mat-icon>edit</mat-icon>
+            <button mat-icon-button (click)="shareForm(form.id)">
             <mat-icon>share</mat-icon>
+            </button>
             <mat-icon (click)="deleteForm(form.id)" class="!text-red-500 hover:text-red-700 cursor-pointer">delete</mat-icon>
           </div>
         </td>
