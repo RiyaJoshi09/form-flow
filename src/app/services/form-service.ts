@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root',
 })
 export class FormService {
-  url = 'http://localhost:8081/formflow';
+  url = 'http://localhost:8081/formflow/';
   constructor(private http: HttpClient) {}
 
   getFieldType(type: string) {
@@ -80,7 +80,7 @@ export class FormService {
   }
   createForm(formData: any): Observable<any> {
     const mappedData = this.mapToFormSchema(formData);
-    let data: any = this.http.post(this.url + '/createForm', mappedData, {
+    let data: any = this.http.post(this.url + 'createForm', mappedData, {
       responseType: 'text',
     });
     data.subscribe((x: string) => {
@@ -90,7 +90,7 @@ export class FormService {
   }
 
   getFormById(id: number): Observable<Form> {
-    return this.http.get<Form>(this.url + '/forms/' + id);
+    return this.http.get<Form>(this.url + 'forms/' + id);
   }
 
   getAllForms() {}
