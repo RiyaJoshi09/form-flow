@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -12,5 +12,16 @@ import { BuilderFieldSchema } from '../../../interfaces/builder-field-schema';
   styleUrl: './builder-radio-button.css',
 })
 export class BuilderRadioButton {
-  @Input() bluePrint!:BuilderFieldSchema; 
+  @Input() bluePrint!:BuilderFieldSchema;
+  fieldData: BuilderFieldSchema = this.bluePrint;
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['bluePrint']) {
+      const current = changes['bluePrint'].currentValue;
+      this.updateUI(current);
+    }
+  }
+  updateUI(data: BuilderFieldSchema) {
+    this.fieldData = data;
+  }
 }

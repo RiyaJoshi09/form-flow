@@ -6,8 +6,13 @@ import { Injectable } from '@angular/core';
 export class FormService {
   url = "http://localhost:8081/formflow/"
 
-  createForm() {}
-  getAllForms() {}
+  createForm(formData: any) {
+    
+  }
+
   getFormById() {}
+
+
+  getAllForms() {}
   getFormByStatus() {}
 }
