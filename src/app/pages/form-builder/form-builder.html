@@ -28,10 +28,10 @@
     </div>
 
     <div class="flex-1 p-10 overflow-y-auto">
-      <div class="max-w-3xl mx-auto flex flex-col gap-10" cdkDropList [cdkDropListData]="formSections" (cdkDropListDropped)="onSectionDrop($event)>
+      <div class="max-w-3xl mx-auto flex flex-col gap-10" cdkDropList [cdkDropListData]="formSections"
+        (cdkDropListDropped)="onSectionDrop($event)">
 
-        <div *ngFor="let section of formSections; let sectionIndex = index"
-          cdkDrag
+        <div *ngFor=" let section of formSections; let sectionIndex=index" cdkDrag
           class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
 
           <div class="bg-gray-50 p-4 border-b flex justify-between items-center">
@@ -53,7 +53,8 @@
           </div>
 
           <div class="p-6 min-h-[150px]" cdkDropList [id]="section.id" [cdkDropListData]="section.fields"
-            [cdkDropListConnectedTo]="[sidebarList, ...sectionsIds]" (cdkDropListDropped)="onDrop($event, sectionIndex)">
+            [cdkDropListConnectedTo]="[sidebarList, ...sectionsIds]"
+            (cdkDropListDropped)="onDrop($event, sectionIndex)">
             <div *ngFor="let field of section.fields; let fieldIndex = index" cdkDrag class="group relative p-6 mb-6 bg-white border border-slate-200 rounded-2xl hover:border-indigo-200
             hover:shadow-md transition-all">
 
