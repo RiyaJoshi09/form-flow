@@ -14,6 +14,7 @@ import { BuilderRadioButton } from '../../components/builder-cards/builder-radio
 import { BuilderSelectCard } from '../../components/builder-cards/builder-select-card/builder-select-card';
 import { BuilderTextarea } from '../../components/builder-cards/builder-textarea/builder-textarea';
 import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { FormService } from '../../services/form-service';
 
 @Component({
   selector: 'app-form-builder',
@@ -51,7 +52,8 @@ export class FormBuilder {
   constructor(
     private dialog: MatDialog,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private formService: FormService
   ) { }
 
   elements = [
@@ -110,6 +112,7 @@ export class FormBuilder {
         responses: 0,
         createdAt: new Date(),
       };
+      // this.formService.createForm(formToSave);
       allForms.push(formToSave);
     }
 
