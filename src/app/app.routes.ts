@@ -9,7 +9,7 @@ export const routes: Routes = [
     {path: "create", component: FormBuilder},
 
     {path: "form/:id", component: FormSubmission},
-    {path: "**", redirectTo: ""},
+    { path: 'edit-form/:id', component: FormBuilder },
 
     // {path: "**", component:NotFound
     // {path: "**", redirectTo: ""},

@@ -36,10 +36,16 @@
           <div class="bg-gray-50 p-4 border-b flex justify-between items-center">
             <input [(ngModel)]="section.title"
               class="bg-transparent font-bold text-lg border-none focus:ring-1 focus:ring-indigo-300 rounded px-2">
-            <button mat-icon-button color="warn" (click)="removeSection(sectionIndex)"
-              [disabled]="formSections.length === 1">
-              <mat-icon>delete_sweep</mat-icon>
-            </button>
+            <div class="flex gap-1">
+              <button mat-icon-button color="primary" (click)="duplicateSection(sectionIndex)"
+                title="Duplicate Section">
+                <mat-icon>content_copy</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="removeSection(sectionIndex)"
+                [disabled]="formSections.length === 1">
+                <mat-icon>delete_sweep</mat-icon>
+              </button>
+            </div>
           </div>
 
           <div class="p-6 min-h-[150px]" cdkDropList [id]="section.id" [cdkDropListData]="section.fields"
@@ -76,6 +82,10 @@
               </div>
 
               <div class="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button (click)="duplicateField(sectionIndex, fieldIndex)"
+                  class="p-1.5 text-slate-400 hover:text-indigo-600">
+                  <mat-icon class="text-sm">content_copy</mat-icon>
+                </button>
                 <button (click)="editField(sectionIndex, fieldIndex)"
                   class="p-1.5 text-slate-400 hover:text-indigo-600">
                   <mat-icon class="text-sm">settings</mat-icon>
@@ -84,7 +94,8 @@
                   <mat-icon class="text-sm">delete</mat-icon>
                 </button>
               </div>
-              <div *cdkDragPlaceholder class="border-2 border-dashed border-indigo-100 bg-indigo-50/30 rounded-2xl h-32 mb-6"></div>
+              <div *cdkDragPlaceholder
+                class="border-2 border-dashed border-indigo-100 bg-indigo-50/30 rounded-2xl h-32 mb-6"></div>
             </div>
 
             <div *ngIf="section.fields.length === 0"
