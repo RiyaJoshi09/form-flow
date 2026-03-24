@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { EditField } from '../edit-field/edit-field';
 import { FormsModule } from '@angular/forms';
 import { MatMenuModule } from '@angular/material/menu';
@@ -13,7 +13,7 @@ import { BuilderFileUpload } from '../../components/builder-cards/builder-file-u
 import { BuilderRadioButton } from '../../components/builder-cards/builder-radio-button/builder-radio-button';
 import { BuilderSelectCard } from '../../components/builder-cards/builder-select-card/builder-select-card';
 import { BuilderTextarea } from '../../components/builder-cards/builder-textarea/builder-textarea';
-import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-form-builder',
@@ -32,7 +32,7 @@ import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-
     BuilderRadioButton,
     BuilderSelectCard,
     BuilderTextarea,
-    DragDropModule
+    DragDropModule,
   ],
   templateUrl: './form-builder.html',
   styleUrl: './form-builder.css',
@@ -46,51 +46,74 @@ export class FormBuilder {
       fields: [],
     },
   ];
+  editingFormId: string | null = null;
+
   constructor(
     private dialog: MatDialog,
     private router: Router,
-  ) {}
+    private route: ActivatedRoute
+  ) { }
 
   elements = [
-    { type: 'text', label: 'Text Input'},
-    { type: 'checkbox', label: 'Checkbox'},
-    {type: 'file-upload', label: 'File Upload'},
-    {type: 'radio-button', label: 'Radio Button'},
-    {type: 'select-card', label: 'Select Card'},
-    {type: 'text-area', label: 'Text Area'}
+    { type: 'text', label: 'Text Input' },
+    { type: 'checkbox', label: 'Checkbox' },
+    { type: 'file-upload', label: 'File Upload' },
+    { type: 'radio-button', label: 'Radio Button' },
+    { type: 'select-card', label: 'Select Card' },
+    { type: 'text-area', label: 'Text Area' }
   ];
 
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.editingFormId = this.route.snapshot.paramMap.get('id');
+
+    if (this.editingFormId) {
+      this.loadFromForEditing(this.editingFormId);
+    }
+  }
+
+  loadFromForEditing(formId: string) {
+    const rawData = localStorage.getItem('formflow_forms');
+    if (rawData) {
+      const allForms = JSON.parse(rawData);
+
+      const formToEdit = allForms.find((f: any) => f.id === formId);
+
+      if (formToEdit) {
+        this.formTitle = formToEdit.title;
+        this.formSections = formToEdit.sections;
+      }
+    }
+  }
 
   saveForm() {
-    const formToSave = {
-      id: Date.now().toString(),
-      title: this.formTitle,
-      sections: this.formSections,
-      status: 'active',
-      responses: 0,
-      createdAt: new Date(),
-    };
     const rawData = localStorage.getItem('formflow_forms');
-    let existingForms: any[] = [];
 
-    try {
-      // Only parse if rawData isn't null or empty
-      existingForms = rawData ? JSON.parse(rawData) : [];
-      
-      // Safety check: ensure existingForms is actually an array
-      if (!Array.isArray(existingForms)) {
-        existingForms = [];
+    let allForms = rawData ? JSON.parse(rawData) : [];
+
+    if (this.editingFormId) {
+      const index = allForms.findIndex((f: any) => f.id === this.editingFormId);
+      if (index !== -1) {
+        allForms[index] = {
+          ...allForms[index],
+          title: this.formTitle,
+          sections: this.formSections,
+          createdAt: new Date()
+        };
       }
-    } catch (e) {
-      console.error("Error parsing local storage", e);
-      existingForms = [];
+    } else {
+      const formToSave = {
+        id: Date.now().toString(),
+        title: this.formTitle,
+        sections: this.formSections,
+        status: 'active',
+        responses: 0,
+        createdAt: new Date(),
+      };
+      allForms.push(formToSave);
     }
 
-    existingForms.push(formToSave);
-    
-    localStorage.setItem('formflow_forms', JSON.stringify(existingForms));
+    localStorage.setItem('formflow_forms', JSON.stringify(allForms));
 
     alert('Form Saved Successfully!');
     this.router.navigate(['/']);
@@ -112,24 +135,39 @@ export class FormBuilder {
     }
   }
 
-  get sectionsIds(): string[]{
-    return this.formSections.map(s=>s.id);
+  duplicateSection(sectionIndex: number) {
+    const originalSection = this.formSections[sectionIndex];
+
+    const clonedSection = JSON.parse(JSON.stringify(originalSection));
+
+    clonedSection.id = Date.now().toString();
+    clonedSection.title = 'Copy of ' + clonedSection.title;
+    clonedSection.fields.forEach((field: any, index: number) => {
+      field.id = Date.now().toString() + index;
+    });
+
+    this.formSections.splice(sectionIndex + 1, sectionIndex, clonedSection);
   }
 
-  onDrop(event:CdkDragDrop<any[]>, sectionIndex: number){
-    if (event.previousContainer === event.container){
+  get sectionsIds(): string[] {
+    return this.formSections.map(s => s.id);
+  }
+
+  onDrop(event: CdkDragDrop<any[]>, sectionIndex: number) {
+    if (event.previousContainer === event.container) {
       // Rearrange
       moveItemInArray(
         event.container.data,
         event.previousIndex,
         event.currentIndex
       );
-    } else {
+    } 
+    else if (event.previousContainer.id === 'sidebar') {
       //Sidebar to Canvas
       const field = event.previousContainer.data[event.previousIndex];
 
       const newField = {
-        id: this.formSections[sectionIndex].fields.length + 1, //change it
+        id: Date.now().toString(),
         type: field.type,
         label: field.label,
         validations: {},
@@ -139,6 +177,22 @@ export class FormBuilder {
 
       this.formSections[sectionIndex].fields.splice(event.currentIndex, 0, newField);
     }
+    else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+    }
+  }
+
+  onSectionDrop(event: CdkDragDrop<any[]>) {
+    moveItemInArray(
+      this.formSections,
+      event.previousIndex,
+      event.currentIndex
+    );
   }
 
   /*
@@ -180,5 +234,15 @@ export class FormBuilder {
         this.formSections = [...this.formSections];
       }
     });
+  }
+
+  duplicateField(sectionIndex: number, fieldIndex: number) {
+    const originalField = this.formSections[sectionIndex].fields[fieldIndex];
+
+    const clonedField = JSON.parse(JSON.stringify(originalField));
+
+    clonedField.id = Date.now().toString();
+
+    this.formSections[sectionIndex].fields.splice(fieldIndex + 1, fieldIndex, clonedField);
   }
 }
