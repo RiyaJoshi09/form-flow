@@ -162,7 +162,7 @@ export class FormBuilder {
         event.currentIndex
       );
     } 
-    else if (event.previousContainer.id === 'sidebarList') {
+    else if (event.previousContainer.id === 'sidebar') {
       //Sidebar to Canvas
       const field = event.previousContainer.data[event.previousIndex];
 
