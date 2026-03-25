@@ -1,1 +1,43 @@
-<p>form-submission works!</p>
+<div class="min-h-screen bg-slate-50 py-12 px-4">
+  <div class="max-w-3xl mx-auto bg-white shadow-xl rounded-3xl overflow-hidden border border-slate-100">
+    
+    <div class="bg-600 p-10 text-black">
+      <h1 class="text-3xl font-bold">{{ formStructure?.title }}</h1>
+      <p class="opacity-80 mt-2 border-b-1">Please fill out the details below accurately.</p>
+    </div>
+
+    <form [formGroup]="formGroup" (ngSubmit)="submitResponse()" class="p-10">
+      <div *ngFor="let section of formStructure?.sections" class="mb-12">
+        <h2 class="text-xl font-bold text-slate-800 mb-6 border-b pb-2 border-slate-100">
+          {{ section.title }}
+        </h2>
+
+        <div *ngFor="let field of section.fields" class="mb-8">
+          <label class="block text-sm font-bold text-slate-500 uppercase tracking-wider mb-2">
+            {{ field.label }}
+            <span *ngIf="field.validations?.required" class="text-red-500">*</span>
+          </label>
+
+          <div [ngSwitch]="field.type">
+            <app-input-text *ngSwitchCase="'text'" [fieldConfig]="field" [control]="getControl(field.id)"></app-input-text>
+            <app-check-box *ngSwitchCase="'checkbox'" [fieldConfig]="field" [control]="getControl(field.id)"></app-check-box>
+            <app-file-upload *ngSwitchCase="'file-upload'" [fieldConfig]="field" [control]="getControl(field.id)"></app-file-upload>
+            <app-radio-button *ngSwitchCase="'radio-button'" [fieldConfig]="field" [control]="getControl(field.id)"></app-radio-button>
+            <app-select-card *ngSwitchCase="'select-card'" [fieldConfig]="field" [control]="getControl(field.id)"></app-select-card>
+            <app-textarea *ngSwitchCase="'textarea'" [fieldConfig]="field" [control]="getControl(field.id)"></app-textarea>
+            </div>
+
+          <div *ngIf="formGroup.get(field.id)?.invalid && formGroup.get(field.id)?.touched" class="text-red-500 text-xs mt-2 italic">
+            This field is required or formatted incorrectly.
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" 
+              [disabled]="formGroup.invalid"
+              class="w-full bg-600 hover:bg-off-white-700 text-black font-bold py-4 rounded-2xl transition-all shadow-lg shadow-100 disabled:opacity-50">
+        SUBMIT RESPONSE
+      </button>
+    </form>
+  </div>
+</div>
