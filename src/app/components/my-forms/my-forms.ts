@@ -8,11 +8,13 @@ import { ShareDialog } from '../share-dialog/share-dialog';
 import { FormService } from '../../services/form-service';
 
 import { RouterLink } from '@angular/router';
+import { MatFormField, MatLabel, MatOption, MatSelect } from '@angular/material/select';
+import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 
 
 @Component({
   selector: 'app-my-forms',
-  imports: [RouterLink, MatIcon, DatePipe, MatDialogModule],
+  imports: [RouterLink, MatIcon, DatePipe, MatDialogModule, MatMenu, MatMenuTrigger],
   templateUrl: './my-forms.html',
   styleUrl: './my-forms.css',
 })
@@ -62,5 +64,21 @@ export class MyForms {
     data: { link: link }
   });
 
+  }
+
+
+  filterStatus(status: String){
+     console.log(status);
+     if(status=="all"){
+       this.getFormData();
+     }
+     else if(status=="published"){
+       this.forms=this.forms.filter((f:any)=> f.published==true);
+       this.loadSummary();
+     }
+     else if(status=="draft"){
+       this.forms=this.forms.filter((f:any)=> f.published==false);
+       this.loadSummary();
+     }
   }
 }

@@ -33,40 +33,52 @@
       <th>Form-Title</th>
       <th>Responses</th>
       <th>Created_At</th>
-      <th>Status</th>
+
+      <th>
+        Status
+        <button mat-icon-button [matMenuTriggerFor]="statusMenu">
+          <mat-icon>arrow_drop_down</mat-icon>
+        </button>
+      </th>
+
+      <mat-menu #statusMenu="matMenu">
+        <button mat-menu-item (click)="filterStatus('all')" class="!hover:bg-gray-100 hover:text-blue-600">All</button><br />
+        <button mat-menu-item (click)="filterStatus('published')" class="!hover:bg-gray-100 hover:text-blue-600">Published</button><br />
+        <button mat-menu-item (click)="filterStatus('draft')" class="!hover:bg-gray-100 hover:text-blue-600">Draft</button>
+      </mat-menu>
       <th>Actions</th>
     </tr>
 
     @for (form of forms; track form.id) {
-
-    <tr>
-      <td>{{ form.title }}</td>
-      <td>{{ form.responses || 0 }}</td>
-      <td>{{ form.createdAt | date:'dd/MM/yyyy hh:mm a' }}</td>
-      <td>
-        <span [class.active]="form.status === 'active'" [class.draft]="form.status === 'draft'">
-          @if(form.published==true){
-            published
-          }
-          @else{
-            draft
-          }
-        </span>
-      </td>
-      <td>
-        <div class="actions">
-          <button mat-icon-button [routerLink]="['/edit-form', form.id]">
-
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-icon-button (click)="shareForm(form.id)" class="!cursor-pointer">
-            <mat-icon>share</mat-icon>
-          </button>
-          <mat-icon (click)="deleteForm(form.id)"
-            class="!text-red-500 hover:text-red-700 cursor-pointer">delete</mat-icon>
-        </div>
-      </td>
-    </tr>
+      <tr>
+        <td>{{ form.title }}</td>
+        <td>{{ form.responses || 0 }}</td>
+        <td>{{ form.createdAt | date: 'dd/MM/yyyy hh:mm a' }}</td>
+        <td>
+          <span [class.active]="form.status === 'active'" [class.draft]="form.status === 'draft'">
+            @if (form.published == true) {
+              published
+            } @else {
+              draft
+            }
+          </span>
+        </td>
+        <td>
+          <div class="actions">
+            <button mat-icon-button [routerLink]="['/edit-form', form.id]">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button (click)="shareForm(form.id)" class="!cursor-pointer">
+              <mat-icon>share</mat-icon>
+            </button>
+            <mat-icon
+              (click)="deleteForm(form.id)"
+              class="!text-red-500 hover:text-red-700 cursor-pointer"
+              >delete</mat-icon
+            >
+          </div>
+        </td>
+      </tr>
     }
   </table>
 </div>
