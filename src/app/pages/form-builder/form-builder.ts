@@ -174,7 +174,7 @@ export class FormBuilder {
         type: field.type,
         label: field.label,
         validations: {},
-        options: field.options || [],
+        options: field.type === 'checkbox' ? ['Option 1'] : [],
         placeholder: field.placeholder || '',
       };
 
