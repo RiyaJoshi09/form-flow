@@ -1,0 +1,12 @@
+.circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid #ccc;
+}
+
+.blue { background: #2196f3; }
+.pink { background: #e91e63; }
+.green { background: #4caf50; }
+.orange { background: #ff9800; }

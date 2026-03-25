@@ -7,7 +7,7 @@
 .navbar {
     height: 70px;
     width: 100%;
-    background-color: #f8fafc; /* light clean background */
+    background-color: var(--mat-sys-surface-container); /* light clean background */
     display: flex;
     justify-content: space-between;
     align-items: center;   /* ✅ vertically center */
@@ -19,14 +19,14 @@
 .navbar h1 {
     font-size: 22px;
     font-weight: 700;
-    color: #1e293b;
+    color: var(--mat-sys-primary); 
     margin: 0;
 }
 
 /* Dashboard text */
 .navbar h3 {
     font-size: 15px;
-    color: #64748b;
+    color: var(--mat-sys-on-surface-variant);
     margin-left: 20px;
     font-weight: 500;
 }
@@ -40,8 +40,9 @@
 
 /* Button */
 .create {
-    background-color: #334155;
-    color: white;
+    background-color: var(--mat-sys-primary);
+    opacity: 0.8;
+    color: var(--mat-sys-surface);
     border: none;
     padding: 8px 16px;
     border-radius: 8px;
@@ -51,7 +52,8 @@
 }
 
 .create:hover {
-    background-color: #1e293b;
+    background-color: var(--mat-sys-primary);
+    opacity: 1;
 }
 
 /* Icon styling */
@@ -60,14 +62,14 @@
     height: 26px;
     width: 26px;
     line-height: 26px;
-    color: #334155;
+    color: var(--mat-sys-on-surface-variant);
 }
 
 .nav-profile mat-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #e2e8f0;
+    background-color: var(--mat-sys-surface);
     border-radius: 50%;
     padding: 8px;   
     box-sizing: content-box;
@@ -79,7 +81,7 @@
 .sidebar {
     width: 220px;
     height: 100vh;
-    background-color: #f1f5f9;
+    background-color: var(--mat-sys-surface);
     padding: 20px 10px;
 }
 
@@ -98,14 +100,14 @@
     padding: 10px 15px;
     margin-bottom: 10px;
     border-radius: 8px;
-    color: #475569;
+    color: var(--mat-sys-on-surface-variant);
     cursor: pointer;
     transition: 0.2s;
 }
 
 /* Hover */
 .sidebar ul li:hover {
-    background-color: #e2e8f0;
+    background-color: var(--mat-sys-surface-container);
 }
 
 /* Icon */
@@ -120,7 +122,7 @@
 }
 
 .main-content{
-    background-color: white;
+    background-color: var(--mat-sys-surface);
     height: 100vh;
     width: 85%;
     padding: 20px;

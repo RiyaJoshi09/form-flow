@@ -3,10 +3,11 @@ import { Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MyForms } from '../../components/my-forms/my-forms';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { ThemeSelector } from '../../components/theme-selector/theme-selector';
 
 @Component({
   selector: 'app-home',
-  imports: [MatIconModule, CommonModule, MyForms, RouterLink, RouterOutlet],
+  imports: [MatIconModule, CommonModule, MyForms, RouterLink, RouterOutlet,ThemeSelector],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
