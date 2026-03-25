@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class FormService {
-  url = 'http://localhost:8081/formflow/';
+  url = 'http://localhost:8082/formflow/';
   constructor(private http: HttpClient) {}
 
   getFieldType(type: string) {

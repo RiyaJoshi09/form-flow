@@ -21,6 +21,7 @@ import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 export class MyForms {
 
   forms :any[]= [];
+  totalFormsarray:any[]=[];
   totalForms=0;
   totalActive=0;
   totalRes=0;
@@ -35,6 +36,7 @@ export class MyForms {
      this.formService.getAllForms().subscribe((data:any)=>{
       console.log(data);
       this.forms=data;
+      this.totalFormsarray=data;
       this.loadSummary();
       this.cd.detectChanges();
     });
@@ -73,12 +75,14 @@ export class MyForms {
        this.getFormData();
      }
      else if(status=="published"){
-       this.forms=this.forms.filter((f:any)=> f.published==true);
+       this.forms=this.totalFormsarray.filter((f:any)=> f.published==true);
        this.loadSummary();
      }
      else if(status=="draft"){
-       this.forms=this.forms.filter((f:any)=> f.published==false);
+       this.forms=this.totalFormsarray.filter((f:any)=> f.published==false);
        this.loadSummary();
      }
+
+ 
   }
 }
