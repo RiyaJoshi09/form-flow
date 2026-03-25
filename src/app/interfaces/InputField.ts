@@ -26,14 +26,14 @@ export interface CheckboxField extends BaseField {
 }
 
 export interface SelectField extends BaseField {
-  type: FieldType.SELECT;
+  type: FieldType.DROPDOWN;
   config: {
     options: string[];
   };
 }
 
 export interface FileUploadField extends BaseField {
-  type: FieldType.FILE_UPLOAD;
+  type: FieldType.FILE;
 }
 
 export interface TextareaField extends BaseField {

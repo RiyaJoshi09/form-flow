@@ -12,7 +12,7 @@
   </div>
 
   <div class="flex flex-1 overflow-hidden">
-    <div class="w-64 bg-white border-r p-4 overflow-y-auto" cdkDropList #sidebarList="cdkDropList"
+    <div class="w-64 bg-white border-r p-4 overflow-y-auto" cdkDropList id="sidebar" #sidebarList="cdkDropList"
       [cdkDropListConnectedTo]="sectionsIds" [cdkDropListData]="elements" [cdkDropListSortingDisabled]="true">
       <h3 class="text-sm font-semibold text-gray-500 uppercase mb-4">Form Elements</h3>
       <div *ngFor="let tool of elements" cdkDrag [cdkDragData]="tool"
@@ -28,10 +28,9 @@
     </div>
 
     <div class="flex-1 p-10 overflow-y-auto">
-      <div class="max-w-3xl mx-auto flex flex-col gap-10" cdkDropList [cdkDropListData]="formSections" (cdkDropListDropped)="onSectionDrop($event)>
+      <div class="max-w-3xl mx-auto flex flex-col gap-10" cdkDropList [cdkDropListData]="formSections" (cdkDropListDropped)="onSectionDrop($event)">
 
-        <div *ngFor="let section of formSections; let sectionIndex = index"
-          cdkDrag
+        <div *ngFor=" let section of formSections; let sectionIndex=index" cdkDrag
           class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
 
           <div class="bg-gray-50 p-4 border-b flex justify-between items-center">
@@ -53,18 +52,25 @@
           </div>
 
           <div class="p-6 min-h-[150px]" cdkDropList [id]="section.id" [cdkDropListData]="section.fields"
-            [cdkDropListConnectedTo]="[sidebarList, ...sectionsIds]" (cdkDropListDropped)="onDrop($event, sectionIndex)">
+            [cdkDropListConnectedTo]="[sidebarList, ...sectionsIds]"
+            (cdkDropListDropped)="onDrop($event, sectionIndex)">
             <div *ngFor="let field of section.fields; let fieldIndex = index" cdkDrag class="group relative p-6 mb-6 bg-white border border-slate-200 rounded-2xl hover:border-indigo-200
             hover:shadow-md transition-all">
 
               <div class="mb-4">
                 <mat-icon cdkDragHandle class="text-slate-300 cursor-move text-base">drag_handle</mat-icon>
-                <input [(ngModel)]="field.label"
+                <input [(ngModel)]="field.label"  [ngStyle]="{
+                                                        'font-size': field.fontSize,
+                                                        'font-weight': field.bold ? 'bold' : 'normal',
+                                                        'font-style': field.italic ? 'italic' : 'normal',
+                                                        'text-decoration': field.underline ? 'underline' : 'none',
+                                                        'color': field.color
+                                                         }"
                   class="text-xs font-bold text-slate-500 uppercase tracking-widest bg-transparent border-none focus:ring-1 focus:ring-indigo-100 rounded w-full p-1"
                   placeholder="CLICK TO EDIT LABEL">
               </div>
 
-              <div class="pointer-events-none opacity-80">
+              <div class="opacity-80">
                 <app-builder-input-text *ngIf="field.type === 'text' || field.type === 'number'"
                   [bluePrint]="field"></app-builder-input-text>
 

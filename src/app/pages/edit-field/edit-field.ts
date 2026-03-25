@@ -2,10 +2,12 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatTabsModule } from '@angular/material/tabs';
+
 
 @Component({
   selector: 'app-edit-field',
-  imports: [CommonModule, FormsModule, MatDialogContent, MatDialogActions],
+  imports: [CommonModule, FormsModule, MatDialogContent, MatDialogActions, MatTabsModule],
   templateUrl: './edit-field.html',
   styleUrl: './edit-field.css',
 })
@@ -18,7 +20,11 @@ export class EditField {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, private dialogRef: MatDialogRef<EditField> ) {
     this.field = data;
-
+    this.field.fontSize = this.field.fontSize || '16px';
+    this.field.bold = this.field.bold || false;
+    this.field.italic = this.field.italic || false;
+    this.field.underline = this.field.underline || false;
+    this.field.color = this.field.color || '#000000';
     this.setValidationOptions();
   }
 
@@ -95,7 +101,7 @@ export class EditField {
 
     this.field.validations = validations;
 
-    this.dialogRef.close(this.field);
+    this.dialogRef.close({...this.field});
   }
 
   cancel() {

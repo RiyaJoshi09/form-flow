@@ -4,16 +4,24 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { CheckboxField } from '../../../interfaces/InputField';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { BuilderFieldSchema } from '../../../interfaces/builder-field-schema';
+import { FormsModule } from '@angular/forms';
+import {MatIconModule} from '@angular/material/icon';
 
 @Component({
   selector: 'app-builder-check-box',
-  imports: [MatFormFieldModule, MatCheckboxModule, ReactiveFormsModule],
+  imports: [MatFormFieldModule, MatCheckboxModule, MatIconModule, FormsModule, ReactiveFormsModule],
   templateUrl: './builder-check-box.html',
   styleUrl: './builder-check-box.css',
 })
 export class BuilderCheckBox {
   @Input() bluePrint!:BuilderFieldSchema;
   fieldData: BuilderFieldSchema = this.bluePrint;
+
+  ngOnInit() {
+    if (!this.fieldData.options) {
+      this.fieldData.options = ['Option 1'];
+    }
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['bluePrint']) {
@@ -23,5 +31,13 @@ export class BuilderCheckBox {
   }
   updateUI(data: BuilderFieldSchema) {
     this.fieldData = data;
+  }
+
+  addOption() {
+    this.bluePrint.options?.push(`Option ${this.bluePrint.options.length + 1}`);
+  }
+
+  removeOption(index : number) {
+    this.bluePrint.options?.splice(index, 1);
   }
 }

@@ -1,8 +1,8 @@
 export enum FieldType {
     TEXT,
-    SELECT,
+    DROPDOWN,
     RADIO,
     CHECKBOX,
-    FILE_UPLOAD,
+    FILE,
     TEXTAREA
 }

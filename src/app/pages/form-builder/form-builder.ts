@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -14,6 +14,7 @@ import { BuilderRadioButton } from '../../components/builder-cards/builder-radio
 import { BuilderSelectCard } from '../../components/builder-cards/builder-select-card/builder-select-card';
 import { BuilderTextarea } from '../../components/builder-cards/builder-textarea/builder-textarea';
 import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { FormService } from '../../services/form-service';
 
 @Component({
   selector: 'app-form-builder',
@@ -51,7 +52,9 @@ export class FormBuilder {
   constructor(
     private dialog: MatDialog,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private formService: FormService,
+    private cd:ChangeDetectorRef
   ) { }
 
   elements = [
@@ -110,6 +113,7 @@ export class FormBuilder {
         responses: 0,
         createdAt: new Date(),
       };
+      // this.formService.createForm(formToSave);
       allForms.push(formToSave);
     }
 
@@ -162,7 +166,7 @@ export class FormBuilder {
         event.currentIndex
       );
     } 
-    else if (event.previousContainer.id === 'sidebarList') {
+    else if (event.previousContainer.id === 'sidebar') {
       //Sidebar to Canvas
       const field = event.previousContainer.data[event.previousIndex];
 
@@ -171,7 +175,7 @@ export class FormBuilder {
         type: field.type,
         label: field.label,
         validations: {},
-        options: field.options || [],
+        options: ['checkbox', 'radio-button', 'select-card'].includes(field.type) ? ['Option 1'] : [],
         placeholder: field.placeholder || '',
       };
 
@@ -232,6 +236,8 @@ export class FormBuilder {
         //Update field with new data once saved
         this.formSections[sectionIndex].fields[fieldIndex] = result;
         this.formSections = [...this.formSections];
+
+      this.cd.detectChanges();
       }
     });
   }
