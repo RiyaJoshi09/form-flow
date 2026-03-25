@@ -10,6 +10,7 @@ import { FormService } from '../../services/form-service';
 import { RouterLink } from '@angular/router';
 import { MatFormField, MatLabel, MatOption, MatSelect } from '@angular/material/select';
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
+import { Form } from '../../interfaces/form-schema';
 
 
 @Component({
@@ -33,7 +34,7 @@ export class MyForms {
   }
 
   getFormData(){
-     this.formService.getAllForms().subscribe((data:any)=>{
+     this.formService.getAllForms().subscribe((data:any[])=>{
       console.log(data);
       this.forms=data;
       this.totalFormsarray=data;
@@ -49,8 +50,8 @@ export class MyForms {
     this.totalRes = 0;
   }
 
-  deleteForm(id : number){
-    this.forms = this.forms.filter(form => form.id !== id);
+  deleteForm(id : number|undefined){
+    this.forms = this.forms.filter(form  => form.id !== id);
     this.loadSummary();
   }
 

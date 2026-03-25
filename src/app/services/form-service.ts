@@ -93,8 +93,8 @@ export class FormService {
     return this.http.get<Form>(this.url + 'forms/' + id);
   }
 
-  getAllForms() {
-    return this.http.get(this.url+"allForm");
+  getAllForms(): Observable<Form[]> {
+    return this.http.get<Form[]>(this.url+"allForm");
   }
   getFormByStatus() {}
 }

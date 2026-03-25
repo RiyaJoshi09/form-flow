@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -53,7 +53,8 @@ export class FormBuilder {
     private dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
-    private formService: FormService
+    private formService: FormService,
+    private cd:ChangeDetectorRef
   ) { }
 
   elements = [
@@ -235,6 +236,8 @@ export class FormBuilder {
         //Update field with new data once saved
         this.formSections[sectionIndex].fields[fieldIndex] = result;
         this.formSections = [...this.formSections];
+
+      this.cd.detectChanges();
       }
     });
   }

@@ -59,7 +59,13 @@
 
               <div class="mb-4">
                 <mat-icon cdkDragHandle class="text-slate-300 cursor-move text-base">drag_handle</mat-icon>
-                <input [(ngModel)]="field.label"
+                <input [(ngModel)]="field.label"  [ngStyle]="{
+                                                        'font-size': field.fontSize,
+                                                        'font-weight': field.bold ? 'bold' : 'normal',
+                                                        'font-style': field.italic ? 'italic' : 'normal',
+                                                        'text-decoration': field.underline ? 'underline' : 'none',
+                                                        'color': field.color
+                                                         }"
                   class="text-xs font-bold text-slate-500 uppercase tracking-widest bg-transparent border-none focus:ring-1 focus:ring-indigo-100 rounded w-full p-1"
                   placeholder="CLICK TO EDIT LABEL">
               </div>
