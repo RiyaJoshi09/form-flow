@@ -15,6 +15,7 @@ import { BuilderSelectCard } from '../../components/builder-cards/builder-select
 import { BuilderTextarea } from '../../components/builder-cards/builder-textarea/builder-textarea';
 import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { FormService } from '../../services/form-service';
+import { FormSubmission } from '../form-submission/form-submission';
 
 @Component({
   selector: 'app-form-builder',
@@ -250,5 +251,17 @@ export class FormBuilder {
     clonedField.id = Date.now().toString();
 
     this.formSections[sectionIndex].fields.splice(fieldIndex + 1, fieldIndex, clonedField);
+  }
+
+  openPreview() {
+    this.dialog.open(FormSubmission, {
+      width: '90vw',
+      height: '90vh',
+      data: {
+        structure: this.formSections,
+        title: this.formTitle,
+        isReadOnly: true
+      }
+    })
   }
 }
