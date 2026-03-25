@@ -13,6 +13,7 @@ import { BuilderFieldSchema } from '../../../interfaces/builder-field-schema';
 export class BuilderInputText {
   @Input() bluePrint!: BuilderFieldSchema;
   fieldData: BuilderFieldSchema = this.bluePrint;
+  type: string = 'text';
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['bluePrint']) {
@@ -22,5 +23,6 @@ export class BuilderInputText {
   }
   updateUI(data: BuilderFieldSchema) {
     this.fieldData = data;
+    this.type = this.fieldData.validations?.email ? 'email' : 'text';
   }
 }
