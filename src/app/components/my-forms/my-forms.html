@@ -42,9 +42,9 @@
       </th>
 
       <mat-menu #statusMenu="matMenu">
-        <button mat-menu-item (click)="filterStatus('all')" class="!hover:bg-gray-100 hover:text-blue-600">All</button><br />
-        <button mat-menu-item (click)="filterStatus('published')" class="!hover:bg-gray-100 hover:text-blue-600">Published</button><br />
-        <button mat-menu-item (click)="filterStatus('draft')" class="!hover:bg-gray-100 hover:text-blue-600">Draft</button>
+        <button mat-menu-item (click)="filterStatus('all')" class="text-muted hover:text-primary">All</button><br />
+        <button mat-menu-item (click)="filterStatus('published')" class="text-muted hover:text-primary">Published</button><br />
+        <button mat-menu-item (click)="filterStatus('draft')" class="text-muted hover:text-primary">Draft</button>
       </mat-menu>
       <th>Actions</th>
     </tr>
