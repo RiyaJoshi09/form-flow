@@ -1,4 +1,40 @@
-<div class="flex flex-col">
+<div class="flex flex-col gap-3">
+
+  @for (option of fieldData.options; let i = $index; track i) {
+    <div class="flex items-center gap-3 group">
+
+      <mat-checkbox disabled></mat-checkbox>
+
+      <input
+        [(ngModel)]="fieldData.options![i]"
+        class="border-b border-transparent focus:border-indigo-400 outline-none text-sm w-full bg-transparent"
+        placeholder="Option label"
+      />
+
+      @if (fieldData.options!.length > 1) {
+        <button
+          (click)="removeOption(i)"
+          class="text-red-400 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+          <mat-icon class="text-base">delete</mat-icon>
+        </button>
+      }
+
+    </div>
+  }
+
+  <button
+    (click)="addOption()"
+    class="text-indigo-500 text-sm font-medium mt-2 text-left hover:underline">
+    + Add Option
+  </button>
+
+  @if(fieldData.validations?.required){
+    <mat-error>Required Field</mat-error>
+  }
+
+</div>
+
+<!-- <div class="flex flex-col">
   @for (option of fieldData.options; track option) {
     <mat-checkbox>
       {{ option }}
@@ -7,4 +43,4 @@
   @if(fieldData.validations?.required){
     <mat-error>Required Field</mat-error>
   }
-</div>
+</div> -->

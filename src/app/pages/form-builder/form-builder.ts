@@ -175,7 +175,7 @@ export class FormBuilder {
         type: field.type,
         label: field.label,
         validations: {},
-        options: field.options || [],
+        options: ['checkbox', 'radio-button', 'select-card'].includes(field.type) ? ['Option 1'] : [],
         placeholder: field.placeholder || '',
       };
 
