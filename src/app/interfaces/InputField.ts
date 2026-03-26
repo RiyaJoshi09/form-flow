@@ -9,6 +9,7 @@ interface BaseField {
 
 export interface TextField extends BaseField {
   type: FieldType.TEXT;
+  placeholder?:string;
 }
 
 export interface RadioField extends BaseField {
@@ -23,6 +24,7 @@ export interface CheckboxField extends BaseField {
 
 export interface SelectField extends BaseField {
   type: FieldType.DROPDOWN;
+  placeholder?:string;
   options: string[];
 }
 
@@ -32,4 +34,5 @@ export interface FileUploadField extends BaseField {
 
 export interface TextareaField extends BaseField {
   type: FieldType.TEXTAREA;
+  placeholder?:string;
 }
