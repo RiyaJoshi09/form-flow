@@ -13,23 +13,17 @@ export interface TextField extends BaseField {
 
 export interface RadioField extends BaseField {
   type: FieldType.RADIO;
-  config: {
-    options: string[];
-  };
+  options: string[];
 }
 
 export interface CheckboxField extends BaseField {
   type: FieldType.CHECKBOX;
-  config: {
-    options: string[];
-  };
+  options: string[];
 }
 
 export interface SelectField extends BaseField {
   type: FieldType.DROPDOWN;
-  config: {
-    options: string[];
-  };
+  options: string[];
 }
 
 export interface FileUploadField extends BaseField {

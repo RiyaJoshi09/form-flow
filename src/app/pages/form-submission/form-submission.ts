@@ -9,18 +9,20 @@ import { RadioButton } from '../../components/cards/radio-button/radio-button';
 import { SelectCard } from '../../components/cards/select-card/select-card';
 import { Textarea } from '../../components/cards/textarea/textarea';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-form-submission',
-  imports: [CommonModule, 
-    InputText, 
-    FileUpload, 
-    CheckBox, 
-    RadioButton, 
-    SelectCard, 
+  imports: [CommonModule,
+    InputText,
+    FileUpload,
+    CheckBox,
+    RadioButton,
+    SelectCard,
     Textarea,
     FormsModule,
-    ReactiveFormsModule],
+    ReactiveFormsModule,
+    MatIconModule],
   templateUrl: './form-submission.html',
   styleUrl: './form-submission.css',
 })
@@ -30,19 +32,19 @@ export class FormSubmission {
   formStructure: any;
   isReadOnly: boolean = false;
 
-  constructor(private route: ActivatedRoute, 
-    @Optional() @Inject(MAT_DIALOG_DATA) public dialogData: any){}
+  constructor(private route: ActivatedRoute,
+    @Optional() @Inject(MAT_DIALOG_DATA) public dialogData: any) { }
 
   ngOnInit() {
     //Check if data was passed through the Dialog (Preview Mode)
     if (this.dialogData) {
       this.formStructure = {
         title: this.dialogData.title,
-        sections: this.dialogData.structure 
+        sections: this.dialogData.structure
       };
       this.isReadOnly = this.dialogData.isReadOnly;
       this.buildReactiveForm();
-    } 
+    }
     //Check URL (Live Mode)
     else {
       const formId = this.route.snapshot.paramMap.get('id');
@@ -50,15 +52,15 @@ export class FormSubmission {
       this.formStructure = allForms.find((f: any) => f.id === formId);
 
       if (this.formStructure) {
-        this.isReadOnly = false; 
+        this.isReadOnly = false;
         this.buildReactiveForm();
       }
     }
   }
 
-  getControl(id:string): FormControl {
+  getControl(id: string): FormControl {
     const control = this.formGroup.get(id);
-    if(!control) {
+    if (!control) {
       throw new Error('Control with id ${id} not found in FormGroup');
     }
     return control as FormControl;
@@ -66,13 +68,20 @@ export class FormSubmission {
 
   buildReactiveForm() {
     const controls: any = {};
-    if(!this.formStructure || !this.formStructure.sections) return;
+    if (!this.formStructure || !this.formStructure.sections) return;
 
-    this.formStructure.sections.forEach((section:any)=> {
-      section.fields.forEach((field:any)=> {
+    this.formStructure.sections.forEach((section: any) => {
+      section.fields.forEach((field: any) => {
+        const validations = field.validations || {};
         const validators = [];
-        if (field.validations?.required) validators.push(Validators.required);
-        if (field.validations?.email) validators.push(Validators.email);
+        if (validations?.required) validators.push(Validators.required);
+        if (validations?.email) validators.push(Validators.email);
+        if (validations.minLength) validators.push(Validators.minLength(validations.minLength));
+        if (validations.maxLength) validators.push(Validators.maxLength(validations.maxLength));
+        if (validations.fileType) validators.push(Validators.pattern(validations.fileType));
+        if (validations.min) validators.push(Validators.min(validations.min));
+        if (validations.max) validators.push(Validators.max(validations.max));
+        if (validations.maxSize) validators.push(Validators.max(validations.maxSize));
 
         controls[field.id] = new FormControl('', validators);
       });
@@ -81,7 +90,7 @@ export class FormSubmission {
     this.formGroup = new FormGroup(controls);
   }
 
-  submitResponse(){
+  submitResponse() {
     if (this.isReadOnly) {
       alert("This is a preview. Data is not saved to the database.");
       console.log("Mock Submission:", this.formGroup.value);
@@ -101,7 +110,7 @@ export class FormSubmission {
       localStorage.setItem('formflow_responses', JSON.stringify(existing));
 
       alert("Response Submitted!");
-    }else{
+    } else {
       this.formGroup.markAllAsTouched(); // Show errors to the user
       alert("Please fix the errors before submitting.");
     }
