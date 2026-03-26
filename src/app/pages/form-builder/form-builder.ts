@@ -16,6 +16,7 @@ import { BuilderTextarea } from '../../components/builder-cards/builder-textarea
 import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { FormService } from '../../services/form-service';
 import { FormSubmission } from '../form-submission/form-submission';
+import { ThemeSelector } from '../../components/theme-selector/theme-selector';
 
 @Component({
   selector: 'app-form-builder',
@@ -35,7 +36,8 @@ import { FormSubmission } from '../form-submission/form-submission';
     BuilderSelectCard,
     BuilderTextarea,
     DragDropModule,
-    MatMenuModule
+    MatMenuModule,
+    ThemeSelector
   ],
   templateUrl: './form-builder.html',
   styleUrl: './form-builder.css',
