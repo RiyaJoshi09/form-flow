@@ -24,7 +24,7 @@
             <app-file-upload *ngSwitchCase="'file-upload'" [fieldConfig]="field" [control]="getControl(field.id)"></app-file-upload>
             <app-radio-button *ngSwitchCase="'radio-button'" [fieldConfig]="field" [control]="getControl(field.id)"></app-radio-button>
             <app-select-card *ngSwitchCase="'select-card'" [fieldConfig]="field" [control]="getControl(field.id)"></app-select-card>
-            <app-textarea *ngSwitchCase="'textarea'" [fieldConfig]="field" [control]="getControl(field.id)"></app-textarea>
+            <app-textarea *ngSwitchCase="'text-area'" [fieldConfig]="field" [control]="getControl(field.id)"></app-textarea>
             </div>
 
           <div *ngIf="formGroup.get(field.id)?.invalid && formGroup.get(field.id)?.touched" class="text-red-500 text-xs mt-2 italic">

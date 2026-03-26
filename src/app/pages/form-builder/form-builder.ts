@@ -69,7 +69,7 @@ export class FormBuilder {
     private router: Router,
     private route: ActivatedRoute,
     private formService: FormService,
-    private cd:ChangeDetectorRef
+    private cd: ChangeDetectorRef
   ) { }
 
   elements = [
@@ -108,6 +108,18 @@ export class FormBuilder {
     const rawData = localStorage.getItem('formflow_forms');
 
     let allForms = rawData ? JSON.parse(rawData) : [];
+
+    const hasFields = this.formSections.some(section => section.fields && section.fields.length > 0);
+
+    if (!this.formTitle || this.formTitle.trim() === '') {
+      alert('Please provide a title for your form.');
+      return;
+    }
+
+    if (!hasFields) {
+      alert('Cannot save an empty form. Please add at least one field.');
+      return; // Stop execution
+    }
 
     if (this.editingFormId) {
       const index = allForms.findIndex((f: any) => f.id === this.editingFormId);
@@ -180,7 +192,7 @@ export class FormBuilder {
         event.previousIndex,
         event.currentIndex
       );
-    } 
+    }
     else if (event.previousContainer.id === 'sidebar') {
       //Sidebar to Canvas
       const field = event.previousContainer.data[event.previousIndex];
@@ -258,7 +270,7 @@ export class FormBuilder {
         this.formSections[sectionIndex].fields[fieldIndex] = result;
         this.formSections = [...this.formSections];
 
-      this.cd.detectChanges();
+        this.cd.detectChanges();
       }
     });
   }
