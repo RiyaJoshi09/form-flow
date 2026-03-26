@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener } from '@angular/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -34,6 +34,7 @@ import { FormService } from '../../services/form-service';
     BuilderSelectCard,
     BuilderTextarea,
     DragDropModule,
+    MatMenuModule
   ],
   templateUrl: './form-builder.html',
   styleUrl: './form-builder.css',
@@ -48,6 +49,17 @@ export class FormBuilder {
     },
   ];
   editingFormId: string | null = null;
+  
+  selectedFieldIndex: number |null=null;
+  selectedSectionIndex: number | null=null;
+
+  predefinedColours: string[]= [
+    '#000000',
+    '#EF4444',
+    '#10B981',
+    '#3B82F6'
+  ]
+
 
   constructor(
     private dialog: MatDialog,
@@ -177,6 +189,12 @@ export class FormBuilder {
         validations: {},
         options: ['checkbox', 'radio-button', 'select-card'].includes(field.type) ? ['Option 1'] : [],
         placeholder: field.placeholder || '',
+
+        color: '#000000',
+        fontSize: '12px',
+        bold: false,
+        italic: false,
+        underline: false
       };
 
       this.formSections[sectionIndex].fields.splice(event.currentIndex, 0, newField);
@@ -251,4 +269,16 @@ export class FormBuilder {
 
     this.formSections[sectionIndex].fields.splice(fieldIndex + 1, fieldIndex, clonedField);
   }
+
+
+  selectField(sectionIndex: number, fieldIndex: number) {
+  this.selectedSectionIndex = sectionIndex;
+  this.selectedFieldIndex = fieldIndex;
+}
+
+@HostListener('document:click')
+clearSelection(){
+  this.selectedFieldIndex = null;
+  this.selectedSectionIndex = null;
+}
 }

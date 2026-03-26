@@ -59,7 +59,8 @@
 
               <div class="mb-4">
                 <mat-icon cdkDragHandle class="text-slate-300 cursor-move text-base">drag_handle</mat-icon>
-                <input [(ngModel)]="field.label"  [ngStyle]="{
+                <input [(ngModel)]="field.label"   (click)="selectField(sectionIndex, fieldIndex); $event.stopPropagation()"
+                                                        [ngStyle]="{
                                                         'font-size': field.fontSize,
                                                         'font-weight': field.bold ? 'bold' : 'normal',
                                                         'font-style': field.italic ? 'italic' : 'normal',
@@ -69,6 +70,40 @@
                   class="text-xs font-bold text-slate-500 uppercase tracking-widest bg-transparent border-none focus:ring-1 focus:ring-indigo-100 rounded w-full p-1"
                   placeholder="CLICK TO EDIT LABEL">
               </div>
+       
+       <!-- Toolbar        -->
+               <div *ngIf="selectedFieldIndex === fieldIndex && selectedSectionIndex === sectionIndex" (click)="$event.stopPropagation()"
+               class="absolute -top-12 left-4 bg-white border shadow-md rounded-lg px-3 py-2 flex gap-2 z-50">
+
+              <button (click)="field.bold = !field.bold"
+              [class.bg-indigo-100]="field.bold"
+              class="px-2 py-1 rounded font-bold">B</button>
+
+              <button (click)="field.italic = !field.italic"
+              [class.bg-indigo-100]="field.italic"
+              class="px-2 py-1 rounded italic">I</button>
+
+              <button (click)="field.underline = !field.underline"
+              [class.bg-indigo-100]="field.underline"
+              class="px-2 py-1 rounded underline">U</button>
+
+              <select [(ngModel)]="field.fontSize" class="border rounded px-1 text-sm" (click)="$event.stopPropagation()">
+              <option value="12px">S</option>
+              <option value="15px">M</option>
+              <option value="20px">L</option>
+              </select>
+
+              <div class="flex gap-1 items-center">
+               <div *ngFor="let color of predefinedColours" (click)="field.color = color" [style.background]="color"
+                class="w-5 h-5 rounded-full cursor-pointer border hover:scale-110 transition">
+              </div>
+              </div>
+             <input type="color" [(ngModel)]="field.color" [value]="field.color || '#000000'" (click)="$event.stopPropagation()"/>
+
+            </div>
+
+   <!-- toolbar end -->
+
 
               <div class="opacity-80">
                 <app-builder-input-text *ngIf="field.type === 'text' || field.type === 'number'"

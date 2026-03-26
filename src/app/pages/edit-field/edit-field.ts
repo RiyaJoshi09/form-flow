@@ -20,11 +20,6 @@ export class EditField {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, private dialogRef: MatDialogRef<EditField> ) {
     this.field = data;
-    this.field.fontSize = this.field.fontSize || '16px';
-    this.field.bold = this.field.bold || false;
-    this.field.italic = this.field.italic || false;
-    this.field.underline = this.field.underline || false;
-    this.field.color = this.field.color || '#000000';
     this.setValidationOptions();
   }
 
