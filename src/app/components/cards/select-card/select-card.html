@@ -1,6 +1,6 @@
 <mat-form-field appearance="outline" class="w-full">
 
-  <mat-select [formControl]="control">
+  <mat-select [formControl]="control"  [placeholder]="fieldConfig.placeholder || '--Choose From Below--'">
     @for (option of fieldConfig?.options; track $index) {
       <mat-option [value]="option">
         {{ option }}
