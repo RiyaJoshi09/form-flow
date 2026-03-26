@@ -1,0 +1,12 @@
+<button mat-icon-button [matMenuTriggerFor]="menu">
+    <mat-icon>color_lens</mat-icon>
+</button>
+
+<mat-menu #menu="matMenu">
+  <div class="grid grid-cols-4 gap-x-2 p-4">
+    <div class="circle blue" (click)="setTheme('theme-blue')"></div>
+    <div class="circle pink" (click)="setTheme('theme-pink')"></div>
+    <div class="circle green" (click)="setTheme('theme-green')"></div>
+    <div class="circle orange" (click)="setTheme('theme-orange')"></div>
+  </div>
+</mat-menu>
