@@ -26,6 +26,7 @@ export class FormService {
   mapFromBackend(dto: any): Form {
     return {
       id: dto.id,
+      theme: dto.theme,
       title: dto.title,
       description: dto.description,
       published: dto.published,
@@ -56,6 +57,7 @@ export class FormService {
   mapToFormSchema(rawForm: any): Form {
     return {
       id: Number(rawForm.id),
+      theme: localStorage.getItem('theme') || 'theme-pink',
       title: rawForm.title,
       description: '',
       published: rawForm.status === 'active',

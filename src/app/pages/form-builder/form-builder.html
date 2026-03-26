@@ -1,57 +1,51 @@
-<div class="flex h-screen flex-col bg-surface">
-  
-  <div class="h-16 bg-container border-b border-theme flex items-center justify-between px-8 shadow-sm z-10">
-    <input [(ngModel)]="formTitle" 
-           class="text-xl font-bold border-none focus:ring-0 bg-transparent text-primary" 
-           placeholder="Form Title">
+<div class="flex h-screen flex-col bg-gray-100">
+  <div class="h-16 bg-container flex items-center justify-between px-8 shadow-sm">
+    <input [(ngModel)]="formTitle" class="text-xl font-bold border-none focus:ring-0 text-primary" placeholder="Form Title">
     <div class="flex gap-4">
-      <button mat-stroked-button color="accent" (click)="addSection()">
-        <mat-icon>add_to_photos</mat-icon> Add Section
+      <app-theme-selector></app-theme-selector>
+      <button mat-stroked-button color="accent" class="btn-primary action-button" (click)="addSection()">
+        <mat-icon>add_to_photos</mat-icon>
+        <span>Add Section</span>
       </button>
-      <button mat-raised-button color="primary" (click)="saveForm()">
-        <mat-icon>save</mat-icon> Save Form
+      <button mat-raised-button color="primary" class="btn-primary action-button" (click)="saveForm()">
+        <mat-icon>save</mat-icon>
+        <span>Save Form</span>
       </button>
-      <button mat-raised-button color="primary" (click)="openPreview()">
-        <mat-icon class="text-sm">visibility</mat-icon> Preview
-      </button>
+      <button mat-raised-button color="primary" class="btn-primary action-button" (click)="openPreview()">
+      <mat-icon class="text-sm">visibility</mat-icon>
+      <span>Preview</span>
+    </button>
     </div>
   </div>
 
   <div class="flex flex-1 overflow-hidden">
-    <div class="w-64 bg-container border-r border-theme p-4 overflow-y-auto" 
-         cdkDropList id="sidebar" #sidebarList="cdkDropList"
-         [cdkDropListConnectedTo]="sectionsIds" 
-         [cdkDropListData]="elements" 
-         [cdkDropListSortingDisabled]="true">
-      
-      <h3 class="text-[10px] font-bold text-muted uppercase tracking-widest mb-4">Form Elements</h3>
-      
+    <div class="w-64 bg-surface p-4 overflow-y-auto" cdkDropList id="sidebar" #sidebarList="cdkDropList"
+      [cdkDropListConnectedTo]="sectionsIds" [cdkDropListData]="elements" [cdkDropListSortingDisabled]="true">
+      <h3 class="text-sm font-semibold text-primary opacity-80 uppercase mb-4">Form Elements</h3>
       <div *ngFor="let tool of elements" cdkDrag [cdkDragData]="tool"
-        class="p-4 border border-theme rounded-lg cursor-pointer hover:bg-primary/10 mb-3 transition-all active:cursor-grabbing bg-surface">
+        class="p-4 border rounded-lg cursor-pointer hover:bg-container hover:text-primary mb-3 transition-all active:cursor-grabbing">
         <div class="flex items-center gap-3">
           <mat-icon class="text-muted">drag_indicator</mat-icon>
-          <span class="text-sm font-semibold text-primary">{{ tool.label }}</span>
+          <span class="text-sm font-semibold text-muted hover:text-primary">{{ tool.label }}</span>
         </div>
 
-        <div *cdkDragPlaceholder class="border-2 border-dashed border-theme bg-primary/5 rounded-xl h-12"></div>
+        <div *cdkDragPlaceholder class="border-2 border-dashed border-theme bg-surface rounded-xl h-12"></div>
       </div>
-      <p class="text-[10px] text-muted mt-4 italic">Drag and Drop elements directly into any section to add them.</p>
+      <p class="text-xs text-muted mt-4 italic">Drag and Drop elements directly into any section to add them.</p>
     </div>
 
     <div class="flex-1 p-10 overflow-y-auto">
-      <div class="max-w-3xl mx-auto flex flex-col gap-10" 
-           cdkDropList [cdkDropListData]="formSections" 
-           (cdkDropListDropped)="onSectionDrop($event)">
+      <div class="max-w-3xl mx-auto flex flex-col gap-10" cdkDropList [cdkDropListData]="formSections" (cdkDropListDropped)="onSectionDrop($event)">
 
-        <div *ngFor="let section of formSections; let sectionIndex=index" cdkDrag
-          class="bg-container rounded-xl shadow-md border border-theme overflow-hidden">
+        <div *ngFor=" let section of formSections; let sectionIndex=index" cdkDrag
+          class="bg-surface rounded-xl shadow-md overflow-hidden">
 
-          <div class="bg-surface/50 p-4 border-b border-theme flex justify-between items-center">
-            <div class="flex items-center gap-2">
-              <mat-icon cdkDragHandle class="cursor-move text-muted">drag_indicator</mat-icon>
-              <input [(ngModel)]="section.title"
-                class="bg-transparent font-bold text-lg border-none focus:ring-1 focus:ring-primary rounded px-2 text-primary">
-            </div>
+          <div class="bg-surface p-4 border-b border-gray-300 flex justify-between items-center">
+            <mat-icon cdkDragHandle class="cursor-move text-muted">
+              drag_indicator
+            </mat-icon>
+            <input [(ngModel)]="section.title"
+              class="bg-transparent font-bold text-lg border-none text-primary opacity-90 focus:ring-1 focus:ring-(--mat-sys-primary) rounded px-2">
             <div class="flex gap-1">
               <button mat-icon-button color="primary" (click)="duplicateSection(sectionIndex)" title="Duplicate Section">
                 <mat-icon>content_copy</mat-icon>
@@ -65,22 +59,55 @@
           <div class="p-6 min-h-[150px]" cdkDropList [id]="section.id" [cdkDropListData]="section.fields"
             [cdkDropListConnectedTo]="[sidebarList, ...sectionsIds]"
             (cdkDropListDropped)="onDrop($event, sectionIndex)">
-            
-            <div *ngFor="let field of section.fields; let fieldIndex = index" cdkDrag 
-                 class="group relative p-6 mb-6 bg-surface border border-theme rounded-2xl hover:border-primary/50 hover:shadow-md transition-all">
+            <div *ngFor="let field of section.fields; let fieldIndex = index" cdkDrag class="group relative p-6 mb-6 bg-surface border border-theme rounded-2xl hover:shadow-md hover:scale-[1.01] transition-all">
 
               <div class="mb-4">
                 <mat-icon cdkDragHandle class="text-muted cursor-move text-base">drag_handle</mat-icon>
-                <input [(ngModel)]="field.label" [ngStyle]="{
-                        'font-size': field.fontSize,
-                        'font-weight': field.bold ? 'bold' : 'normal',
-                        'font-style': field.italic ? 'italic' : 'normal',
-                        'text-decoration': field.underline ? 'underline' : 'none',
-                        'color': field.color || 'var(--mat-sys-on-surface-variant)'
-                      }"
-                  class="text-[10px] font-bold uppercase tracking-widest bg-transparent border-none focus:ring-1 focus:ring-primary/20 rounded w-full p-1"
+                <input [(ngModel)]="field.label"   (click)="selectField(sectionIndex, fieldIndex); $event.stopPropagation()"
+                                                        [ngStyle]="{
+                                                        'font-size': field.fontSize,
+                                                        'font-weight': field.bold ? 'bold' : 'normal',
+                                                        'font-style': field.italic ? 'italic' : 'normal',
+                                                        'text-decoration': field.underline ? 'underline' : 'none',
+                                                        'color': field.color
+                                                         }"
+                  class="text-xs font-bold text-muted uppercase tracking-widest bg-transparent border-none focus:ring-1 focus:ring-indigo-100 rounded w-full p-1"
                   placeholder="CLICK TO EDIT LABEL">
               </div>
+       
+       <!-- Toolbar        -->
+               <div *ngIf="selectedFieldIndex === fieldIndex && selectedSectionIndex === sectionIndex" (click)="$event.stopPropagation()"
+               class="absolute -top-12 left-4 bg-surface border shadow-md rounded-lg px-3 py-2 flex gap-2 z-50">
+
+              <button (click)="field.bold = !field.bold"
+              [class.bg-indigo-100]="field.bold"
+              class="px-2 py-1 rounded font-bold">B</button>
+
+              <button (click)="field.italic = !field.italic"
+              [class.bg-indigo-100]="field.italic"
+              class="px-2 py-1 rounded italic">I</button>
+
+              <button (click)="field.underline = !field.underline"
+              [class.bg-indigo-100]="field.underline"
+              class="px-2 py-1 rounded underline">U</button>
+
+              <select [(ngModel)]="field.fontSize" class="border rounded px-1 text-sm" (click)="$event.stopPropagation()">
+              <option value="12px">S</option>
+              <option value="15px">M</option>
+              <option value="20px">L</option>
+              </select>
+
+              <div class="flex gap-1 items-center">
+               <div *ngFor="let color of predefinedColours" (click)="field.color = color" [style.background]="color"
+                class="w-5 h-5 rounded-full cursor-pointer border hover:scale-110 transition">
+              </div>
+              </div>
+             <input type="color" [(ngModel)]="field.color" [value]="field.color || '#000000'" (click)="$event.stopPropagation()"/>
+
+            </div>
+
+   <!-- toolbar end -->
+
 
               <div class="opacity-90">
                 <app-builder-input-text *ngIf="field.type === 'text' || field.type === 'number'" [bluePrint]="field"></app-builder-input-text>
@@ -92,22 +119,24 @@
               </div>
 
               <div class="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button (click)="duplicateField(sectionIndex, fieldIndex)" class="p-1.5 text-muted hover:text-primary transition-colors">
+                <button (click)="duplicateField(sectionIndex, fieldIndex)"
+                  class="p-1.5 text-muted hover:text-primary">
                   <mat-icon class="text-sm">content_copy</mat-icon>
                 </button>
-                <button (click)="editField(sectionIndex, fieldIndex)" class="p-1.5 text-muted hover:text-primary transition-colors">
+                <button (click)="editField(sectionIndex, fieldIndex)"
+                  class="p-1.5 text-muted hover:text-primary">
                   <mat-icon class="text-sm">settings</mat-icon>
                 </button>
-                <button (click)="removeField(sectionIndex, fieldIndex)" class="p-1.5 text-muted hover:text-red-500 transition-colors">
+                <button (click)="removeField(sectionIndex, fieldIndex)" class="p-1.5 text-muted hover:text-red-500">
                   <mat-icon class="text-sm">delete</mat-icon>
                 </button>
               </div>
-
-              <div *cdkDragPlaceholder class="border-2 border-dashed border-theme bg-primary/5 rounded-2xl h-32 mb-6"></div>
+              <div *cdkDragPlaceholder
+                class="border-2 border-dashed opacity-40 border-theme bg-surface rounded-2xl h-32 mb-6"></div>
             </div>
 
             <div *ngIf="section.fields.length === 0"
-              class="flex flex-col items-center justify-center py-12 border-2 border-dashed border-theme text-muted rounded-xl">
+              class="flex flex-col items-center justify-center py-12 border-2 border-dashed border-theme text-muted opacity-40 rounded-xl">
               <mat-icon class="mb-2">add_circle_outline</mat-icon>
               <p class="text-[10px] font-bold uppercase tracking-widest">Drop elements here</p>
             </div>
