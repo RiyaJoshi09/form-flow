@@ -47,12 +47,10 @@
             <input [(ngModel)]="section.title"
               class="bg-transparent font-bold text-lg border-none text-primary opacity-90 focus:ring-1 focus:ring-(--mat-sys-primary) rounded px-2">
             <div class="flex gap-1">
-              <button mat-icon-button color="primary" (click)="duplicateSection(sectionIndex)"
-                title="Duplicate Section">
+              <button mat-icon-button color="primary" (click)="duplicateSection(sectionIndex)" title="Duplicate Section">
                 <mat-icon>content_copy</mat-icon>
               </button>
-              <button mat-icon-button color="warn" (click)="removeSection(sectionIndex)"
-                [disabled]="formSections.length === 1">
+              <button mat-icon-button color="warn" (click)="removeSection(sectionIndex)" [disabled]="formSections.length === 1">
                 <mat-icon>delete_sweep</mat-icon>
               </button>
             </div>
@@ -111,25 +109,13 @@
    <!-- toolbar end -->
 
 
-              <div class="opacity-80">
-                <app-builder-input-text *ngIf="field.type === 'text' || field.type === 'number'"
-                  [bluePrint]="field"></app-builder-input-text>
-
-                <app-builder-file-upload *ngIf="field.type === 'file-upload'" [bluePrint]="field">
-                </app-builder-file-upload>
-
-                <app-builder-check-box *ngIf="field.type === 'checkbox'" [bluePrint]="field">
-                </app-builder-check-box>
-
-                <app-builder-radio-button *ngIf="field.type === 'radio-button'" [bluePrint]="field">
-                </app-builder-radio-button>
-
-                <app-builder-select-card *ngIf="field.type === 'select-card'" [bluePrint]="field">
-                </app-builder-select-card>
-
-                <app-builder-textarea *ngIf="field.type === 'text-area'" [bluePrint]="field">
-                </app-builder-textarea>
-
+              <div class="opacity-90">
+                <app-builder-input-text *ngIf="field.type === 'text' || field.type === 'number'" [bluePrint]="field"></app-builder-input-text>
+                <app-builder-file-upload *ngIf="field.type === 'file-upload'" [bluePrint]="field"></app-builder-file-upload>
+                <app-builder-check-box *ngIf="field.type === 'checkbox'" [bluePrint]="field"></app-builder-check-box>
+                <app-builder-radio-button *ngIf="field.type === 'radio-button'" [bluePrint]="field"></app-builder-radio-button>
+                <app-builder-select-card *ngIf="field.type === 'select-card'" [bluePrint]="field"></app-builder-select-card>
+                <app-builder-textarea *ngIf="field.type === 'text-area'" [bluePrint]="field"></app-builder-textarea>
               </div>
 
               <div class="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -152,9 +138,11 @@
             <div *ngIf="section.fields.length === 0"
               class="flex flex-col items-center justify-center py-12 border-2 border-dashed border-theme text-muted opacity-40 rounded-xl">
               <mat-icon class="mb-2">add_circle_outline</mat-icon>
-              <p class="text-xs font-bold uppercase tracking-widest">Drop elements here</p>
+              <p class="text-[10px] font-bold uppercase tracking-widest">Drop elements here</p>
             </div>
           </div>
+
+          <div *cdkDragPlaceholder class="border-2 border-dashed border-theme bg-primary/10 h-64 rounded-xl"></div>
         </div>
 
       </div>
