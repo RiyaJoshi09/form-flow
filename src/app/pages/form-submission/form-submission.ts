@@ -9,6 +9,7 @@ import { RadioButton } from '../../components/cards/radio-button/radio-button';
 import { SelectCard } from '../../components/cards/select-card/select-card';
 import { Textarea } from '../../components/cards/textarea/textarea';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-form-submission',
@@ -20,7 +21,8 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
     SelectCard,
     Textarea,
     FormsModule,
-    ReactiveFormsModule],
+    ReactiveFormsModule,
+    MatIconModule],
   templateUrl: './form-submission.html',
   styleUrl: './form-submission.css',
 })
