@@ -11,6 +11,7 @@ import { Textarea } from '../../components/cards/textarea/textarea';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormService } from '../../services/form-service';
 import { Form } from '../../interfaces/form-schema';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-form-submission',

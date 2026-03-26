@@ -80,6 +80,16 @@ export class FormService {
       })),
     };
   }
+
+  private mapToBackendResponse(data: any) {
+  return {
+    formId: data.formId,
+    response: data.answers  
+  };
+}
+
+
+
   createForm(formData: any): Observable<any> {
     const mappedData = this.mapToFormSchema(formData);
     let data: any = this.http.post(this.url + 'createForm', mappedData, {
@@ -99,4 +109,9 @@ export class FormService {
     return this.http.get<Form[]>(this.url+"allForm");
   }
   getFormByStatus() {}
+
+  submitResponse(data : any){
+    const mappedData = this.mapToBackendResponse(data);
+    return this.http.post(this.url+"submitForm", mappedData);
+  }
 }
