@@ -22,7 +22,8 @@ import { Form } from '../../interfaces/form-schema';
     SelectCard,
     Textarea,
     FormsModule,
-    ReactiveFormsModule],
+    ReactiveFormsModule,
+    MatIconModule],
   templateUrl: './form-submission.html',
   styleUrl: './form-submission.css',
 })

@@ -1,19 +1,20 @@
-<div class="min-h-screen bg-slate-50 py-12 px-4">
-  <div class="max-w-3xl mx-auto bg-white shadow-xl rounded-3xl overflow-hidden border border-slate-100">
+<div class="min-h-screen bg-surface py-12 px-4 transition-colors duration-300">
+  
+  <div class="max-w-3xl mx-auto bg-container shadow-xl rounded-3xl overflow-hidden border border-theme">
     
-    <div class="bg-600 p-10 text-black">
-      <h1 class="text-3xl font-bold">{{ formStructure?.title }}</h1>
-      <p class="opacity-80 mt-2 border-b-1">Please fill out the details below accurately.</p>
+    <div class="p-10 text-primary">
+      <h1 class="text-3xl font-bold brightness-125">{{ formStructure?.title }}</h1>
     </div>
 
     <form [formGroup]="formGroup" (ngSubmit)="submitResponse()" class="p-10">
       <div *ngFor="let section of formStructure?.sections" class="mb-12">
-        <h2 class="text-xl font-bold text-slate-800 mb-6 border-b pb-2 border-slate-100">
+        
+        <h2 class="text-xl font-bold text-primary mb-6 border-b pb-2 border-theme">
           {{ section.title }}
         </h2>
 
         <div *ngFor="let field of section.fields" class="mb-8">
-          <label class="block text-sm font-bold text-slate-500 uppercase tracking-wider mb-2">
+          <label class="block text-sm font-bold text-muted uppercase tracking-wider mb-2">
             {{ field.label }}
             <span *ngIf="field.validations?.required" class="text-red-500">*</span>
           </label>
@@ -25,9 +26,11 @@
             <app-radio-button *ngSwitchCase="'radio-button'" [fieldConfig]="field" [control]="getControl(field.id)"></app-radio-button>
             <app-select-card *ngSwitchCase="'select-card'" [fieldConfig]="field" [control]="getControl(field.id)"></app-select-card>
             <app-textarea *ngSwitchCase="'text-area'" [fieldConfig]="field" [control]="getControl(field.id)"></app-textarea>
-            </div>
+          </div>
 
-          <div *ngIf="formGroup.get(field.id)?.invalid && formGroup.get(field.id)?.touched" class="text-red-500 text-xs mt-2 italic">
+          <div *ngIf="formGroup.get(field.id)?.invalid && formGroup.get(field.id)?.touched" 
+               class="text-red-500 text-xs mt-2 italic flex items-center gap-1">
+            <mat-icon class="text-sm scale-75">error_outline</mat-icon>
             This field is required or formatted incorrectly.
           </div>
         </div>
@@ -35,7 +38,7 @@
 
       <button type="submit" 
               [disabled]="formGroup.invalid"
-              class="w-full bg-600 hover:bg-off-white-700 text-black font-bold py-4 rounded-2xl transition-all shadow-lg shadow-100 disabled:opacity-50">
+              class="w-full btn-primary font-bold py-4 rounded-2xl transition-all shadow-lg hover:opacity-90 disabled:opacity-50 disabled:grayscale">
         SUBMIT RESPONSE
       </button>
     </form>
