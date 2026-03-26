@@ -35,12 +35,14 @@ export class FormService {
       sections: dto.sections
         ?.sort((a: any, b: any) => a.sectionOrder - b.sectionOrder)
         .map((section: any) => ({
+          id: Date.now().toString(),
           sectionTitle: section.sectionTitle,
           sectionOrder: section.sectionOrder,
 
           fields: section.fields
             ?.sort((a: any, b: any) => a.fieldOrder - b.fieldOrder)
             .map((field: any) => ({
+              id: Date.now().toString(),
               fieldType: field.fieldType,
               fieldOrder: field.fieldOrder,
 
@@ -94,10 +96,7 @@ export class FormService {
     const mappedData = this.mapToFormSchema(formData);
     let data: any = this.http.post(this.url + 'createForm', mappedData, {
       responseType: 'text',
-    });
-    data.subscribe((x: string) => {
-      console.log(x);
-    });
+    })
     return data;
   }
 
