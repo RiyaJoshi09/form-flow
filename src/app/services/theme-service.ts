@@ -22,7 +22,7 @@ export class ThemeService {
   }
 
   loadTheme() {
-    const saved = localStorage.getItem('theme') || 'theme-blue';
+    const saved = localStorage.getItem('theme') || 'theme-pink';
     this.setTheme(saved);
   }
 }
