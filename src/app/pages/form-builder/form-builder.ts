@@ -52,11 +52,11 @@ export class FormBuilder {
     },
   ];
   editingFormId: string | null = null;
-  
-  selectedFieldIndex: number |null=null;
-  selectedSectionIndex: number | null=null;
 
-  predefinedColours: string[]= [
+  selectedFieldIndex: number | null = null;
+  selectedSectionIndex: number | null = null;
+
+  predefinedColours: string[] = [
     '#000000',
     '#EF4444',
     '#10B981',
@@ -91,63 +91,59 @@ export class FormBuilder {
   }
 
   loadFromForEditing(formId: string) {
-    const rawData = localStorage.getItem('formflow_forms');
-    if (rawData) {
-      const allForms = JSON.parse(rawData);
+    this.formService.getFormById(+formId).subscribe({
+      next: (form) => {
+        this.formTitle = form.title;
 
-      const formToEdit = allForms.find((f: any) => f.id === formId);
-
-      if (formToEdit) {
-        this.formTitle = formToEdit.title;
-        this.formSections = formToEdit.sections;
-      }
-    }
+        // Map back to the builder's internal structure
+        this.formSections = form.sections.map(s => ({
+          id: Date.now().toString(),
+          title: s.sectionTitle,
+          fields: s.fields.map((f:any) => ({
+            type: Object.keys(this.formService.getFieldType('')).find(
+              key => this.formService.getFieldType(key) === f.fieldType
+            ) || f.fieldType.toLowerCase(),
+            label: f.fieldConfig.label,
+            validations: f.fieldConfig.validations,
+            options: f.fieldConfig.options,
+            placeholder: f.fieldConfig.placeholder
+          }))
+        }));
+      },
+      error: (err) => alert('Could not find this form on the server.')
+    });
   }
 
   saveForm() {
-    const rawData = localStorage.getItem('formflow_forms');
-
-    let allForms = rawData ? JSON.parse(rawData) : [];
-
     const hasFields = this.formSections.some(section => section.fields && section.fields.length > 0);
 
-    if (!this.formTitle || this.formTitle.trim() === '') {
+    if (!this.formTitle?.trim()) {
       alert('Please provide a title for your form.');
       return;
     }
 
     if (!hasFields) {
-      alert('Cannot save an empty form. Please add at least one field.');
-      return; // Stop execution
+      alert('Cannot save an empty form.');
+      return;
     }
 
-    if (this.editingFormId) {
-      const index = allForms.findIndex((f: any) => f.id === this.editingFormId);
-      if (index !== -1) {
-        allForms[index] = {
-          ...allForms[index],
-          title: this.formTitle,
-          sections: this.formSections,
-          createdAt: new Date()
-        };
+    const formToSave = {
+      id: this.editingFormId,
+      title: this.formTitle,
+      sections: this.formSections,
+      status: 'active'
+    };
+
+    this.formService.createForm(formToSave).subscribe({
+      next: (response) => {
+        alert('Form Saved Successfully to Database!');
+        this.router.navigate(['/']);
+      },
+      error: (err) => {
+        console.error(err);
+        alert('Error saving form to backend. Check if Spring Boot is running.');
       }
-    } else {
-      const formToSave = {
-        id: Date.now().toString(),
-        title: this.formTitle,
-        sections: this.formSections,
-        status: 'active',
-        responses: 0,
-        createdAt: new Date(),
-      };
-      // this.formService.createForm(formToSave);
-      allForms.push(formToSave);
-    }
-
-    localStorage.setItem('formflow_forms', JSON.stringify(allForms));
-
-    alert('Form Saved Successfully!');
-    this.router.navigate(['/']);
+    });
   }
 
   addSection() {
@@ -287,15 +283,15 @@ export class FormBuilder {
 
 
   selectField(sectionIndex: number, fieldIndex: number) {
-  this.selectedSectionIndex = sectionIndex;
-  this.selectedFieldIndex = fieldIndex;
-}
+    this.selectedSectionIndex = sectionIndex;
+    this.selectedFieldIndex = fieldIndex;
+  }
 
-@HostListener('document:click')
-clearSelection(){
-  this.selectedFieldIndex = null;
-  this.selectedSectionIndex = null;
-}
+  @HostListener('document:click')
+  clearSelection() {
+    this.selectedFieldIndex = null;
+    this.selectedSectionIndex = null;
+  }
 
   openPreview() {
     this.dialog.open(FormSubmission, {
