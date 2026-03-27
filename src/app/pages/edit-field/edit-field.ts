@@ -25,7 +25,7 @@ export class EditField {
 
   setValidationOptions() {
 
-    if (this.field.type === 'text') {
+    if (this.field.type === 'TEXT') {
       this.validationOptions = [
         {key: 'required', label: 'Required', value: false},
         {key: 'minLength', label: 'Min Length', value: null},
@@ -34,7 +34,7 @@ export class EditField {
       ];
     }
 
-    if (this.field.type === 'number') {
+    if (this.field.type === 'NUMBER') {
       this.validationOptions = [
         {key: 'required', label: 'Required', value: false},
         {key: 'min', label: 'Min Value', value: null},
@@ -42,25 +42,25 @@ export class EditField {
       ];
     }
 
-    if (this.field.type === 'checkbox') {
+    if (this.field.type === 'CHECKBOX') {
       this.validationOptions = [
         {key: 'required', label: 'Required (must be checked)', value: false}
       ];
     }
 
-    if (this.field.type === 'radio-button') {
+    if (this.field.type === 'RADIO') {
       this.validationOptions = [
         {key: 'required', label: 'Required (must select one option)', value: false}
       ];
     }
 
-    if (this.field.type === 'select-card') {
+    if (this.field.type === 'DROPDOWN') {
       this.validationOptions = [
         {key: 'required', label: 'Required', value: false}
       ];
     }
 
-    if (this.field.type === 'file-upload') {
+    if (this.field.type === 'FILE') {
       this.validationOptions = [
         {key: 'required', label: 'Required', value: false},
         {key: 'maxSize', label: 'Max File Size (KB)', value: null},
@@ -68,7 +68,7 @@ export class EditField {
       ];
     }
 
-    if (this.field.type === 'text-area') {
+    if (this.field.type === 'TEXTAREA') {
       this.validationOptions = [
         {key: 'required', label: 'Required', value: false},
         {key: 'minLength', label: 'Min Length', value: null},
