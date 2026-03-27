@@ -69,7 +69,7 @@ export class FormBuilder {
     private route: ActivatedRoute,
     private formService: FormService,
     private cd: ChangeDetectorRef,
-  ) {}
+  ) { }
 
   elements = [
     { type: 'text', label: 'Text Input' },
@@ -87,18 +87,18 @@ export class FormBuilder {
       this.loadFromForEditing(this.editingFormId);
     }
   }
-  
+/*
   mapFieldType(type: string): string {
     const typeMap: Record<string, string> = {
-      TEXT: 'text',
-      CHECKBOX: 'checkbox',
-      FILE: 'file-upload',
-      RADIO: 'radio-button',
-      DROPDOWN: 'select-card',
-      TEXTAREA: 'text-area',
+      text: 'TEXT',
+      'check-box': 'CHECKBOX',
+      'file-upload': 'FILE',
+      'radio-button': 'RADIO',
+      'select-card': 'DROPDOWN',
+      'text-area': 'TEXTAREA',
     };
     return typeMap[type] || 'text';
-  }
+  }*/
 
   loadFromForEditing(formId: string) {
     this.formService.getFormById(+formId).subscribe({
@@ -112,7 +112,7 @@ export class FormBuilder {
             .sort((a: any, b: any) => a.fieldOrder - b.fieldOrder)
             .map((field: any, index: number) => ({
               id: Date.now().toString() + index,
-              type: this.mapFieldType(field.fieldType),
+              type: field.fieldType,
               label: field.fieldConfig.label,
               validations: field.fieldConfig.validations || {},
               options: field.fieldConfig.options || [],
@@ -309,14 +309,29 @@ export class FormBuilder {
   }
 
   openPreview() {
+    const previewData = {
+      title: this.formTitle,
+      sections: this.formSections.map((section, sIndex) => ({
+        sectionTitle: section.title,
+        sectionOrder: sIndex + 1,
+        fields: section.fields.map((field: any, fIndex: number) => ({
+          fieldType: field.type,
+          fieldOrder: fIndex + 1,
+          id: field.id || `temp_${fIndex}`,
+          fieldConfig: {
+            label: field.label,
+            placeholder: field.placeholder,
+            options: field.options,
+            validations: field.validations,
+          }
+        }))
+      })),
+      isReadOnly: true
+    };
     this.dialog.open(FormSubmission, {
       width: '90vw',
       height: '90vh',
-      data: {
-        structure: this.formSections,
-        title: this.formTitle,
-        isReadOnly: true,
-      },
+      data: previewData
     });
   }
 }

@@ -1,7 +1,7 @@
 <mat-form-field appearance="outline" class="w-full">
   <input matInput
   [formControl]="control"
-  [type]="fieldConfig.type.toString()"
+  [type]="fieldConfig?.type || 'text'"
   [placeholder]="fieldConfig.placeholder || 'Enter here'"/>
 
   @if (control.hasError('required')) {

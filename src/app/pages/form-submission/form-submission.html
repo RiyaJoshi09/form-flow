@@ -10,25 +10,25 @@
     <form [formGroup]="formGroup" (ngSubmit)="submitResponse()" class="p-10">
       <div *ngFor="let section of formStructure?.sections" class="mb-12">
         <h2 class="text-xl font-bold text-primary mb-6 border-b pb-2 border-theme">
-          {{ section.title }}
+          {{ section.sectionTitle }}
         </h2>
 
         <div *ngFor="let field of section.fields" class="mb-8">
           <label class="block text-sm font-bold text-muted uppercase tracking-wider mb-2">
-            {{ field.label }}
+            {{ field.fieldConfig?.label}}
             <span *ngIf="field.validations?.required" class="text-red-500">*</span>
           </label>
 
-          <div [ngSwitch]="field.type">
-            <app-input-text *ngSwitchCase="'text'" [fieldConfig]="field" [control]="getControl(field.id)"></app-input-text>
-            <app-check-box *ngSwitchCase="'checkbox'" [fieldConfig]="field" [control]="getControl(field.id)"></app-check-box>
-            <app-file-upload *ngSwitchCase="'file-upload'" [fieldConfig]="field" [control]="getControl(field.id)"></app-file-upload>
-            <app-radio-button *ngSwitchCase="'radio-button'" [fieldConfig]="field" [control]="getControl(field.id)"></app-radio-button>
-            <app-select-card *ngSwitchCase="'select-card'" [fieldConfig]="field" [control]="getControl(field.id)"></app-select-card>
-            <app-textarea *ngSwitchCase="'text-area'" [fieldConfig]="field" [control]="getControl(field.id)"></app-textarea>
+          <div [ngSwitch]="field.fieldType">
+            <app-input-text *ngSwitchCase="'TEXT'" [fieldConfig]="field.fieldConfig" [control]="getControl(field)"></app-input-text>
+            <app-check-box *ngSwitchCase="'CHECKBOX'" [fieldConfig]="field.fieldConfig" [control]="getControl(field)"></app-check-box>
+            <app-file-upload *ngSwitchCase="'FILE'" [fieldConfig]="field.fieldConfig" [control]="getControl(field)"></app-file-upload>
+            <app-radio-button *ngSwitchCase="'RADIO'" [fieldConfig]="field.fieldConfig" [control]="getControl(field)"></app-radio-button>
+            <app-select-card *ngSwitchCase="'DROPDOWN'" [fieldConfig]="field.fieldConfig" [control]="getControl(field)"></app-select-card>
+            <app-textarea *ngSwitchCase="'TEXTAREA'" [fieldConfig]="field.fieldConfig " [control]="getControl(field)"></app-textarea>
           </div>
 
-          <div *ngIf="formGroup.get(field.id)?.invalid && formGroup.get(field.id)?.touched" 
+          <div *ngIf="formGroup.get(field.id)?.invalid && formGroup.get(field.id || field.fieldOrder)?.touched" 
                class="text-red-500 text-xs mt-2 italic flex items-center gap-1">
             <mat-icon class="text-sm scale-75">error_outline</mat-icon>
             This field is required or formatted incorrectly.
