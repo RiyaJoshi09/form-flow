@@ -3,8 +3,6 @@
 </h2>
 
 <mat-dialog-content class="dialog-content">
-<mat-tab-group>
-  <mat-tab label="Validation">
   <div class="flex flex-col gap-4">
 
     <div *ngFor="let v of validationOptions" class="mb-3">
@@ -47,52 +45,6 @@
     </div>
 
   </div>
-  </mat-tab>
-
-  <mat-tab label="Appearance">
-
-    <div class="flex flex-col gap-4 p-2">
-
-      <!-- Font Size -->
-      <div>
-        <label class="block text-sm font-medium mb-1">Font Size</label>
-        <select [(ngModel)]="field.fontSize"
-          class="border p-2 rounded w-full">
-          <option value="14px">Small</option>
-          <option value="16px">Medium</option>
-          <option value="20px">Large</option>
-        </select>
-      </div>
-
-      <!-- Bold -->
-      <label class="flex items-center gap-2">
-        <input type="checkbox" [(ngModel)]="field.bold" />
-        Bold
-      </label>
-
-      <!-- Italic -->
-       <label class="flex items-center gap-2">
-        <input type="checkbox" [(ngModel)]="field.italic" />
-        Italic
-      </label>
-
-      <!-- underline -->
-       <label class="flex items-center gap-2">
-        <input type="checkbox" [(ngModel)]="field.underline" />
-        underline
-      </label>
-
-      <!-- Color -->
-      <div>
-        <label class="block text-sm font-medium mb-1">Label Color</label>
-        <input type="color" [(ngModel)]="field.color"/>
-      </div>
-
-    </div>
-
-  </mat-tab>
-
-</mat-tab-group>
 
 </mat-dialog-content>
 

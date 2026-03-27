@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener } from '@angular/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,9 +13,15 @@ import { BuilderFileUpload } from '../../components/builder-cards/builder-file-u
 import { BuilderRadioButton } from '../../components/builder-cards/builder-radio-button/builder-radio-button';
 import { BuilderSelectCard } from '../../components/builder-cards/builder-select-card/builder-select-card';
 import { BuilderTextarea } from '../../components/builder-cards/builder-textarea/builder-textarea';
-import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import {
+  CdkDragDrop,
+  DragDropModule,
+  moveItemInArray,
+  transferArrayItem,
+} from '@angular/cdk/drag-drop';
 import { FormService } from '../../services/form-service';
 import { FormSubmission } from '../form-submission/form-submission';
+import { ThemeSelector } from '../../components/theme-selector/theme-selector';
 
 @Component({
   selector: 'app-form-builder',
@@ -35,6 +41,8 @@ import { FormSubmission } from '../form-submission/form-submission';
     BuilderSelectCard,
     BuilderTextarea,
     DragDropModule,
+    MatMenuModule,
+    ThemeSelector,
   ],
   templateUrl: './form-builder.html',
   styleUrl: './form-builder.css',
@@ -50,12 +58,17 @@ export class FormBuilder {
   ];
   editingFormId: string | null = null;
 
+  selectedFieldIndex: number | null = null;
+  selectedSectionIndex: number | null = null;
+
+  predefinedColours: string[] = ['#000000', '#EF4444', '#10B981', '#3B82F6'];
+
   constructor(
     private dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
     private formService: FormService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
   ) { }
 
   elements = [
@@ -64,9 +77,8 @@ export class FormBuilder {
     { type: 'file-upload', label: 'File Upload' },
     { type: 'radio-button', label: 'Radio Button' },
     { type: 'select-card', label: 'Select Card' },
-    { type: 'text-area', label: 'Text Area' }
+    { type: 'text-area', label: 'Text Area' },
   ];
-
 
   ngOnInit() {
     this.editingFormId = this.route.snapshot.paramMap.get('id');
@@ -75,65 +87,85 @@ export class FormBuilder {
       this.loadFromForEditing(this.editingFormId);
     }
   }
+/*
+  mapFieldType(type: string): string {
+    const typeMap: Record<string, string> = {
+      text: 'TEXT',
+      'check-box': 'CHECKBOX',
+      'file-upload': 'FILE',
+      'radio-button': 'RADIO',
+      'select-card': 'DROPDOWN',
+      'text-area': 'TEXTAREA',
+    };
+    return typeMap[type] || 'text';
+  }*/
 
   loadFromForEditing(formId: string) {
-    const rawData = localStorage.getItem('formflow_forms');
-    if (rawData) {
-      const allForms = JSON.parse(rawData);
+    this.formService.getFormById(+formId).subscribe({
+      next: (form) => {
+        this.formTitle = form.title;
 
-      const formToEdit = allForms.find((f: any) => f.id === formId);
-
-      if (formToEdit) {
-        this.formTitle = formToEdit.title;
-        this.formSections = formToEdit.sections;
-      }
-    }
+        this.formSections = form.sections.map((section: any) => ({
+          id: Date.now().toString() + Math.random(),
+          title: section.sectionTitle,
+          fields: section.fields
+            .sort((a: any, b: any) => a.fieldOrder - b.fieldOrder)
+            .map((field: any, index: number) => ({
+              id: Date.now().toString() + index,
+              type: field.fieldType,
+              label: field.fieldConfig.label,
+              validations: field.fieldConfig.validations || {},
+              options: field.fieldConfig.options || [],
+              placeholder: field.fieldConfig.placeholder || '',
+              color: '#000000',
+              fontSize: '12px',
+              bold: false,
+              italic: false,
+              underline: false,
+            })),
+        }));
+        this.formSections = [...this.formSections];
+        this.cd.detectChanges();
+      },
+      error: (err) => {
+        console.error(err);
+        alert('Could not load form for editing.');
+      },
+    });
   }
 
   saveForm() {
-    const rawData = localStorage.getItem('formflow_forms');
+    const hasFields = this.formSections.some(
+      (section) => section.fields && section.fields.length > 0,
+    );
 
-    let allForms = rawData ? JSON.parse(rawData) : [];
-
-    const hasFields = this.formSections.some(section => section.fields && section.fields.length > 0);
-
-    if (!this.formTitle || this.formTitle.trim() === '') {
+    if (!this.formTitle?.trim()) {
       alert('Please provide a title for your form.');
       return;
     }
 
     if (!hasFields) {
-      alert('Cannot save an empty form. Please add at least one field.');
-      return; // Stop execution
+      alert('Cannot save an empty form.');
+      return;
     }
 
-    if (this.editingFormId) {
-      const index = allForms.findIndex((f: any) => f.id === this.editingFormId);
-      if (index !== -1) {
-        allForms[index] = {
-          ...allForms[index],
-          title: this.formTitle,
-          sections: this.formSections,
-          createdAt: new Date()
-        };
-      }
-    } else {
-      const formToSave = {
-        id: Date.now().toString(),
-        title: this.formTitle,
-        sections: this.formSections,
-        status: 'active',
-        responses: 0,
-        createdAt: new Date(),
-      };
-      // this.formService.createForm(formToSave);
-      allForms.push(formToSave);
-    }
+    const formToSave = {
+      id: this.editingFormId,
+      title: this.formTitle,
+      sections: this.formSections,
+      status: 'active',
+    };
 
-    localStorage.setItem('formflow_forms', JSON.stringify(allForms));
-
-    alert('Form Saved Successfully!');
-    this.router.navigate(['/']);
+    this.formService.createForm(formToSave).subscribe({
+      next: (response) => {
+        alert('Form Saved Successfully to Database!');
+        this.router.navigate(['/']);
+      },
+      error: (err) => {
+        console.error(err);
+        alert('Error saving form to backend. Check if Spring Boot is running.');
+      },
+    });
   }
 
   addSection() {
@@ -167,19 +199,14 @@ export class FormBuilder {
   }
 
   get sectionsIds(): string[] {
-    return this.formSections.map(s => s.id);
+    return this.formSections.map((s) => s.id);
   }
 
   onDrop(event: CdkDragDrop<any[]>, sectionIndex: number) {
     if (event.previousContainer === event.container) {
       // Rearrange
-      moveItemInArray(
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
-    }
-    else if (event.previousContainer.id === 'sidebar') {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else if (event.previousContainer.id === 'sidebar') {
       //Sidebar to Canvas
       const field = event.previousContainer.data[event.previousIndex];
 
@@ -188,28 +215,31 @@ export class FormBuilder {
         type: field.type,
         label: field.label,
         validations: {},
-        options: ['checkbox', 'radio-button', 'select-card'].includes(field.type) ? ['Option 1'] : [],
+        options: ['checkbox', 'radio-button', 'select-card'].includes(field.type)
+          ? ['Option 1']
+          : [],
         placeholder: field.placeholder || '',
+
+        color: '#000000',
+        fontSize: '12px',
+        bold: false,
+        italic: false,
+        underline: false,
       };
 
       this.formSections[sectionIndex].fields.splice(event.currentIndex, 0, newField);
-    }
-    else {
+    } else {
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
-        event.currentIndex
+        event.currentIndex,
       );
     }
   }
 
   onSectionDrop(event: CdkDragDrop<any[]>) {
-    moveItemInArray(
-      this.formSections,
-      event.previousIndex,
-      event.currentIndex
-    );
+    moveItemInArray(this.formSections, event.previousIndex, event.currentIndex);
   }
 
   /*
@@ -236,7 +266,9 @@ export class FormBuilder {
 
   editField(sectionIndex: number, fieldIndex: number) {
     // open edit dialog box and edit the copy of it until saved
-    const fieldToEdit = JSON.parse(JSON.stringify(this.formSections[sectionIndex].fields[fieldIndex]));
+    const fieldToEdit = JSON.parse(
+      JSON.stringify(this.formSections[sectionIndex].fields[fieldIndex]),
+    );
 
     const dialogRef = this.dialog.open(EditField, {
       width: '400px',
@@ -265,15 +297,41 @@ export class FormBuilder {
     this.formSections[sectionIndex].fields.splice(fieldIndex + 1, fieldIndex, clonedField);
   }
 
+  selectField(sectionIndex: number, fieldIndex: number) {
+    this.selectedSectionIndex = sectionIndex;
+    this.selectedFieldIndex = fieldIndex;
+  }
+
+  @HostListener('document:click')
+  clearSelection() {
+    this.selectedFieldIndex = null;
+    this.selectedSectionIndex = null;
+  }
+
   openPreview() {
+    const previewData = {
+      title: this.formTitle,
+      sections: this.formSections.map((section, sIndex) => ({
+        sectionTitle: section.title,
+        sectionOrder: sIndex + 1,
+        fields: section.fields.map((field: any, fIndex: number) => ({
+          fieldType: field.type,
+          fieldOrder: fIndex + 1,
+          id: field.id || `temp_${fIndex}`,
+          fieldConfig: {
+            label: field.label,
+            placeholder: field.placeholder,
+            options: field.options,
+            validations: field.validations,
+          }
+        }))
+      })),
+      isReadOnly: true
+    };
     this.dialog.open(FormSubmission, {
       width: '90vw',
       height: '90vh',
-      data: {
-        structure: this.formSections,
-        title: this.formTitle,
-        isReadOnly: true
-      }
-    })
+      data: previewData
+    });
   }
 }

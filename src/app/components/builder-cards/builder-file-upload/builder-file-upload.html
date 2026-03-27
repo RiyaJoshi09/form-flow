@@ -1,12 +1,12 @@
 <div
   (click)="fileInput.click()"
-  class="flex items-center justify-between px-4 py-2 border border-gray-300 rounded-lg cursor-pointer hover:border-[#a900a9] transition"
+  class="flex items-center justify-between px-4 py-2 border border-theme hover:outline-1 rounded-lg cursor-pointer transition"
 >
   <span class="text-gray-500 text-sm">
     {{ fieldData.placeholder }}
   </span>
 
-  <span class="text-[#a900a9] text-sm font-medium"> Browse </span>
+  <span class="text-primary text-sm font-medium"> Browse </span>
 </div>
 <input type="file" #fileInput class="hidden" />
 @if (fieldData.validations?.required) {

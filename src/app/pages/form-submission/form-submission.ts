@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, Optional } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, Optional } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { InputText } from '../../components/cards/input-text/input-text';
@@ -9,7 +9,9 @@ import { RadioButton } from '../../components/cards/radio-button/radio-button';
 import { SelectCard } from '../../components/cards/select-card/select-card';
 import { Textarea } from '../../components/cards/textarea/textarea';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormService } from '../../services/form-service';
 import { MatIconModule } from '@angular/material/icon';
+import { Form } from '../../interfaces/form-schema';
 
 @Component({
   selector: 'app-form-submission',
@@ -33,33 +35,42 @@ export class FormSubmission {
   isReadOnly: boolean = false;
 
   constructor(private route: ActivatedRoute,
+    private formService: FormService,
+    private cd: ChangeDetectorRef,
     @Optional() @Inject(MAT_DIALOG_DATA) public dialogData: any) { }
 
   ngOnInit() {
     //Check if data was passed through the Dialog (Preview Mode)
+    console.log(this.dialogData);
     if (this.dialogData) {
-      this.formStructure = {
-        title: this.dialogData.title,
-        sections: this.dialogData.structure
-      };
+      this.formStructure = this.dialogData;
       this.isReadOnly = this.dialogData.isReadOnly;
       this.buildReactiveForm();
     }
     //Check URL (Live Mode)
     else {
       const formId = this.route.snapshot.paramMap.get('id');
-      const allForms = JSON.parse(localStorage.getItem('formflow_forms') || '[]');
-      this.formStructure = allForms.find((f: any) => f.id === formId);
-
-      if (this.formStructure) {
-        this.isReadOnly = false;
-        this.buildReactiveForm();
+      if (formId) {
+        // Convert formId to number to match your service signature
+        this.formService.getFormById(Number(formId)).subscribe({
+          next: (form: Form) => {
+            this.formStructure = form;
+            console.log(this.formStructure);
+            this.isReadOnly = false;
+            this.buildReactiveForm();
+          },
+          error: (err) => {
+            console.error("Could not fetch form:", err);
+            alert("Error: Form not found on server.");
+          }
+        });
       }
     }
   }
 
-  getControl(id: string): FormControl {
-    const control = this.formGroup.get(id);
+  getControl(field: any): FormControl {
+    const controlId = String(field.id || field.fieldOrder);
+    const control = this.formGroup.get(controlId);
     if (!control) {
       throw new Error('Control with id ${id} not found in FormGroup');
     }
@@ -71,23 +82,27 @@ export class FormSubmission {
     if (!this.formStructure || !this.formStructure.sections) return;
 
     this.formStructure.sections.forEach((section: any) => {
+      console.log(section);
       section.fields.forEach((field: any) => {
-        const validations = field.validations || {};
+        const controlKey = String(field.id || field.fieldOrder);
+        console.log(field);
+        const config = field.fieldConfig || {};
         const validators = [];
-        if (validations?.required) validators.push(Validators.required);
-        if (validations?.email) validators.push(Validators.email);
-        if (validations.minLength) validators.push(Validators.minLength(validations.minLength));
-        if (validations.maxLength) validators.push(Validators.maxLength(validations.maxLength));
-        if (validations.fileType) validators.push(Validators.pattern(validations.fileType));
-        if (validations.min) validators.push(Validators.min(validations.min));
-        if (validations.max) validators.push(Validators.max(validations.max));
-        if (validations.maxSize) validators.push(Validators.max(validations.maxSize));
+        if (config.validations?.required) validators.push(Validators.required);
+        if (config.validations?.email) validators.push(Validators.email);
+        if (config.validations?.minLength) validators.push(Validators.minLength(config.validations.minLength));
+        if (config.validations?.maxLength) validators.push(Validators.maxLength(config.validations.maxLength));
+        if (config.validations?.fileType) validators.push(Validators.pattern(config.validations.fileType));
+        if (config.validations?.min) validators.push(Validators.min(config.validations.min));
+        if (config.validations?.max) validators.push(Validators.max(config.validations.max));
+        if (config.validations?.maxSize) validators.push(Validators.max(config.validations.maxSize));
 
-        controls[field.id] = new FormControl('', validators);
+        controls[controlKey] = new FormControl('', validators);
       });
     });
 
     this.formGroup = new FormGroup(controls);
+    this.cd.detectChanges();
   }
 
   submitResponse() {

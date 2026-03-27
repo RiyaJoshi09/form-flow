@@ -14,6 +14,7 @@ export interface Form {
   id?: number;
   userId?:number;
   createdBy?: string;
+  theme:string;
   title: string;
   description: string;
   published: boolean;

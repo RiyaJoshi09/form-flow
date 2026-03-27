@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class FormService {
   url = 'http://localhost:8082/formflow/';
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getFieldType(type: string) {
     const typeMap: Record<string, string> = {
@@ -26,6 +26,7 @@ export class FormService {
   mapFromBackend(dto: any): Form {
     return {
       id: dto.id,
+      theme: dto.theme,
       title: dto.title,
       description: dto.description,
       published: dto.published,
@@ -34,12 +35,14 @@ export class FormService {
       sections: dto.sections
         ?.sort((a: any, b: any) => a.sectionOrder - b.sectionOrder)
         .map((section: any) => ({
+          id: Date.now().toString(),
           sectionTitle: section.sectionTitle,
           sectionOrder: section.sectionOrder,
 
           fields: section.fields
             ?.sort((a: any, b: any) => a.fieldOrder - b.fieldOrder)
             .map((field: any) => ({
+              id: Date.now().toString(),
               fieldType: field.fieldType,
               fieldOrder: field.fieldOrder,
 
@@ -56,6 +59,7 @@ export class FormService {
   mapToFormSchema(rawForm: any): Form {
     return {
       id: Number(rawForm.id),
+      theme: localStorage.getItem('theme') || 'theme-pink',
       title: rawForm.title,
       description: '',
       published: rawForm.status === 'active',
@@ -78,14 +82,19 @@ export class FormService {
       })),
     };
   }
+
+  private mapToBackendResponse(data: any) {
+    return {
+      formId: data.formId,
+      response: data.answers
+    };
+  }
+
   createForm(formData: any): Observable<any> {
     const mappedData = this.mapToFormSchema(formData);
     let data: any = this.http.post(this.url + 'createForm', mappedData, {
       responseType: 'text',
-    });
-    data.subscribe((x: string) => {
-      console.log(x);
-    });
+    })
     return data;
   }
 
@@ -94,7 +103,12 @@ export class FormService {
   }
 
   getAllForms(): Observable<Form[]> {
-    return this.http.get<Form[]>(this.url+"allForm");
+    return this.http.get<Form[]>(this.url + "allForm");
   }
-  getFormByStatus() {}
+  getFormByStatus() { }
+
+  submitResponse(data: any) {
+    const mappedData = this.mapToBackendResponse(data);
+    return this.http.post(this.url + "submitForm", mappedData);
+  }
 }
