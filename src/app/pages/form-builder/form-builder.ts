@@ -13,7 +13,12 @@ import { BuilderFileUpload } from '../../components/builder-cards/builder-file-u
 import { BuilderRadioButton } from '../../components/builder-cards/builder-radio-button/builder-radio-button';
 import { BuilderSelectCard } from '../../components/builder-cards/builder-select-card/builder-select-card';
 import { BuilderTextarea } from '../../components/builder-cards/builder-textarea/builder-textarea';
-import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import {
+  CdkDragDrop,
+  DragDropModule,
+  moveItemInArray,
+  transferArrayItem,
+} from '@angular/cdk/drag-drop';
 import { FormService } from '../../services/form-service';
 import { FormSubmission } from '../form-submission/form-submission';
 import { ThemeSelector } from '../../components/theme-selector/theme-selector';
@@ -37,7 +42,7 @@ import { ThemeSelector } from '../../components/theme-selector/theme-selector';
     BuilderTextarea,
     DragDropModule,
     MatMenuModule,
-    ThemeSelector
+    ThemeSelector,
   ],
   templateUrl: './form-builder.html',
   styleUrl: './form-builder.css',
@@ -56,20 +61,14 @@ export class FormBuilder {
   selectedFieldIndex: number | null = null;
   selectedSectionIndex: number | null = null;
 
-  predefinedColours: string[] = [
-    '#000000',
-    '#EF4444',
-    '#10B981',
-    '#3B82F6'
-  ]
-
+  predefinedColours: string[] = ['#000000', '#EF4444', '#10B981', '#3B82F6'];
 
   constructor(
     private dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
     private formService: FormService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
   ) { }
 
   elements = [
@@ -78,9 +77,8 @@ export class FormBuilder {
     { type: 'file-upload', label: 'File Upload' },
     { type: 'radio-button', label: 'Radio Button' },
     { type: 'select-card', label: 'Select Card' },
-    { type: 'text-area', label: 'Text Area' }
+    { type: 'text-area', label: 'Text Area' },
   ];
-
 
   ngOnInit() {
     this.editingFormId = this.route.snapshot.paramMap.get('id');
@@ -89,33 +87,57 @@ export class FormBuilder {
       this.loadFromForEditing(this.editingFormId);
     }
   }
+/*
+  mapFieldType(type: string): string {
+    const typeMap: Record<string, string> = {
+      text: 'TEXT',
+      'check-box': 'CHECKBOX',
+      'file-upload': 'FILE',
+      'radio-button': 'RADIO',
+      'select-card': 'DROPDOWN',
+      'text-area': 'TEXTAREA',
+    };
+    return typeMap[type] || 'text';
+  }*/
 
   loadFromForEditing(formId: string) {
     this.formService.getFormById(+formId).subscribe({
       next: (form) => {
         this.formTitle = form.title;
 
-        // Map back to the builder's internal structure
-        this.formSections = form.sections.map(s => ({
-          id: Date.now().toString(),
-          title: s.sectionTitle,
-          fields: s.fields.map((f:any) => ({
-            type: Object.keys(this.formService.getFieldType('')).find(
-              key => this.formService.getFieldType(key) === f.fieldType
-            ) || f.fieldType.toLowerCase(),
-            label: f.fieldConfig.label,
-            validations: f.fieldConfig.validations,
-            options: f.fieldConfig.options,
-            placeholder: f.fieldConfig.placeholder
-          }))
+        this.formSections = form.sections.map((section: any) => ({
+          id: Date.now().toString() + Math.random(),
+          title: section.sectionTitle,
+          fields: section.fields
+            .sort((a: any, b: any) => a.fieldOrder - b.fieldOrder)
+            .map((field: any, index: number) => ({
+              id: Date.now().toString() + index,
+              type: field.fieldType,
+              label: field.fieldConfig.label,
+              validations: field.fieldConfig.validations || {},
+              options: field.fieldConfig.options || [],
+              placeholder: field.fieldConfig.placeholder || '',
+              color: '#000000',
+              fontSize: '12px',
+              bold: false,
+              italic: false,
+              underline: false,
+            })),
         }));
+        this.formSections = [...this.formSections];
+        this.cd.detectChanges();
       },
-      error: (err) => alert('Could not find this form on the server.')
+      error: (err) => {
+        console.error(err);
+        alert('Could not load form for editing.');
+      },
     });
   }
 
   saveForm() {
-    const hasFields = this.formSections.some(section => section.fields && section.fields.length > 0);
+    const hasFields = this.formSections.some(
+      (section) => section.fields && section.fields.length > 0,
+    );
 
     if (!this.formTitle?.trim()) {
       alert('Please provide a title for your form.');
@@ -131,7 +153,7 @@ export class FormBuilder {
       id: this.editingFormId,
       title: this.formTitle,
       sections: this.formSections,
-      status: 'active'
+      status: 'active',
     };
 
     this.formService.createForm(formToSave).subscribe({
@@ -142,7 +164,7 @@ export class FormBuilder {
       error: (err) => {
         console.error(err);
         alert('Error saving form to backend. Check if Spring Boot is running.');
-      }
+      },
     });
   }
 
@@ -177,19 +199,14 @@ export class FormBuilder {
   }
 
   get sectionsIds(): string[] {
-    return this.formSections.map(s => s.id);
+    return this.formSections.map((s) => s.id);
   }
 
   onDrop(event: CdkDragDrop<any[]>, sectionIndex: number) {
     if (event.previousContainer === event.container) {
       // Rearrange
-      moveItemInArray(
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
-    }
-    else if (event.previousContainer.id === 'sidebar') {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else if (event.previousContainer.id === 'sidebar') {
       //Sidebar to Canvas
       const field = event.previousContainer.data[event.previousIndex];
 
@@ -198,34 +215,31 @@ export class FormBuilder {
         type: field.type,
         label: field.label,
         validations: {},
-        options: ['checkbox', 'radio-button', 'select-card'].includes(field.type) ? ['Option 1'] : [],
+        options: ['checkbox', 'radio-button', 'select-card'].includes(field.type)
+          ? ['Option 1']
+          : [],
         placeholder: field.placeholder || '',
 
         color: '#000000',
         fontSize: '12px',
         bold: false,
         italic: false,
-        underline: false
+        underline: false,
       };
 
       this.formSections[sectionIndex].fields.splice(event.currentIndex, 0, newField);
-    }
-    else {
+    } else {
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
-        event.currentIndex
+        event.currentIndex,
       );
     }
   }
 
   onSectionDrop(event: CdkDragDrop<any[]>) {
-    moveItemInArray(
-      this.formSections,
-      event.previousIndex,
-      event.currentIndex
-    );
+    moveItemInArray(this.formSections, event.previousIndex, event.currentIndex);
   }
 
   /*
@@ -252,7 +266,9 @@ export class FormBuilder {
 
   editField(sectionIndex: number, fieldIndex: number) {
     // open edit dialog box and edit the copy of it until saved
-    const fieldToEdit = JSON.parse(JSON.stringify(this.formSections[sectionIndex].fields[fieldIndex]));
+    const fieldToEdit = JSON.parse(
+      JSON.stringify(this.formSections[sectionIndex].fields[fieldIndex]),
+    );
 
     const dialogRef = this.dialog.open(EditField, {
       width: '400px',
@@ -281,7 +297,6 @@ export class FormBuilder {
     this.formSections[sectionIndex].fields.splice(fieldIndex + 1, fieldIndex, clonedField);
   }
 
-
   selectField(sectionIndex: number, fieldIndex: number) {
     this.selectedSectionIndex = sectionIndex;
     this.selectedFieldIndex = fieldIndex;
@@ -294,15 +309,29 @@ export class FormBuilder {
   }
 
   openPreview() {
+    const previewData = {
+      title: this.formTitle,
+      sections: this.formSections.map((section, sIndex) => ({
+        sectionTitle: section.title,
+        sectionOrder: sIndex + 1,
+        fields: section.fields.map((field: any, fIndex: number) => ({
+          fieldType: field.type,
+          fieldOrder: fIndex + 1,
+          id: field.id || `temp_${fIndex}`,
+          fieldConfig: {
+            label: field.label,
+            placeholder: field.placeholder,
+            options: field.options,
+            validations: field.validations,
+          }
+        }))
+      })),
+      isReadOnly: true
+    };
     this.dialog.open(FormSubmission, {
       width: '90vw',
       height: '90vh',
-      data: {
-        structure: this.formSections,
-        title: this.formTitle,
-        isReadOnly: true
-      }
-    })
+      data: previewData
+    });
   }
-
 }
