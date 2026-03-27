@@ -72,12 +72,12 @@ export class FormBuilder {
   ) { }
 
   elements = [
-    { type: 'text', label: 'Text Input' },
-    { type: 'checkbox', label: 'Checkbox' },
-    { type: 'file-upload', label: 'File Upload' },
-    { type: 'radio-button', label: 'Radio Button' },
-    { type: 'select-card', label: 'Select Card' },
-    { type: 'text-area', label: 'Text Area' },
+    { type: 'TEXT', label: 'Text Input' },
+    { type: 'CHECKBOX', label: 'Checkbox' },
+    { type: 'FILE', label: 'File Upload' },
+    { type: 'RADIO', label: 'Radio Button' },
+    { type: 'DROPDOWN', label: 'Select Card' },
+    { type: 'TEXTAREA', label: 'Text Area' },
   ];
 
   ngOnInit() {
@@ -87,18 +87,6 @@ export class FormBuilder {
       this.loadFromForEditing(this.editingFormId);
     }
   }
-/*
-  mapFieldType(type: string): string {
-    const typeMap: Record<string, string> = {
-      text: 'TEXT',
-      'check-box': 'CHECKBOX',
-      'file-upload': 'FILE',
-      'radio-button': 'RADIO',
-      'select-card': 'DROPDOWN',
-      'text-area': 'TEXTAREA',
-    };
-    return typeMap[type] || 'text';
-  }*/
 
   loadFromForEditing(formId: string) {
     this.formService.getFormById(+formId).subscribe({
@@ -215,7 +203,7 @@ export class FormBuilder {
         type: field.type,
         label: field.label,
         validations: {},
-        options: ['checkbox', 'radio-button', 'select-card'].includes(field.type)
+        options: ['CHECKBOX', 'RADIO', 'DROPDOWN'].includes(field.type)
           ? ['Option 1']
           : [],
         placeholder: field.placeholder || '',
