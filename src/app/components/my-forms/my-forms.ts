@@ -37,8 +37,13 @@ export class MyForms {
      this.formService.getAllForms().subscribe((data:any[])=>{
       this.forms=data;
       this.totalFormsarray=data;
-      this.loadSummary();
-      this.cd.detectChanges();
+      this.forms.forEach((form:any)=>{
+      this.formService.getFormResponseById(form.id).subscribe((res:any)=>{
+        form.responses = res.length;
+        this.loadSummary();
+        this.cd.detectChanges();
+      });
+    });
     });
 
   }
@@ -46,7 +51,7 @@ export class MyForms {
   loadSummary(){
     this.totalForms=this.forms.length;
     this.totalActive = this.forms.filter((f:any)=> f.published==true).length;
-    this.totalRes = 0;
+    this.totalRes = this.forms.reduce((sum, f:any)=> sum + (f.responses || 0), 0);
   }
 
   deleteForm(id : number|undefined){
