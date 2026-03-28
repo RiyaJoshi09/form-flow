@@ -76,6 +76,10 @@ export class FormService {
 
   submitResponse(data: any) {
     const mappedData = this.mapToBackendResponse(data);
-    return this.http.post(this.url + "submitForm", mappedData);
+    return this.http.post(this.url + "api/responses", mappedData);
+  }
+
+  getFormResponseById(id: number){
+     return this.http.get(this.url+"api/responses/"+id);
   }
 }
