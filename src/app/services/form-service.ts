@@ -86,7 +86,7 @@ export class FormService {
   private mapToBackendResponse(data: any) {
     return {
       formId: data.formId,
-      response: data.answers
+      response: data.response
     };
   }
 
@@ -109,6 +109,6 @@ export class FormService {
 
   submitResponse(data: any) {
     const mappedData = this.mapToBackendResponse(data);
-    return this.http.post(this.url + "submitForm", mappedData);
+    return this.http.post(this.url + "api/responses", mappedData);
   }
 }
