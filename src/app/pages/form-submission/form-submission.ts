@@ -33,6 +33,7 @@ export class FormSubmission {
   formGroup: FormGroup = new FormGroup({});
   formStructure: any;
   isReadOnly: boolean = false;
+  isSubmitting: boolean = false;
 
   constructor(private route: ActivatedRoute,
     private formService: FormService,
@@ -41,7 +42,6 @@ export class FormSubmission {
 
   ngOnInit() {
     //Check if data was passed through the Dialog (Preview Mode)
-    console.log(this.dialogData);
     if (this.dialogData) {
       this.formStructure = this.dialogData;
       this.isReadOnly = this.dialogData.isReadOnly;
@@ -55,7 +55,6 @@ export class FormSubmission {
         this.formService.getFormById(Number(formId)).subscribe({
           next: (form: Form) => {
             this.formStructure = form;
-            console.log(this.formStructure);
             this.isReadOnly = false;
             this.buildReactiveForm();
           },
@@ -82,10 +81,8 @@ export class FormSubmission {
     if (!this.formStructure || !this.formStructure.sections) return;
 
     this.formStructure.sections.forEach((section: any) => {
-      console.log(section);
       section.fields.forEach((field: any) => {
         const controlKey = String(field.id || field.fieldOrder);
-        console.log(field);
         const config = field.fieldConfig || {};
         const validators = [];
         if (config.validations?.required) validators.push(Validators.required);
@@ -108,23 +105,32 @@ export class FormSubmission {
   submitResponse() {
     if (this.isReadOnly) {
       alert("This is a preview. Data is not saved to the database.");
-      console.log("Mock Submission:", this.formGroup.value);
       return;
     }
 
     if (this.formGroup.valid) {
+      this.isSubmitting = true;
+
       const responseEntry = {
-        responseId: Date.now().toString(),
         formId: this.formStructure.id,
-        answers: this.formGroup.value,
-        submittedAt: new Date()
+        response: this.formGroup.value
       };
 
-      const existing = JSON.parse(localStorage.getItem('formflow_responses') || '[]');
-      existing.push(responseEntry);
-      localStorage.setItem('formflow_responses', JSON.stringify(existing));
+      console.log(this.formGroup.value);
 
-      alert("Response Submitted!");
+      this.formService.submitResponse(responseEntry).subscribe({
+        next: (res) => {
+          console.log(res);
+          alert("Response saved successfully!");
+          this.formGroup.reset();
+          this.isSubmitting = false;
+        },
+        error: (err) => {
+          console.error("Submission failed", err);
+          alert("Could not save response. Please try again.");
+          this.isSubmitting = false;
+        }
+      });
     } else {
       this.formGroup.markAllAsTouched(); // Show errors to the user
       alert("Please fix the errors before submitting.");

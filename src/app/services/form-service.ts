@@ -45,7 +45,7 @@ export class FormService {
   private mapToBackendResponse(data: any) {
     return {
       formId: data.formId,
-      response: data.answers
+      response: data.response
     };
   }
 

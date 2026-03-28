@@ -36,7 +36,7 @@ export class MyForms {
   getFormData(){
      this.formService.getAllForms().subscribe((data:any[])=>{
       this.forms=data;
-      //this.totalFormsarray=data;
+      this.totalFormsarray=data;
       this.forms.forEach((form:any)=>{
       this.formService.getFormResponseById(form.id).subscribe((res:any)=>{
         form.responses = res.length;
@@ -45,8 +45,6 @@ export class MyForms {
       });
     });
     });
-
-    this.totalFormsarray=this.forms;
 
   }
 
