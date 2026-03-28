@@ -8,7 +8,6 @@ import { EditField } from '../edit-field/edit-field';
 import { FormsModule } from '@angular/forms';
 import { MatMenuModule } from '@angular/material/menu';
 import { BuilderInputText } from '../../components/builder-cards/builder-input-text/builder-input-text';
-import { BuilderCheckBox } from '../../components/builder-cards/builder-check-box/builder-check-box';
 import { BuilderFileUpload } from '../../components/builder-cards/builder-file-upload/builder-file-upload';
 import { BuilderRadioButton } from '../../components/builder-cards/builder-radio-button/builder-radio-button';
 import { BuilderSelectCard } from '../../components/builder-cards/builder-select-card/builder-select-card';
@@ -23,6 +22,7 @@ import { FormService } from '../../services/form-service';
 import { FormSubmission } from '../form-submission/form-submission';
 import { ThemeSelector } from '../../components/theme-selector/theme-selector';
 import { ThemeService } from '../../services/theme-service';
+import { BuilderCheckBox } from '../../components/builder-cards/builder-check-box/builder-check-box';
 
 @Component({
   selector: 'app-form-builder',

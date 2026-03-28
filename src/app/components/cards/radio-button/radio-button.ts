@@ -4,10 +4,11 @@ import { FieldType } from '../../../enums/field-type.enum';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatRadioModule } from '@angular/material/radio';
 import { RadioField } from '../../../interfaces/InputField';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-radio-button',
-  imports: [ReactiveFormsModule, MatFormFieldModule, MatRadioModule],
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatRadioModule,MatIconModule],
   templateUrl: './radio-button.html',
   styleUrl: './radio-button.css',
 })

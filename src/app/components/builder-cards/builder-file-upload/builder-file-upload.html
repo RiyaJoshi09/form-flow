@@ -1,6 +1,6 @@
 <div
   (click)="fileInput.click()"
-  class="flex items-center justify-between px-4 py-2 border border-theme hover:outline-1 rounded-lg cursor-pointer transition"
+  class="flex items-center justify-between px-4 py-2 mb-3 border border-theme hover:outline-1 rounded-lg cursor-pointer transition"
 >
   <span class="text-gray-500 text-sm">
     {{ fieldData.placeholder }}
@@ -10,5 +10,8 @@
 </div>
 <input type="file" #fileInput class="hidden" />
 @if (fieldData.validations?.required) {
-  <mat-error>Required Field</mat-error>
+  <div class="flex justify-start items-end">
+    <mat-icon [style.color]="'var(--mat-sys-on-surface-variant)'" style="font-size: 16px;" class="relative top-1">check_circle_outline</mat-icon>
+    <span class="text-primary capitalize italic font-medium opacity-60">Required</span>
+  </div>
 }

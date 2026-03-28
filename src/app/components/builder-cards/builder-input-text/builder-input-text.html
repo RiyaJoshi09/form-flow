@@ -1,19 +1,31 @@
 <mat-form-field appearance="outline" class="w-full">
-  <input
-    matInput
-    [type]="type"
-    [placeholder]="fieldData.placeholder ?? 'input here...'"
-  />
+  <input matInput [type]="type" [placeholder]="fieldData.placeholder ?? 'input here...'" />
 </mat-form-field>
 @if (fieldData.validations?.required) {
-  <mat-error>Required Field</mat-error>
+  <div class="flex justify-start items-end">
+    <mat-icon [style.color]="'var(--mat-sys-on-surface-variant)'" style="font-size: 16px;" class="relative top-1">check_circle_outline</mat-icon>
+    <span class="text-primary capitalize italic font-medium opacity-60">Required</span>
+  </div>
 }
 @if (fieldData.validations?.minLength ?? 0) {
-  <mat-error>Input must have minlength : {{ fieldData.validations?.minLength }}</mat-error>
+  <div class="flex justify-start items-end">
+    <mat-icon [style.color]="'var(--mat-sys-on-surface-variant)'" style="font-size: 16px;" class="relative top-1">notes</mat-icon>
+    <span class="text-primary capitalize italic font-medium opacity-60"
+      >Minimum Length: <span class="text-muted">{{ fieldData.validations?.minLength }}</span></span
+    >
+  </div>
 }
 @if (fieldData.validations?.maxLength) {
-  <mat-error>Input must have minlength : {{ fieldData.validations?.maxLength }}</mat-error>
+  <div class="flex justify-start items-end">
+    <mat-icon [style.color]="'var(--mat-sys-on-surface-variant)'" style="font-size: 16px;" class="relative top-1">notes</mat-icon>
+    <span class="text-primary capitalize italic font-medium opacity-60"
+      >Maximum Length: <span class="text-muted">{{ fieldData.validations?.maxLength }}</span></span
+    >
+  </div>
 }
 @if (fieldData.validations?.email) {
-  <mat-error>Email Type Field</mat-error>
+  <div class="flex justify-start items-end">
+    <mat-icon [style.color]="'var(--mat-sys-on-surface-variant)'" style="font-size: 16px;" class="relative top-1">mail_outline</mat-icon>
+    <span class="text-primary capitalize italic font-medium opacity-60">Email Field</span>
+  </div>
 }
