@@ -2,60 +2,17 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Form } from '../interfaces/form-schema';
 import { Observable } from 'rxjs';
+import { ThemeService } from './theme-service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FormService {
-  url = 'http://localhost:8082/formflow/';
-  constructor(private http: HttpClient) { }
 
-  getFieldType(type: string) {
-    const typeMap: Record<string, string> = {
-      'text': 'TEXT',
-      'checkbox': 'CHECKBOX',
-      'file-upload': 'FILE',
-      'radio-button': 'RADIO',
-      'select-card': 'DROPDOWN',
-      'text-area': 'TEXTAREA',
-    };
+  url = 'http://localhost:8081/formflow/';
 
-    return typeMap[type];
-  }
+  constructor(private http: HttpClient, private themeService : ThemeService) { }
 
-  mapFromBackend(dto: any): Form {
-    return {
-      id: dto.id,
-      theme: dto.theme,
-      title: dto.title,
-      description: dto.description,
-      published: dto.published,
-      createdBy: dto.createdBy,
-
-      sections: dto.sections
-        ?.sort((a: any, b: any) => a.sectionOrder - b.sectionOrder)
-        .map((section: any) => ({
-          id: Date.now().toString(),
-          sectionTitle: section.sectionTitle,
-          sectionOrder: section.sectionOrder,
-
-          fields: section.fields
-            ?.sort((a: any, b: any) => a.fieldOrder - b.fieldOrder)
-            .map((field: any) => ({
-              id: Date.now().toString(),
-              fieldType: field.fieldType,
-              fieldOrder: field.fieldOrder,
-
-              fieldConfig: {
-                label: field.fieldConfig?.label ?? '',
-                validations: field.fieldConfig?.validations ?? {},
-                options: field.fieldConfig?.options ?? [],
-                placeholder: field.fieldConfig?.placeholder ?? '',
-              },
-            })),
-        })),
-    };
-  }
   mapToFormSchema(rawForm: any): Form {
     return {
       id: Number(rawForm.id),
@@ -65,11 +22,13 @@ export class FormService {
       published: rawForm.status === 'active',
 
       sections: rawForm.sections.map((section: any, sectionIndex: number) => ({
+        id:section.id,
         sectionTitle: section.title,
         sectionOrder: sectionIndex + 1,
 
         fields: section.fields.map((field: any, fieldIndex: number) => ({
-          fieldType: this.getFieldType(field.type),
+          id:field.id,
+          fieldType: field.type,
           fieldOrder: fieldIndex + 1,
 
           fieldConfig: {
@@ -93,6 +52,14 @@ export class FormService {
   createForm(formData: any): Observable<any> {
     const mappedData = this.mapToFormSchema(formData);
     let data: any = this.http.post(this.url + 'createForm', mappedData, {
+      responseType: 'text',
+    })
+    return data;
+  }
+
+  updateForm(formData: any): Observable<any> {
+    const mappedData = this.mapToFormSchema(formData);
+    let data: any = this.http.put(this.url + 'updateForm', mappedData, {
       responseType: 'text',
     })
     return data;

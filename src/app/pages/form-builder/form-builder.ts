@@ -22,6 +22,7 @@ import {
 import { FormService } from '../../services/form-service';
 import { FormSubmission } from '../form-submission/form-submission';
 import { ThemeSelector } from '../../components/theme-selector/theme-selector';
+import { ThemeService } from '../../services/theme-service';
 
 @Component({
   selector: 'app-form-builder',
@@ -68,16 +69,17 @@ export class FormBuilder {
     private router: Router,
     private route: ActivatedRoute,
     private formService: FormService,
+    private themeService: ThemeService,
     private cd: ChangeDetectorRef,
   ) { }
 
   elements = [
-    { type: 'text', label: 'Text Input' },
-    { type: 'checkbox', label: 'Checkbox' },
-    { type: 'file-upload', label: 'File Upload' },
-    { type: 'radio-button', label: 'Radio Button' },
-    { type: 'select-card', label: 'Select Card' },
-    { type: 'text-area', label: 'Text Area' },
+    { type: 'TEXT', label: 'Text Input' },
+    { type: 'CHECKBOX', label: 'Checkbox' },
+    { type: 'FILE', label: 'File Upload' },
+    { type: 'RADIO', label: 'Radio Button' },
+    { type: 'DROPDOWN', label: 'Select Card' },
+    { type: 'TEXTAREA', label: 'Text Area' },
   ];
 
   ngOnInit() {
@@ -87,31 +89,21 @@ export class FormBuilder {
       this.loadFromForEditing(this.editingFormId);
     }
   }
-/*
-  mapFieldType(type: string): string {
-    const typeMap: Record<string, string> = {
-      text: 'TEXT',
-      'check-box': 'CHECKBOX',
-      'file-upload': 'FILE',
-      'radio-button': 'RADIO',
-      'select-card': 'DROPDOWN',
-      'text-area': 'TEXTAREA',
-    };
-    return typeMap[type] || 'text';
-  }*/
 
   loadFromForEditing(formId: string) {
     this.formService.getFormById(+formId).subscribe({
       next: (form) => {
+        localStorage.setItem('prevTheme', localStorage.getItem('theme') || 'theme-pink')
+        localStorage.setItem('theme', form.theme);
+        this.themeService.loadTheme();
         this.formTitle = form.title;
-
         this.formSections = form.sections.map((section: any) => ({
-          id: Date.now().toString() + Math.random(),
+          id: section.id,
           title: section.sectionTitle,
           fields: section.fields
             .sort((a: any, b: any) => a.fieldOrder - b.fieldOrder)
             .map((field: any, index: number) => ({
-              id: Date.now().toString() + index,
+              id: field.id,
               type: field.fieldType,
               label: field.fieldConfig.label,
               validations: field.fieldConfig.validations || {},
@@ -125,6 +117,7 @@ export class FormBuilder {
             })),
         }));
         this.formSections = [...this.formSections];
+        console.log(this.formSections)
         this.cd.detectChanges();
       },
       error: (err) => {
@@ -156,7 +149,21 @@ export class FormBuilder {
       status: 'active',
     };
 
-    this.formService.createForm(formToSave).subscribe({
+    console.log(formToSave)
+
+    if(this.editingFormId){
+      this.formService.updateForm(formToSave).subscribe({
+      next: (response) => {
+        alert('Form updated Successfully to Database!');
+        this.router.navigate(['/']);
+      },
+      error: (err) => {
+        console.error(err);
+        alert('Error saving form to backend. Check if Spring Boot is running.');
+      },
+    });
+    } else {
+      this.formService.createForm(formToSave).subscribe({
       next: (response) => {
         alert('Form Saved Successfully to Database!');
         this.router.navigate(['/']);
@@ -166,6 +173,10 @@ export class FormBuilder {
         alert('Error saving form.');
       },
     });
+    }
+    localStorage.setItem('theme',localStorage.getItem('prevTheme') || 'theme-blue')
+    localStorage.removeItem('prevTheme');
+    this.themeService.loadTheme();
   }
 
   addSection() {
@@ -215,7 +226,7 @@ export class FormBuilder {
         type: field.type,
         label: field.label,
         validations: {},
-        options: ['checkbox', 'radio-button', 'select-card'].includes(field.type)
+        options: ['CHECKBOX', 'RADIO', 'DROPDOWN'].includes(field.type)
           ? ['Option 1']
           : [],
         placeholder: field.placeholder || '',
