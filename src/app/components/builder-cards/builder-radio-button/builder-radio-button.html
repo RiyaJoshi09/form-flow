@@ -4,10 +4,9 @@
     <div class="flex items-center gap-3 group">
 
       <mat-radio-button disabled></mat-radio-button>
-
       <input
         [(ngModel)]="fieldData.options![i]"
-        class="border-b border-transparent focus:border-indigo-400 outline-none text-sm w-full bg-transparent"
+        class="border-b border-transparent focus:border-theme outline-none text-sm w-full bg-transparent"
         placeholder="Option label"
       />
 
@@ -28,12 +27,12 @@
 
 <button
   (click)="addOption()"
-  class="text-indigo-500 text-sm font-medium mt-2 text-left hover:underline">
+  class="text-primary text-sm font-medium mt-2 text-left hover:underline block pb-5">
   + Add Option
 </button>
 
 @if (fieldData.validations?.required) {
-  <mat-error>Required Field</mat-error>
+  <mat-error class="text-red-500">Required Field</mat-error>
 }
 
 <!-- <mat-radio-group>

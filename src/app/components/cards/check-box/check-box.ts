@@ -7,7 +7,7 @@ import { FieldType } from '../../../enums/field-type.enum';
 
 @Component({
   selector: 'app-check-box',
-  imports: [MatFormFieldModule, ReactiveFormsModule, MatCheckboxModule],
+  imports: [MatFormFieldModule, ReactiveFormsModule, MatCheckboxModule, MatFormFieldModule],
   templateUrl: './check-box.html',
   styleUrl: './check-box.css',
 })

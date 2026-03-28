@@ -6,4 +6,7 @@
       {{ option }}
     </mat-checkbox>
   }
+  @if(control?.value?.length == 0){
+    <mat-error class="text-red-500">* Required Field</mat-error>
+  }
 </div>

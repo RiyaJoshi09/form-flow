@@ -1,6 +1,3 @@
-@if (control?.hasError('required')) {
-  <mat-error>This field is required</mat-error>
-}
 <mat-radio-group [formControl]="control">
   @for (option of fieldConfig?.options; track $index) {
     <mat-radio-button [value]="option" class="block">
