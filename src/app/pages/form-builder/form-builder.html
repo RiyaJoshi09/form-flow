@@ -110,12 +110,12 @@
 
 
               <div class="opacity-90">
-                <app-builder-input-text *ngIf="field.type === 'text' || field.type === 'number'" [bluePrint]="field"></app-builder-input-text>
-                <app-builder-file-upload *ngIf="field.type === 'file-upload'" [bluePrint]="field"></app-builder-file-upload>
-                <app-builder-check-box *ngIf="field.type === 'checkbox'" [bluePrint]="field"></app-builder-check-box>
-                <app-builder-radio-button *ngIf="field.type === 'radio-button'" [bluePrint]="field"></app-builder-radio-button>
-                <app-builder-select-card *ngIf="field.type === 'select-card'" [bluePrint]="field"></app-builder-select-card>
-                <app-builder-textarea *ngIf="field.type === 'text-area'" [bluePrint]="field"></app-builder-textarea>
+                <app-builder-input-text *ngIf="field.type === 'TEXT' || field.type === 'number'" [bluePrint]="field"></app-builder-input-text>
+                <app-builder-file-upload *ngIf="field.type === 'FILE'" [bluePrint]="field"></app-builder-file-upload>
+                <app-builder-check-box *ngIf="field.type === 'CHECKBOX'" [bluePrint]="field"></app-builder-check-box>
+                <app-builder-radio-button *ngIf="field.type === 'RADIO'" [bluePrint]="field"></app-builder-radio-button>
+                <app-builder-select-card *ngIf="field.type === 'DROPDOWN'" [bluePrint]="field"></app-builder-select-card>
+                <app-builder-textarea *ngIf="field.type === 'TEXTAREA'" [bluePrint]="field"></app-builder-textarea>
               </div>
 
               <div class="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">

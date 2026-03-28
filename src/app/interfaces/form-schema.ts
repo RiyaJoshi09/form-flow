@@ -1,10 +1,12 @@
 export interface Field {
+  id?:number;
   fieldType: string;
   fieldOrder: number;
   fieldConfig: {}; 
 }
 
 export interface Section {
+  id?:number;
   sectionTitle: string;
   sectionOrder: number;
   fields: Field[];
