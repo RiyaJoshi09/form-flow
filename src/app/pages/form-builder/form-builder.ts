@@ -170,7 +170,7 @@ export class FormBuilder {
       },
       error: (err) => {
         console.error(err);
-        alert('Error saving form to backend. Check if Spring Boot is running.');
+        alert('Error saving form.');
       },
     });
     }
@@ -252,22 +252,6 @@ export class FormBuilder {
   onSectionDrop(event: CdkDragDrop<any[]>) {
     moveItemInArray(this.formSections, event.previousIndex, event.currentIndex);
   }
-
-  /*
-  addField(field: any, sectionIndex: number) {
-    // To add field to canvas
-    const newField = {
-      id: this.formSections[sectionIndex].fields.length + 1, //change it
-      type: field.type,
-      label: field.label,
-      validations: {},
-      options: field.options || [],
-      placeholder: field.placeholder || '',
-    };
-    this.formSections[sectionIndex].fields.push(newField);
-    this.formSections = [...this.formSections];
-  }
-  */
 
   removeField(sectionIndex: number, fieldIndex: number) {
     // To remove field from canvas
