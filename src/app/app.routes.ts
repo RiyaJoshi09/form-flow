@@ -5,7 +5,10 @@ import { NotFound } from './pages/not-found/not-found';
 import { FormSubmission } from './pages/form-submission/form-submission';
 
 export const routes: Routes = [
-    {path: "", component: Home},
+    {path: "", redirectTo: "login", pathMatch: "full"},
+    {path: "login", component: Login},
+    
+    {path: "home", component: Home, canActivate: [authGuard]},
     {path: "create", component: FormBuilder},
 
     {path: "form/:id", component: FormSubmission},
