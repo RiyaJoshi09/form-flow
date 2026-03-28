@@ -1,9 +1,4 @@
 <div class="border rounded-lg p-4">
-
-  <div class="text-sm font-semibold text-gray-500 mb-2">
-    Select Options
-  </div>
-
   <mat-form-field appearance="outline" class="w-full">
     <mat-select disabled placeholder="Select option">
       @for (option of fieldData.options; track option) {
@@ -14,43 +9,50 @@
     </mat-select>
   </mat-form-field>
 
-  <div class="flex flex-col gap-2 mt-3">
-
+  <div class="flex flex-col gap-2">
     @for (option of fieldData.options; let i = $index; track i) {
       <div class="flex items-center gap-2 group">
-
         <span class="text-gray-400 text-sm">•</span>
 
         <input
           [(ngModel)]="fieldData.options![i]"
-          class="border-b border-transparent focus:border-indigo-400 outline-none text-sm w-full bg-transparent"
+          class="border-b border-transparent focus:border-theme outline-none text-sm w-full bg-transparent"
           placeholder="Option label"
         />
 
         @if (fieldData.options!.length > 1) {
           <button
             (click)="removeOption(i)"
-            class="p-1 rounded-full text-red-400 hover:bg-red-50 opacity-0 group-hover:opacity-100 transition">
+            class="p-1 rounded-full text-red-400 hover:bg-red-50 opacity-0 group-hover:opacity-100 transition"
+          >
             <mat-icon class="text-base">delete</mat-icon>
           </button>
         }
-
       </div>
     }
 
     <button
       (click)="addOption()"
-      class="text-indigo-500 text-sm font-medium mt-2 text-left hover:underline">
+      class="text-primary text-sm font-medium mt-2 text-left hover:underline"
+    >
       + Add Option
     </button>
-
   </div>
-
 </div>
 
-@if (fieldData.validations?.required) {
-  <mat-error>Required Field</mat-error>
-}
+<div class="mt-6">
+  @if (fieldData.validations?.required) {
+    <div class="flex justify-start items-end">
+      <mat-icon
+        [style.color]="'var(--mat-sys-on-surface-variant)'"
+        style="font-size: 16px"
+        class="relative top-1"
+        >check_circle_outline</mat-icon
+      >
+      <span class="text-primary capitalize italic font-medium opacity-60">Required</span>
+    </div>
+  }
+</div>
 
 <!-- <mat-form-field appearance="outline" class="w-full">
   <mat-select>

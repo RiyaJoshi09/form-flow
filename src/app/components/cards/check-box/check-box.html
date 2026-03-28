@@ -2,8 +2,17 @@
   @for (option of fieldConfig?.options; track $index) {
     <mat-checkbox
       [checked]="control?.value?.includes(option)"
-      (change)="onChange(option, $event.checked)">
+      (change)="onChange(option, $event.checked)"
+    >
       {{ option }}
     </mat-checkbox>
   }
 </div>
+@if (control.hasError('required')) {
+  <div class="text-xs italic text-red-500 flex justify-start items-start mt-5">
+    <mat-icon style="font-size: 16px; font-weight: 500"
+      >error_outline</mat-icon
+    >
+    <mat-error class="text-red-500!">Required.</mat-error>
+  </div>
+}

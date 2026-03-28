@@ -4,7 +4,7 @@
   [type]="fieldConfig?.type || 'text'"
   [placeholder]="fieldConfig.placeholder || 'Enter here'"/>
 
-  @if (control.hasError('required')) {
+  <!-- @if (control.hasError('required')) {
     <mat-error> This field is required </mat-error>
   }
   @if (control.hasError('email')) {
@@ -15,5 +15,5 @@
   }
   @if (control.hasError('maxlength')) {
     <mat-error> Maximum length exceeded </mat-error>
-  }
+  } -->
 </mat-form-field>

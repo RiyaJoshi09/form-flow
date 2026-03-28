@@ -1,10 +1,11 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
 import { BuilderFieldSchema } from '../../../interfaces/builder-field-schema';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-builder-file-upload',
-  imports: [MatFormFieldModule],
+  imports: [MatFormFieldModule,MatIconModule],
   templateUrl: './builder-file-upload.html',
   styleUrl: './builder-file-upload.css',
 })

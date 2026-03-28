@@ -1,6 +1,9 @@
 <mat-form-field appearance="outline" class="w-full">
-
-  <mat-select [formControl]="control"  [placeholder]="fieldConfig.placeholder || '--Choose From Below--'">
+  <mat-select
+    [formControl]="control"
+    [placeholder]="fieldConfig.placeholder || '--Choose From Below--'"
+  >
+    <mat-option [value]="null">-- SELECT ONE --</mat-option>
     @for (option of fieldConfig?.options; track $index) {
       <mat-option [value]="option">
         {{ option }}
@@ -8,7 +11,7 @@
     }
   </mat-select>
 
-  @if (control?.hasError('required')) {
+  <!-- @if (control?.hasError('required')) {
     <mat-error>This field is required</mat-error>
-  }
+  } -->
 </mat-form-field>

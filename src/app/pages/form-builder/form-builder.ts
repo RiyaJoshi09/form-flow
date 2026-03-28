@@ -8,7 +8,6 @@ import { EditField } from '../edit-field/edit-field';
 import { FormsModule } from '@angular/forms';
 import { MatMenuModule } from '@angular/material/menu';
 import { BuilderInputText } from '../../components/builder-cards/builder-input-text/builder-input-text';
-import { BuilderCheckBox } from '../../components/builder-cards/builder-check-box/builder-check-box';
 import { BuilderFileUpload } from '../../components/builder-cards/builder-file-upload/builder-file-upload';
 import { BuilderRadioButton } from '../../components/builder-cards/builder-radio-button/builder-radio-button';
 import { BuilderSelectCard } from '../../components/builder-cards/builder-select-card/builder-select-card';
@@ -23,6 +22,7 @@ import { FormService } from '../../services/form-service';
 import { FormSubmission } from '../form-submission/form-submission';
 import { ThemeSelector } from '../../components/theme-selector/theme-selector';
 import { ThemeService } from '../../services/theme-service';
+import { BuilderCheckBox } from '../../components/builder-cards/builder-check-box/builder-check-box';
 
 @Component({
   selector: 'app-form-builder',
@@ -71,7 +71,7 @@ export class FormBuilder {
     private formService: FormService,
     private themeService: ThemeService,
     private cd: ChangeDetectorRef,
-  ) { }
+  ) {}
 
   elements = [
     { type: 'TEXT', label: 'Text Input' },
@@ -93,7 +93,7 @@ export class FormBuilder {
   loadFromForEditing(formId: string) {
     this.formService.getFormById(+formId).subscribe({
       next: (form) => {
-        localStorage.setItem('prevTheme', localStorage.getItem('theme') || 'theme-pink')
+        localStorage.setItem('prevTheme', localStorage.getItem('theme') || 'theme-pink');
         localStorage.setItem('theme', form.theme);
         this.themeService.loadTheme();
         this.formTitle = form.title;
@@ -117,7 +117,7 @@ export class FormBuilder {
             })),
         }));
         this.formSections = [...this.formSections];
-        console.log(this.formSections)
+        console.log(this.formSections);
         this.cd.detectChanges();
       },
       error: (err) => {
@@ -149,19 +149,19 @@ export class FormBuilder {
       status: 'active',
     };
 
-    console.log(formToSave)
+    console.log(formToSave);
 
-    if(this.editingFormId){
+    if (this.editingFormId) {
       this.formService.updateForm(formToSave).subscribe({
-      next: (response) => {
-        alert('Form updated Successfully to Database!');
-        this.router.navigate(['/']);
-      },
-      error: (err) => {
-        console.error(err);
-        alert('Error saving form to backend. Check if Spring Boot is running.');
-      },
-    });
+        next: (response) => {
+          alert('Form updated Successfully to Database!');
+          this.router.navigate(['/']);
+        },
+        error: (err) => {
+          console.error(err);
+          alert('Error saving form to backend. Check if Spring Boot is running.');
+        },
+      });
     } else {
       this.formService.createForm(formToSave).subscribe({
       next: (response) => {
@@ -174,7 +174,7 @@ export class FormBuilder {
       },
     });
     }
-    localStorage.setItem('theme',localStorage.getItem('prevTheme') || 'theme-blue')
+    localStorage.setItem('theme', localStorage.getItem('prevTheme') || 'theme-blue');
     localStorage.removeItem('prevTheme');
     this.themeService.loadTheme();
   }
@@ -226,9 +226,7 @@ export class FormBuilder {
         type: field.type,
         label: field.label,
         validations: {},
-        options: ['CHECKBOX', 'RADIO', 'DROPDOWN'].includes(field.type)
-          ? ['Option 1']
-          : [],
+        options: ['CHECKBOX', 'RADIO', 'DROPDOWN'].includes(field.type) ? ['Option 1'] : [],
         placeholder: field.placeholder || '',
 
         color: '#000000',
@@ -318,15 +316,15 @@ export class FormBuilder {
             placeholder: field.placeholder,
             options: field.options,
             validations: field.validations,
-          }
-        }))
+          },
+        })),
       })),
-      isReadOnly: true
+      isReadOnly: true,
     };
     this.dialog.open(FormSubmission, {
       width: '90vw',
       height: '90vh',
-      data: previewData
+      data: previewData,
     });
   }
 }
