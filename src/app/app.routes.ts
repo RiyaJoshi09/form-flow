@@ -14,7 +14,7 @@ export const routes: Routes = [
     {path: "create", component: FormBuilder,canActivate: [authGuard]},
 
     {path: "form/:id", component: FormSubmission},
-    { path: 'edit-form/:id', component: FormBuilder },
+    { path: 'edit-form/:id', component: FormBuilder, canActivate: [authGuard] },
     // {path: "**", component:NotFound
     // {path: "**", redirectTo: ""},
     {path: "**", component:NotFound}
