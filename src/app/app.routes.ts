@@ -5,17 +5,14 @@ import { NotFound } from './pages/not-found/not-found';
 import { FormSubmission } from './pages/form-submission/form-submission';
 import { Login } from './pages/login/login';
 import { authGuard } from './auth.guard';
+import { authInverseGuard } from './auth-inverse-guard';
 
 export const routes: Routes = [
-    {path: "", redirectTo: "login", pathMatch: "full"},
-    {path: "login", component: Login},
-    
+    {path: "", redirectTo: "home", pathMatch: "full"},
     {path: "home", component: Home, canActivate: [authGuard]},
+    {path: "login", component: Login, canActivate: [authInverseGuard]},
     {path: "create", component: FormBuilder,canActivate: [authGuard]},
-
-    {path: "form/:id", component: FormSubmission},
-    { path: 'edit-form/:id', component: FormBuilder, canActivate: [authGuard] },
-    // {path: "**", component:NotFound
-    // {path: "**", redirectTo: ""},
+    { path: 'edit-form/:id', component: FormBuilder, canActivate: [authGuard]},
+    { path: 'edit-form/:id', component: FormBuilder },
     {path: "**", component:NotFound}
 ];
