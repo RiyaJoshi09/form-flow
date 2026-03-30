@@ -11,7 +11,7 @@ export class FormService {
 
   url = 'http://localhost:8081/formflow/';
 
-  constructor(private http: HttpClient, private themeService : ThemeService) { }
+  constructor(private http: HttpClient, private themeService: ThemeService) { }
 
   mapToFormSchema(rawForm: any): Form {
     return {
@@ -22,12 +22,12 @@ export class FormService {
       published: rawForm.status === 'active',
 
       sections: rawForm.sections.map((section: any, sectionIndex: number) => ({
-        id:section.id,
+        id: section.id,
         sectionTitle: section.title,
         sectionOrder: sectionIndex + 1,
 
         fields: section.fields.map((field: any, fieldIndex: number) => ({
-          id:field.id,
+          id: field.id,
           fieldType: field.type,
           fieldOrder: fieldIndex + 1,
 
@@ -36,7 +36,23 @@ export class FormService {
             validations: field.validations,
             options: field.options,
             placeholder: field.placeholder,
+            //Field Style
+            color: field.color,
+            fontSize: field.fontSize,
+            bold: field.bold,
+            italic: field.italic,
+            underline: field.underline
           },
+
+          /*
+          fieldStyle: {
+            color: field.color,
+            fontSize: field.fontSize,
+            bold: field.bold,
+            italic: field.italic,
+            underline: field.underline
+          }
+          */
         })),
       })),
     };
@@ -79,7 +95,7 @@ export class FormService {
     return this.http.post(this.url + "api/responses", mappedData);
   }
 
-  getFormResponseById(id: number){
-     return this.http.get(this.url+"api/responses/"+id);
+  getFormResponseById(id: number) {
+    return this.http.get(this.url + "api/responses/" + id);
   }
 }

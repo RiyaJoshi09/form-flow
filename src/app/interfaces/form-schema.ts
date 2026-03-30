@@ -2,7 +2,8 @@ export interface Field {
   id?:number;
   fieldType: string;
   fieldOrder: number;
-  fieldConfig: {}; 
+  fieldConfig: {};
+ // fieldStyle: {}
 }
 
 export interface Section {

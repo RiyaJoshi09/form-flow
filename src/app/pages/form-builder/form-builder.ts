@@ -109,11 +109,11 @@ export class FormBuilder {
               validations: field.fieldConfig.validations || {},
               options: field.fieldConfig.options || [],
               placeholder: field.fieldConfig.placeholder || '',
-              color: '#000000',
-              fontSize: '12px',
-              bold: false,
-              italic: false,
-              underline: false,
+              color: field.fieldConfig.color ||'#000000', //field.fieldStyle.color ||'#000000'
+              fontSize: field.fieldConfig.fontSize || '12px', //field.fieldStyle.fontSize ||'12px'
+              bold: field.fieldConfig.bold || false, //field.fieldStyle.bold || false
+              italic: field.fieldConfig.italic || false, //field.fieldStyle.italics || false
+              underline: field.fieldConfig.underline ||false, //field.fieldStyle.undelrine || false
             })),
         }));
         this.formSections = [...this.formSections];
@@ -152,6 +152,8 @@ export class FormBuilder {
     console.log(formToSave);
 
     if (this.editingFormId) {
+      console.log(formToSave);
+      /*
       this.formService.updateForm(formToSave).subscribe({
         next: (response) => {
           alert('Form updated Successfully to Database!');
@@ -161,7 +163,8 @@ export class FormBuilder {
           console.error(err);
           alert('Error saving form to backend. Check if Spring Boot is running.');
         },
-      });
+      });*/
+      
     } else {
       this.formService.createForm(formToSave).subscribe({
       next: (response) => {
@@ -316,7 +319,22 @@ export class FormBuilder {
             placeholder: field.placeholder,
             options: field.options,
             validations: field.validations,
+            //Field Style
+            color: field.color,
+            fontSize: field.fontSize,
+            bold: field.bold,
+            italics: field.italics,
+            underline: field.underline
           },
+          /*
+          fieldStyle: {
+            color: field.color,
+            fontSize: field.fontSize,
+            bold: field.bold,
+            italics: field.italics,
+            underline: field.underline
+          }
+          */
         })),
       })),
       isReadOnly: true,
