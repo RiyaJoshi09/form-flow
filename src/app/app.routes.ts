@@ -13,6 +13,6 @@ export const routes: Routes = [
     {path: "login", component: Login, canActivate: [authInverseGuard]},
     {path: "create", component: FormBuilder,canActivate: [authGuard]},
     { path: 'edit-form/:id', component: FormBuilder, canActivate: [authGuard]},
-    { path: 'edit-form/:id', component: FormBuilder },
+    {path: "form/:id", component: FormSubmission},
     {path: "**", component:NotFound}
 ];
