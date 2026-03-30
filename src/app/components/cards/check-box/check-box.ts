@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { CheckboxField } from '../../../interfaces/InputField';
+import { CheckboxField } from '../../../interfaces/field-config-schema';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FieldType } from '../../../enums/field-type.enum';
 import { MatIconModule } from '@angular/material/icon';

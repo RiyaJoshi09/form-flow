@@ -3,7 +3,7 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FieldType } from '../../../enums/field-type.enum';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatRadioModule } from '@angular/material/radio';
-import { RadioField } from '../../../interfaces/InputField';
+import { RadioField } from '../../../interfaces/field-config-schema';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({

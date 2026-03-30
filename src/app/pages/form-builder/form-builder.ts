@@ -174,7 +174,7 @@ export class FormBuilder {
       },
     });
     }
-    localStorage.setItem('theme', localStorage.getItem('prevTheme') || 'theme-blue');
+    localStorage.setItem('theme', localStorage.getItem('prevTheme') || 'theme-pink');
     localStorage.removeItem('prevTheme');
     this.themeService.loadTheme();
   }

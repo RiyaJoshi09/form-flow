@@ -1,7 +1,7 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { CheckboxField } from '../../../interfaces/InputField';
+import { CheckboxField } from '../../../interfaces/field-config-schema';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { BuilderFieldSchema } from '../../../interfaces/builder-field-schema';
 import { FormsModule } from '@angular/forms';

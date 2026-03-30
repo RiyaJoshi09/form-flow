@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FieldType } from '../../../enums/field-type.enum';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { TextareaField } from '../../../interfaces/InputField';
+import { TextareaField } from '../../../interfaces/field-config-schema';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({

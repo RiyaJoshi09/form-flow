@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FieldType } from '../../../enums/field-type.enum';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { SelectField } from '../../../interfaces/InputField';
+import { SelectField } from '../../../interfaces/field-config-schema';
 import { MatSelectModule } from '@angular/material/select';
 
 @Component({

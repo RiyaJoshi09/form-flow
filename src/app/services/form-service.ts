@@ -9,7 +9,7 @@ import { ThemeService } from './theme-service';
 })
 export class FormService {
 
-  url = 'http://localhost:8081/formflow/';
+  url = 'http://localhost:8082/formflow/';
 
   constructor(private http: HttpClient, private themeService : ThemeService) { }
 
@@ -51,7 +51,7 @@ export class FormService {
 
   createForm(formData: any): Observable<any> {
     const mappedData = this.mapToFormSchema(formData);
-    let data: any = this.http.post(this.url + 'createForm', mappedData, {
+    let data: any = this.http.post(this.url + 'user/createForm', mappedData, {
       responseType: 'text',
     })
     return data;
@@ -59,18 +59,18 @@ export class FormService {
 
   updateForm(formData: any): Observable<any> {
     const mappedData = this.mapToFormSchema(formData);
-    let data: any = this.http.put(this.url + 'updateForm', mappedData, {
+    let data: any = this.http.put(this.url + 'user/updateForm', mappedData, {
       responseType: 'text',
     })
     return data;
   }
 
   getFormById(id: number): Observable<Form> {
-    return this.http.get<Form>(this.url + 'forms/' + id);
+    return this.http.get<Form>(this.url + 'user/form/' + id);
   }
 
   getAllForms(): Observable<Form[]> {
-    return this.http.get<Form[]>(this.url + "allForm");
+    return this.http.get<Form[]>(this.url + "admin/getAllForms");
   }
   getFormByStatus() { }
 
