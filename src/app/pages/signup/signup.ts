@@ -5,12 +5,12 @@ import { MatError, MatFormField, MatInputModule } from '@angular/material/input'
 import { AuthService } from '../../services/auth-service';
 
 @Component({
-  selector: 'app-login',
-  imports: [FormsModule, MatFormField, MatInputModule, MatError,RouterLink],
-  templateUrl: './login.html',
-  styleUrl: './login.css',
+  selector: 'app-signup',
+  imports: [FormsModule, MatFormField, MatInputModule, MatError, RouterLink],
+  templateUrl: './signup.html',
+  styleUrl: './signup.css',
 })
-export class Login {
+export class Signup {
   username: string = '';
   password: string = '';
 
@@ -31,7 +31,7 @@ export class Login {
     }
 
     this.authService
-      .login({
+      .signup({
         username: this.username,
         password: this.password,
       })
