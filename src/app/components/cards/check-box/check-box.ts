@@ -38,5 +38,6 @@ export class CheckBox {
     } else {
       this.control.setValue(current.filter((v:string) => v !== option));
     }
+    this.control.markAsTouched();  
   }
 }
