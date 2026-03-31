@@ -1,12 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatFormField } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-share-dialog',
-  imports: [MatIcon, MatFormField, CommonModule],
+  imports: [MatIcon, CommonModule],
   templateUrl: './share-dialog.html',
   styleUrl: './share-dialog.css',
 })

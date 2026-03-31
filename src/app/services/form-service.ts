@@ -92,6 +92,23 @@ export class FormService {
   getAllForms(): Observable<Form[]> {
     return this.http.get<Form[]>(this.url + "user/allForm");
   }
+
+  moveFormToTrash(id: number): Observable<string> {
+    return this.http.patch(this.url + 'user/form/moveToTrash/' + id, {}, {
+      responseType: 'text',
+    });
+  }
+
+  getTrashedForms(): Observable<Form[]> {
+    return this.http.get<Form[]>(this.url + 'user/form/trash');
+  }
+
+  restoreFormFromTrash(id: number): Observable<string> {
+    return this.http.patch(this.url + 'user/form/restoreFromTrash/' + id, {}, {
+      responseType: 'text',
+    });
+  }
+
   getFormByStatus() { }
 
   submitResponse(data: any) {

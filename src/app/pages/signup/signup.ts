@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { MatError, MatFormField, MatInputModule } from '@angular/material/input';
+import { MatFormField, MatInputModule } from '@angular/material/input';
 import { AuthService } from '../../services/auth-service';
 
 @Component({
   selector: 'app-signup',
-  imports: [FormsModule, MatFormField, MatInputModule, MatError, RouterLink],
+  imports: [FormsModule, MatFormField, MatInputModule, RouterLink],
   templateUrl: './signup.html',
   styleUrl: './signup.css',
 })

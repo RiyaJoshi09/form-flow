@@ -69,6 +69,22 @@ export class AuthService {
     alert("Logged Out!!!")
   }
 
+  getUsername(): string | null {
+    const token = this.getAccessToken();
+
+    if (!token) {
+      return null;
+    }
+
+    try {
+      const payload = token.split('.')[1];
+      const decoded = JSON.parse(atob(payload));
+      return decoded.sub ?? decoded.username ?? null;
+    } catch {
+      return null;
+    }
+  }
+
   refreshToken(): Observable<any> {
     const refreshToken = this.getRefreshToken();
 

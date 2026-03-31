@@ -6,7 +6,16 @@
     <div class="nav-profile">
       <button class="create" type="button" [routerLink]="['/create']">Create New</button>
       <app-theme-selector></app-theme-selector>
-      <mat-icon>person</mat-icon>
+      <button class="profile-trigger" type="button" (click)="toggleProfileMenu($event)">
+        <mat-icon>person</mat-icon>
+      </button>
+
+      @if (showProfileMenu) {
+        <div class="profile-menu" (click)="$event.stopPropagation()">
+          <p class="profile-greeting">Hello {{ username || 'User' }}</p>
+          <button class="logout-btn" type="button" (click)="onLogout()">Logout</button>
+        </div>
+      }
     </div>
   </div>
 
@@ -37,7 +46,60 @@
     <!--maincontent-->
     <div class="main-content">
       @if (activesection == 'MyForm') {
-        <app-my-forms></app-my-forms>
+        <app-my-forms viewMode="all"></app-my-forms>
+      }
+
+      @if (activesection == 'Templates') {
+        <div class="panel">
+          <h2>Templates</h2>
+          <p>Pick a ready-to-use layout and customize it quickly.</p>
+
+          <div class="quick-grid">
+            <div class="quick-card">
+              <h3>Contact Form</h3>
+              <p>Collect name, email, phone and message.</p>
+              <button type="button" class="panel-btn" [routerLink]="['/create']">Use Template</button>
+            </div>
+            <div class="quick-card">
+              <h3>Feedback Form</h3>
+              <p>Rating + comments for product feedback.</p>
+              <button type="button" class="panel-btn" [routerLink]="['/create']">Use Template</button>
+            </div>
+            <div class="quick-card">
+              <h3>Registration Form</h3>
+              <p>Capture attendee details and confirmations.</p>
+              <button type="button" class="panel-btn" [routerLink]="['/create']">Use Template</button>
+            </div>
+          </div>
+        </div>
+      }
+
+      @if (activesection == 'Recent') {
+        <div class="panel">
+          <h2>Recent</h2>
+          <p>Quick links for your latest actions.</p>
+
+          <div class="recent-list">
+            <div class="recent-item">
+              <mat-icon>edit_note</mat-icon>
+              <span>Continue editing your latest form from My Forms.</span>
+            </div>
+            <div class="recent-item">
+              <mat-icon>insights</mat-icon>
+              <span>Check responses from active forms in My Forms.</span>
+            </div>
+            <div class="recent-item">
+              <mat-icon>add_circle</mat-icon>
+              <span>Create a new form from scratch in one click.</span>
+            </div>
+          </div>
+
+          <button type="button" class="panel-btn" [routerLink]="['/create']">Create New Form</button>
+        </div>
+      }
+
+      @if (activesection == 'Trash') {
+        <app-my-forms viewMode="trash"></app-my-forms>
       }
     </div>
   </div>

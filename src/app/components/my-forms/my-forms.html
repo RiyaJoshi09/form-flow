@@ -1,8 +1,9 @@
 <div class="heading-sec">
-  <h1>My Forms</h1>
-  <p>Manage and track your data collection</p>
+  <h1>{{ sectionTitle }}</h1>
+  <p>{{ sectionDescription }}</p>
 </div>
 
+@if (!isTrashView) {
 <div class="summary">
   <div class="cards">
     <div class="details">
@@ -26,6 +27,7 @@
     <mat-icon>bar_chart</mat-icon>
   </div>
 </div>
+}
 
 <div class="form-data-table">
   <table>
@@ -34,6 +36,7 @@
       <th>Responses</th>
       <th>Created_At</th>
 
+      @if (!isTrashView) {
       <th>
         Status
         <button mat-icon-button [matMenuTriggerFor]="statusMenu">
@@ -46,6 +49,7 @@
         <button mat-menu-item (click)="filterStatus('published')" class="text-muted hover:text-primary">Published</button><br />
         <button mat-menu-item (click)="filterStatus('draft')" class="text-muted hover:text-primary">Draft</button>
       </mat-menu>
+      }
       <th>Actions</th>
     </tr>
 
@@ -54,6 +58,8 @@
         <td>{{ form.title }}</td>
         <td>{{ form.responses || 0 }}</td>
         <td>{{ form.createdAt | date: 'dd/MM/yyyy hh:mm a' }}</td>
+
+        @if (!isTrashView) {
         <td>
           <span [class.active]="form.status === 'active'" [class.draft]="form.status === 'draft'">
             @if (form.published == true) {
@@ -63,8 +69,11 @@
             }
           </span>
         </td>
+        }
+
         <td>
           <div class="actions">
+            @if (!isTrashView) {
             <button mat-icon-button [routerLink]="['/edit-form', form.id]">
               <mat-icon>edit</mat-icon>
             </button>
@@ -72,10 +81,15 @@
               <mat-icon>share</mat-icon>
             </button>
             <mat-icon
-              (click)="deleteForm(form.id)"
+              (click)="moveToTrash(form.id)"
               class="!text-red-500 hover:text-red-700 cursor-pointer"
               >delete</mat-icon
             >
+            } @else {
+            <button mat-icon-button (click)="restoreForm(form.id)" class="!cursor-pointer">
+              <mat-icon class="!text-green-700">restore_from_trash</mat-icon>
+            </button>
+            }
           </div>
         </td>
       </tr>
