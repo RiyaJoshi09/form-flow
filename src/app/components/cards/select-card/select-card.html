@@ -10,8 +10,11 @@
       </mat-option>
     }
   </mat-select>
-
-  <!-- @if (control?.hasError('required')) {
-    <mat-error>This field is required</mat-error>
-  } -->
 </mat-form-field>
+
+@if (control.touched && control.hasError('required')) {
+  <div class="text-xs italic text-red-500 flex justify-start items-start">
+    <mat-icon style="font-size: 16px; font-weight: 500">error_outline</mat-icon>
+    <mat-error class="text-red-500!">Required.</mat-error>
+  </div>
+}
