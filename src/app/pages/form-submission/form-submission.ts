@@ -52,7 +52,7 @@ export class FormSubmission {
       const formId = this.route.snapshot.paramMap.get('id');
       if (formId) {
         // Convert formId to number to match your service signature
-        this.formService.getFormById(Number(formId)).subscribe({
+        this.formService.getResponseFormById(Number(formId)).subscribe({
           next: (form: Form) => {
             this.formStructure = form;
             this.isReadOnly = false;

@@ -85,6 +85,10 @@ export class FormService {
     return this.http.get<Form>(this.url + 'user/form/' + id);
   }
 
+  getResponseFormById(id: number): Observable<Form> {
+    return this.http.get<Form>(this.url + 'public/form/' + id);
+  }
+
   getAllForms(): Observable<Form[]> {
     return this.http.get<Form[]>(this.url + "user/allForm");
   }
