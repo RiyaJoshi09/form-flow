@@ -60,7 +60,12 @@ export class MyForms {
   }
 
 
-  shareForm(id: number){
+  shareForm(id: number, published: boolean){
+   if(published==false){
+    alert("It is just a draft form. You can,t share it");
+    return;
+   }
+
   const link = `${window.location.origin}/form/${id}`;
 
   console.log("Dialog open ho raha hai");

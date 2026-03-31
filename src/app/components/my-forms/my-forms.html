@@ -68,7 +68,7 @@
             <button mat-icon-button [routerLink]="['/edit-form', form.id]">
               <mat-icon>edit</mat-icon>
             </button>
-            <button mat-icon-button (click)="shareForm(form.id)" class="!cursor-pointer">
+            <button mat-icon-button (click)="shareForm(form.id, form.published)" class="!cursor-pointer">
               <mat-icon>share</mat-icon>
             </button>
             <mat-icon
