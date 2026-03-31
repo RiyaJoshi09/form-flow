@@ -1,59 +1,342 @@
-# FormFlowFrontend
+# AUTH SERVICE API CONTRACT (Frontend → Backend)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.0.
+**Base URL:**   `http://localhost:8082/formflow/auth`
 
-## Development server
 
-To start a local development server, run:
+## Endpoints
 
-```bash
-ng serve
+### 1. SIGNUP (to be implemented)
+**Endpoint:** `POST /signup`
+
+**Request Body:**
+```json
+{
+  "username": "string",
+  "password": "string"
+}
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+**Expected Response:** ( Currently user has to login again after registration)
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```json
+{
+  "accessToken": "string",
+  "refreshToken": "string"
+}
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+**Notes:**
 
-```bash
-ng generate --help
+- Create user in DB
+- Generate tokens after signup
+
+
+### 2. LOGIN
+
+**Endpoint:** `POST /login`
+
+**Request Body:**
+
+```json
+{
+  "username": "string",
+  "password": "string"
+}
 ```
 
-## Building
+**Response:**
 
-To build the project run:
-
-```bash
-ng build
+```json
+{
+  "accessToken": "string",
+  "refreshToken": "string"
+}
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+**Notes:**
 
-## Running unit tests
+- Validate credentials
+- Return both tokens
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
 
-```bash
-ng test
+### 3. REFRESH TOKEN
+
+**Endpoint:** `POST /refresh`
+
+**Request Body:**
+
+```json
+{
+  "refreshToken": "string"
+}
 ```
 
-## Running end-to-end tests
+**Response:**
 
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
+```json
+{
+  "accessToken": "string",
+  "refreshToken": "string"
+}
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+**Notes:**
 
-## Additional Resources
+- Validate refresh token
+- Issue new access token
+- Refresh token rotation recommended
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+### 4. LOGOUT
+
+**Endpoint:** `POST /logout`
+
+**Request Body:**
+
+```json
+{
+  "refreshToken": "string"
+}
+```
+
+**Notes:**
+
+- Invalidate refresh token in DB
+- Access token remains stateless
+
+
+---
+
+# Form Service API Contract (Frontend to Backend)
+
+## Base URL
+
+`http://localhost:8082/formflow/`
+
+## Endpoints
+
+### 1. Create Form
+
+**Method:** `POST`  
+**Path:** `/user/createForm`
+
+#### Request Body
+
+```json
+{
+  "id": 0,
+  "theme": "string",
+  "title": "string",
+  "description": "string",
+  "published": true,
+  "sections": [
+    {
+      "id": 0,
+      "sectionTitle": "string",
+      "sectionOrder": 0,
+      "fields": [
+        {
+          "id": 0,
+          "fieldType": "string",
+          "fieldOrder": 0,
+          "fieldConfig": {
+            "label": "string",
+            "validations": {},
+            "options": [],
+            "placeholder": "string"
+          }
+          "fieldStyle": {
+            "color": "string",
+            "fontSize": "string",
+            "bold": true,
+            "italic": true,
+            "underline": true
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+#### Response
+
+- Plain text response.
+
+#### Notes
+
+- Save the complete form structure in the database.
+- Maintain section ordering and field ordering.
+
+### 2. Update Form (Yet to be implemented at the backend side)
+
+**Method:** `PUT`  
+**Path:** `/user/updateForm`
+
+**Request Body**: Same schema as ***Create Form***.
+
+```json
+{
+  "id": 0,
+  "theme": "string",
+  "title": "string",
+  "description": "string",
+  "published": true,
+  "sections": [
+    {
+      "id": 0,
+      "sectionTitle": "string",
+      "sectionOrder": 0,
+      "fields": [
+        {
+          "id": 0,
+          "fieldType": "string",
+          "fieldOrder": 0,
+          "fieldConfig": {
+            "label": "string",
+            "validations": {},
+            "options": [],
+            "placeholder": "string",
+          }
+          "fieldStyle": {
+            "color": "string",
+            "fontSize": "string",
+            "bold": true,
+            "italic": true,
+            "underline": true
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+
+#### Response
+
+- Plain text response.
+
+#### Notes
+
+- Update an existing form using its ID.
+- Preserve new structures across updates.
+
+### 3. Get Form by ID
+
+**Method:** `GET`  
+**Path:** `/user/form/{id}`
+
+#### Response Body
+
+```json
+{
+    "id": 0,
+    "title": "string",
+    "description": "string",
+    "published": true,
+    "createdBy": "string",
+    "createdAt": "ISO DateTime",
+    "sections": [
+      {
+        "sectionTitle": "string",
+        "sectionOrder": 0,
+        "fields": [
+          {
+            "fieldType": "string",
+            "fieldOrder": 0,
+            "fieldConfig": {},
+            "fieldStyle": {}
+          }
+        ]
+      }
+    ]
+  }
+```
+
+#### Notes
+
+- Backend returns the raw structure.
+- Frontend maps the response into its Form schema.
+
+### 4. Get All Forms (Admin)
+
+**Method:** `GET`  
+**Path:** `/admin/getAllForms`
+
+#### Response Body
+
+```json
+[
+  {
+    "id": 0,
+    "title": "string",
+    "description": "string",
+    "published": true,
+    "createdBy": "string",
+    "createdAt": "ISO DateTime",
+    "sections": [
+      {
+        "sectionTitle": "string",
+        "sectionOrder": 0,
+        "fields": [
+          {
+            "fieldType": "string",
+            "fieldOrder": 0,
+            "fieldConfig": {},
+            "fieldStyle": {}
+          }
+        ]
+      }
+    ]
+  }
+]
+```
+
+#### Notes
+
+- Intended for the admin dashboard.
+
+### 5. Submit Form Response
+
+**Method:** `POST`  
+**Path:** `/api/responses`
+
+#### Request Body
+
+```json
+{
+  "formId": 0,
+  "response": {
+    "field_id": "string"
+  }
+}
+```
+
+#### Response
+
+- Plain text response.
+
+#### Notes
+
+- Store user responses mapped to `formId`.
+
+
+### 6. Get Form Responses by Form ID
+
+**Method:** `GET`  
+**Path:** `/api/responses/{formId}`
+
+#### Response Body
+
+```json
+[
+  {
+    
+  }
+]
+```
+
+#### Notes
+
+- Get user responses mapped to `formId`.

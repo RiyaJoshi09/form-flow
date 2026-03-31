@@ -9,9 +9,9 @@ import { ThemeService } from './theme-service';
 })
 export class FormService {
 
-  url = 'http://localhost:8081/formflow/';
+  url = 'http://localhost:8082/formflow/';
 
-  constructor(private http: HttpClient, private themeService : ThemeService) { }
+  constructor(private http: HttpClient, private themeService: ThemeService) { }
 
   mapToFormSchema(rawForm: any): Form {
     return {
@@ -22,12 +22,12 @@ export class FormService {
       published: rawForm.status === 'active',
 
       sections: rawForm.sections.map((section: any, sectionIndex: number) => ({
-        id:section.id,
+        id: section.id,
         sectionTitle: section.title,
         sectionOrder: sectionIndex + 1,
 
         fields: section.fields.map((field: any, fieldIndex: number) => ({
-          id:field.id,
+          id: field.id,
           fieldType: field.type,
           fieldOrder: fieldIndex + 1,
 
@@ -36,7 +36,23 @@ export class FormService {
             validations: field.validations,
             options: field.options,
             placeholder: field.placeholder,
+            //Field Style
+            color: field.color,
+            fontSize: field.fontSize,
+            bold: field.bold,
+            italic: field.italic,
+            underline: field.underline
           },
+
+          /*
+          fieldStyle: {
+            color: field.color,
+            fontSize: field.fontSize,
+            bold: field.bold,
+            italic: field.italic,
+            underline: field.underline
+          }
+          */
         })),
       })),
     };
@@ -51,7 +67,7 @@ export class FormService {
 
   createForm(formData: any): Observable<any> {
     const mappedData = this.mapToFormSchema(formData);
-    let data: any = this.http.post(this.url + 'createForm', mappedData, {
+    let data: any = this.http.post(this.url + 'user/createForm', mappedData, {
       responseType: 'text',
     })
     return data;
@@ -59,23 +75,27 @@ export class FormService {
 
   updateForm(formData: any): Observable<any> {
     const mappedData = this.mapToFormSchema(formData);
-    let data: any = this.http.put(this.url + 'updateForm', mappedData, {
+    let data: any = this.http.put(this.url + 'user/updateForm/' + formData.id, mappedData, {
       responseType: 'text',
     })
     return data;
   }
 
   getFormById(id: number): Observable<Form> {
-    return this.http.get<Form>(this.url + 'forms/' + id);
+    return this.http.get<Form>(this.url + 'user/form/' + id);
   }
 
   getAllForms(): Observable<Form[]> {
-    return this.http.get<Form[]>(this.url + "allForm");
+    return this.http.get<Form[]>(this.url + "admin/getAllForms");
   }
   getFormByStatus() { }
 
   submitResponse(data: any) {
     const mappedData = this.mapToBackendResponse(data);
     return this.http.post(this.url + "api/responses", mappedData);
+  }
+
+  getFormResponseById(id: number) {
+    return this.http.get(this.url + "api/responses/" + id);
   }
 }

@@ -1,47 +1,44 @@
 <div class="home">
-
-<!--navbar-->
-<div class="navbar">
+  <!--navbar-->
+  <div class="navbar">
     <h1>FormFlow</h1>
     <h3>Dashboard</h3>
     <div class="nav-profile">
-        <button  class="create" type="button" routerLink="create">Create New</button>
-        <app-theme-selector></app-theme-selector>
-        <mat-icon>person</mat-icon>
+      <button class="create" type="button" [routerLink]="['/create']">Create New</button>
+      <app-theme-selector></app-theme-selector>
+      <mat-icon>person</mat-icon>
     </div>
-</div>
+  </div>
 
+  <!--Dashboard-->
 
-<!--Dashboard-->
-
-<div class="dashboard">
+  <div class="dashboard">
     <!--sidebar-->
     <div class="sidebar">
-        <ul>
-            <li (click)="activesection='MyForm'" [class.active]="activesection=='MyForm'">
-                <mat-icon>folder</mat-icon>
-                <span>My Forms</span>
-            </li>
-            <li (click)="activesection='Templates'" [class.active]="activesection=='Templates'">
-                <mat-icon>dashboard</mat-icon>
-                <span>Templates</span>
-            </li>
-            <li (click)="activesection='Recent'" [class.active]="activesection=='Recent'">
-                <mat-icon>history</mat-icon>
-                <span>Recent</span>
-            </li>
-            <li (click)="activesection='Trash'" [class.active]="activesection=='Trash'">
-                <mat-icon>delete</mat-icon>
-                <span>Trash</span>
-            </li>
-        </ul>
+      <ul>
+        <li (click)="activesection = 'MyForm'" [class.active]="activesection == 'MyForm'">
+          <mat-icon>folder</mat-icon>
+          <span>My Forms</span>
+        </li>
+        <li (click)="activesection = 'Templates'" [class.active]="activesection == 'Templates'">
+          <mat-icon>dashboard</mat-icon>
+          <span>Templates</span>
+        </li>
+        <li (click)="activesection = 'Recent'" [class.active]="activesection == 'Recent'">
+          <mat-icon>history</mat-icon>
+          <span>Recent</span>
+        </li>
+        <li (click)="activesection = 'Trash'" [class.active]="activesection == 'Trash'">
+          <mat-icon>delete</mat-icon>
+          <span>Trash</span>
+        </li>
+      </ul>
     </div>
     <!--maincontent-->
     <div class="main-content">
-        @if(activesection=='MyForm'){
-            <app-my-forms></app-my-forms>
-        }
+      @if (activesection == 'MyForm') {
+        <app-my-forms></app-my-forms>
+      }
     </div>
-</div>
-
+  </div>
 </div>

@@ -67,6 +67,16 @@ export class FormSubmission {
     }
   }
 
+  getFieldStyle(config: any) {
+    return {
+      'color': config?.color || '#000000',
+      'font-size': config?.fontSize || '12px',
+      'font-weight': config?.bold ? 'bold' : 'normal',
+      'font-style': config?.italic ? 'italic' : 'normal',
+      'text-decoration': config?.underline ? 'underline' : 'none'
+    };
+  }
+
   getControl(field: any): FormControl {
     const controlId = String(field.id || field.fieldOrder);
     const control = this.formGroup.get(controlId);

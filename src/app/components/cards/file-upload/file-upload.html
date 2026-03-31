@@ -1,21 +1,19 @@
-@if(control?.hasError('required')){
-  <mat-error>Required</mat-error>
-}
 <div
   (click)="fileInput.click()"
-  class="flex items-center justify-between px-4 py-2 border border-theme rounded-lg cursor-pointer hover:outline-1 transition">
+  class="flex items-center justify-between px-4 py-2 border border-theme rounded-lg cursor-pointer hover:outline-1 transition"
+>
   <span class="text-gray-500 text-sm">
     {{ control?.value?.name || 'Choose a file...' }}
   </span>
 
-  <span class="text-primary text-sm font-medium">
-    Browse
-  </span>
+  <span class="text-primary text-sm font-medium"> Browse </span>
 </div>
 
-<input
-  type="file"
-  #fileInput
-  class="hidden"
-  (change)="onFileChange($event)"
-/>
+<input type="file" #fileInput class="hidden" (change)="onFileChange($event)" />
+
+@if (control.hasError('required')) {
+  <div class="text-xs italic text-red-500 flex justify-start items-start mt-5">
+    <mat-icon style="font-size: 16px; font-weight:500;">error_outline</mat-icon>
+    <mat-error class="text-red-500! ">Required.</mat-error>
+  </div>
+}

@@ -14,7 +14,8 @@
         </h2>
 
         <div *ngFor="let field of section.fields" class="mb-8">
-          <label class="block text-sm font-bold text-muted uppercase tracking-wider mb-2">
+          <label class="block text-sm font-bold text-muted uppercase tracking-wider mb-2" [ngStyle]="getFieldStyle(field.fieldConfig)">
+          <!--[ngStyle]="getFieldStyle(field.fieldStyle)-->
             {{ field.fieldConfig?.label}}
             <span *ngIf="field.validations?.required" class="text-red-500">*</span>
           </label>

@@ -3,10 +3,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BuilderFieldSchema } from '../../../interfaces/builder-field-schema';
+import { MatIcon } from "@angular/material/icon";
 
 @Component({
   selector: 'app-builder-input-text',
-  imports: [MatFormFieldModule, MatInputModule, ReactiveFormsModule],
+  imports: [MatFormFieldModule, MatInputModule, ReactiveFormsModule, MatIcon],
   templateUrl: './builder-input-text.html',
   styleUrl: './builder-input-text.css',
 })

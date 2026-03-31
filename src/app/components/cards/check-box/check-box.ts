@@ -1,13 +1,14 @@
 import { Component, Input } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { CheckboxField } from '../../../interfaces/InputField';
+import { CheckboxField } from '../../../interfaces/field-config-schema';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FieldType } from '../../../enums/field-type.enum';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-check-box',
-  imports: [MatFormFieldModule, ReactiveFormsModule, MatCheckboxModule],
+  imports: [MatFormFieldModule, ReactiveFormsModule, MatCheckboxModule, MatFormFieldModule,MatIconModule],
   templateUrl: './check-box.html',
   styleUrl: './check-box.css',
 })
@@ -32,7 +33,6 @@ export class CheckBox {
   */
   onChange(option: string, checked: boolean) {
     const current = this.control.value;
-
     if (checked) {
       this.control.setValue([...current, option]);
     } else {

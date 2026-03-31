@@ -5,8 +5,4 @@
     [formControl]="control"
     [placeholder]="fieldConfig.placeholder || 'Enter here'">
   </textarea>
-
-  @if (control?.hasError('required')) {
-    <mat-error>This field is required</mat-error>
-  }
 </mat-form-field>
