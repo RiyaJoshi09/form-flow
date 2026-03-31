@@ -98,7 +98,7 @@ export class FormBuilder {
         this.themeService.loadTheme();
         this.formTitle = form.title;
         this.formSections = form.sections.map((section: any) => ({
-          id: section.id,
+          id: section.id ? section.id.toString() : Date.now().toString(),
           title: section.sectionTitle,
           fields: section.fields
             .sort((a: any, b: any) => a.fieldOrder - b.fieldOrder)
@@ -153,7 +153,6 @@ export class FormBuilder {
 
     if (this.editingFormId) {
       console.log(formToSave);
-      /*
       this.formService.updateForm(formToSave).subscribe({
         next: (response) => {
           alert('Form updated Successfully to Database!');
@@ -163,7 +162,7 @@ export class FormBuilder {
           console.error(err);
           alert('Error saving form to backend. Check if Spring Boot is running.');
         },
-      });*/
+      });
       
     } else {
       this.formService.createForm(formToSave).subscribe({
@@ -209,7 +208,7 @@ export class FormBuilder {
       field.id = Date.now().toString() + index;
     });
 
-    this.formSections.splice(sectionIndex + 1, sectionIndex, clonedSection);
+    this.formSections.splice(sectionIndex + 1, 0, clonedSection);
   }
 
   get sectionsIds(): string[] {
@@ -290,7 +289,7 @@ export class FormBuilder {
 
     clonedField.id = Date.now().toString();
 
-    this.formSections[sectionIndex].fields.splice(fieldIndex + 1, fieldIndex, clonedField);
+    this.formSections[sectionIndex].fields.splice(fieldIndex + 1, 0, clonedField);
   }
 
   selectField(sectionIndex: number, fieldIndex: number) {
