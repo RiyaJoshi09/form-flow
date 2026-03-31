@@ -143,7 +143,9 @@
             "label": "string",
             "validations": {},
             "options": [],
-            "placeholder": "string",
+            "placeholder": "string"
+          }
+          "fieldStyle": {
             "color": "string",
             "fontSize": "string",
             "bold": true,
@@ -195,6 +197,8 @@
             "validations": {},
             "options": [],
             "placeholder": "string",
+          }
+          "fieldStyle": {
             "color": "string",
             "fontSize": "string",
             "bold": true,
@@ -241,7 +245,8 @@
           {
             "fieldType": "string",
             "fieldOrder": 0,
-            "fieldConfig": {}
+            "fieldConfig": {},
+            "fieldStyle": {}
           }
         ]
       }
@@ -278,7 +283,8 @@
           {
             "fieldType": "string",
             "fieldOrder": 0,
-            "fieldConfig": {}
+            "fieldConfig": {},
+            "fieldStyle": {}
           }
         ]
       }
@@ -300,17 +306,16 @@
 
 ```json
 {
-  
+  "formId": 0,
+  "response": {
+    "field_id": "string"
+  }
 }
 ```
 
-#### Response Body
+#### Response
 
-```json
-{
-  
-}
-```
+- Plain text response.
 
 #### Notes
 
