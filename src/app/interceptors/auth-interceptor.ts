@@ -33,7 +33,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
 
-      if (error) {
+      if (error.status===401) {
 
         if (!isRefreshing) {
           isRefreshing = true;
