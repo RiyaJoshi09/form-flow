@@ -6,3 +6,21 @@
     [placeholder]="fieldConfig.placeholder || 'Enter here'">
   </textarea>
 </mat-form-field>
+@if (control.touched && control.hasError('required')) {
+  <div class="text-xs italic text-red-500 flex justify-start items-start">
+    <mat-icon style="font-size: 16px; font-weight: 500">error_outline</mat-icon>
+    <mat-error class="text-red-500!">Required.</mat-error>
+  </div>
+}
+@if (control.touched && control.hasError('minlength')) {
+  <div class="text-xs italic text-red-500 flex justify-start items-start">
+    <mat-icon style="font-size: 16px; font-weight: 500">error_outline</mat-icon>
+    <mat-error class="text-red-500!">Minimum Length Criteria not met</mat-error>
+  </div>
+}
+@if (control.touched && control.hasError('maxlength')) {
+  <div class="text-xs italic text-red-500 flex justify-start items-start">
+    <mat-icon style="font-size: 16px; font-weight: 500">error_outline</mat-icon>
+    <mat-error class="text-red-500!">Maximum length exceeded</mat-error>
+  </div>
+}
