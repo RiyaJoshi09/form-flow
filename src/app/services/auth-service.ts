@@ -1,6 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap, throwError } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,7 @@ export class AuthService {
 
   isLoggedIn = signal(false);
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   getAccessToken(): string | null {
     return localStorage.getItem('accessToken');
@@ -41,8 +42,8 @@ export class AuthService {
   signup(payload: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/signup`, payload).pipe(
       tap((res: any) => {
-        this.setTokens(res.accessToken, res.refreshToken);
-        this.isLoggedIn.set(true);
+        alert(res.message + '. Please Login to continue');
+        this.router.navigate(['/login']);
       }),
     );
   }
