@@ -67,6 +67,7 @@ export class AuthService {
     this.clearTokens();
     this.isLoggedIn.set(false);
     alert("Logged Out!!!")
+    this.router.navigate(['/login']);
   }
 
   refreshToken(): Observable<any> {
