@@ -29,11 +29,11 @@
             <app-textarea *ngSwitchCase="'TEXTAREA'" [fieldConfig]="field.fieldConfig " [control]="getControl(field)"></app-textarea>
           </div>
 
-          <div *ngIf="formGroup.get(field.id)?.invalid && formGroup.get(field.id || field.fieldOrder)?.touched" 
+          <!-- <div *ngIf="formGroup.get(field.id)?.invalid && formGroup.get(field.id || field.fieldOrder)?.touched" 
                class="text-red-500 text-xs mt-2 italic flex items-center gap-1">
             <mat-icon class="text-sm scale-75">error_outline</mat-icon>
             This field is required or formatted incorrectly.
-          </div>
+          </div> -->
         </div>
       </div>
 

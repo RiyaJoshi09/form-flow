@@ -4,10 +4,11 @@ import { FieldType } from '../../../enums/field-type.enum';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { SelectField } from '../../../interfaces/field-config-schema';
 import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-select-card',
-  imports: [ReactiveFormsModule, MatFormFieldModule, MatSelectModule],
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatSelectModule, MatIconModule],
   templateUrl: './select-card.html',
   styleUrl: './select-card.css',
 })

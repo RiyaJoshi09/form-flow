@@ -12,7 +12,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  const skipUrls = ['/login', '/refresh'];
+  const skipUrls = ['/login', '/refresh', '/signup'];
 
   if (skipUrls.some(url => req.url.includes(url))) {
     return next(req);
@@ -36,8 +36,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
 
-
-      if (error.status===401) {
+      if (error.status === 401 || error.status === 403) {
 
 
         if (!isRefreshing) {

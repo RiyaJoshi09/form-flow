@@ -76,7 +76,7 @@ export class FormService {
 
   updateForm(formData: any): Observable<any> {
     const mappedData = this.mapToFormSchema(formData);
-    let data: any = this.http.put(this.url + 'user/updateForm', mappedData, {
+    let data: any = this.http.put(this.url + 'user/updateForm/' + formData.id, mappedData, {
       responseType: 'text',
     })
     return data;
@@ -86,8 +86,12 @@ export class FormService {
     return this.http.get<Form>(this.url + 'user/form/' + id);
   }
 
+  getResponseFormById(id: number): Observable<Form> {
+    return this.http.get<Form>(this.url + 'public/form/' + id);
+  }
+
   getAllForms(): Observable<Form[]> {
-    return this.http.get<Form[]>(this.url + "admin/getAllForms");
+    return this.http.get<Form[]>(this.url + "user/allForm");
   }
   getFormByStatus() { }
 
