@@ -76,14 +76,13 @@
         </td>
         <td>
           <div class="actions">
-            <button mat-icon-button [routerLink]="['/edit-form', form.id]">
+            @if(type=='myForms'){
+              <button mat-icon-button [routerLink]="['/edit-form', form.id]">
               <mat-icon>edit</mat-icon>
             </button>
-            @if(type=='myForms'){
               <button mat-icon-button (click)="shareForm(form.id, form.published)" class="!cursor-pointer">
                 <mat-icon>share</mat-icon>
               </button>
-
               <mat-icon
               (click)="deleteForm(form.id)"
               class="!text-red-500 hover:text-red-700 cursor-pointer"
