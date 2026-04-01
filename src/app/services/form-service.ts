@@ -112,4 +112,17 @@ export class FormService {
     { responseType: 'text' }
   );
   }
+
+
+  getTrashForms(){
+    return this.http.get(this.url+"user/form/trash");
+  }
+
+
+  restoreForms(id: number){
+    return this.http.patch(
+      this.url + "user/form/restoreFromTrash/" + id, {},
+      { responseType: 'text' }
+    );
+  }
 }

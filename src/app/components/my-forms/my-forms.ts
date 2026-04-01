@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { FORMS_DATA } from '../../data/form-data';
 import { MatIcon } from '@angular/material/icon';
 import { DatePipe } from '@angular/common';
@@ -20,7 +20,7 @@ import { Form } from '../../interfaces/form-schema';
   styleUrl: './my-forms.css',
 })
 export class MyForms {
-
+  @Input() type: 'myForms'| 'trash'='myForms';
   forms :any[]= [];
   totalFormsarray:any[]=[];
   totalForms=0;
@@ -30,7 +30,11 @@ export class MyForms {
   constructor(private dialog:MatDialog, private formService: FormService, private cd:ChangeDetectorRef){}
   
   ngOnInit(){
-    this.getFormData();
+    if(this.type=='myForms'){
+      this.getFormData();
+    }else if(this.type=='trash'){
+      this.getTrashFormData();
+    }
   }
 
   getFormData(){
@@ -49,24 +53,39 @@ export class MyForms {
 
   }
 
+
+  getTrashFormData(){
+    this.formService.getTrashForms().subscribe((data:any)=>{
+      console.log(data);
+      this.forms = data;
+      this.totalFormsarray=data;
+      this.forms.forEach((form:any)=>{
+      this.formService.getFormResponseById(form.id).subscribe((res:any)=>{
+        form.responses = res.length;
+        this.loadSummary();
+        this.cd.detectChanges();
+      });
+    });
+    })
+  }
+
+
+
   loadSummary(){
     this.totalForms=this.forms.length;
     this.totalActive = this.forms.filter((f:any)=> f.published==true).length;
     this.totalRes = this.forms.reduce((sum, f:any)=> sum + (f.responses || 0), 0);
   }
 
-  deleteForm(id : number|undefined){
-    console.log("delete form called"+id)
-    if (id === undefined) {
-      return;
-    }
-
+  deleteForm(id : number){
     this.formService.deleteFormById(id).subscribe({
   next: () => {
     this.forms = this.forms.filter((form) => form.id !== id);
-    this.totalFormsarray = this.totalFormsarray.filter((form) => form.id !== id);
+    this.totalFormsarray=this.forms;
     this.loadSummary();
     this.cd.detectChanges();
+    alert('Form moved to trash successfully!');
+    
   },
   error: (err) => {
     console.error(err);
@@ -95,6 +114,26 @@ export class MyForms {
   }
 
 
+ restoreForm(id: number){
+  this.formService.restoreForms(id).subscribe({
+    next: (data:any) => {
+      console.log(data);
+      this.forms = this.forms.filter((form) => form.id !== id);
+      this.totalFormsarray = this.forms;
+      this.loadSummary();
+      this.cd.detectChanges();
+      alert('Form restored successfully!');
+    },
+    error: (err:any) => {
+      console.error(err);
+      alert('Restore failed!');
+    }
+  });
+}
+
+
+
+
   filterStatus(status: String){
      if(status=="all"){
        this.getFormData();
@@ -110,4 +149,8 @@ export class MyForms {
 
  
   }
+
+
+
+
 }

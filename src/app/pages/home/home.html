@@ -36,9 +36,13 @@
     </div>
     <!--maincontent-->
     <div class="main-content">
-      @if (activesection == 'MyForm') {
-        <app-my-forms></app-my-forms>
-      }
+     @if (activesection == 'MyForm') {
+  <app-my-forms type='myForms'></app-my-forms>
+}
+
+@if (activesection == 'Trash') {
+  <app-my-forms type='trash'></app-my-forms>
+}
     </div>
   </div>
 </div>
