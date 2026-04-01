@@ -5,10 +5,12 @@ import { MyForms } from '../../components/my-forms/my-forms';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { ThemeSelector } from '../../components/theme-selector/theme-selector';
 import { ThemeService } from '../../services/theme-service';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatButtonModule} from '@angular/material/button';
 
 @Component({
   selector: 'app-home',
-  imports: [MatIconModule, CommonModule, MyForms, RouterLink, RouterOutlet, ThemeSelector],
+  imports: [MatIconModule, CommonModule, MyForms, RouterLink, RouterOutlet, ThemeSelector, MatMenuModule, MatButtonModule],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
