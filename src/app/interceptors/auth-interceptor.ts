@@ -20,6 +20,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   const accessToken = authService.getAccessToken();
 
+// console.log("INTERCEPTOR HIT");
+// console.log("TOKEN:", accessToken);
+
   let authReq = req;
 
   if (accessToken) {
@@ -85,6 +88,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       }
 
       return throwError(() => error);
+
     })
   );
+
 };

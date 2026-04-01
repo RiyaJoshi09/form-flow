@@ -35,7 +35,8 @@ export class MyForms {
 
   getFormData(){
      this.formService.getAllForms().subscribe((data:any[])=>{
-      this.forms=data;
+      console.log(data);
+      this.forms = data;
       this.totalFormsarray=data;
       this.forms.forEach((form:any)=>{
       this.formService.getFormResponseById(form.id).subscribe((res:any)=>{
@@ -55,8 +56,23 @@ export class MyForms {
   }
 
   deleteForm(id : number|undefined){
-    this.forms = this.forms.filter(form  => form.id !== id);
+    console.log("delete form called"+id)
+    if (id === undefined) {
+      return;
+    }
+
+    this.formService.deleteFormById(id).subscribe({
+  next: () => {
+    this.forms = this.forms.filter((form) => form.id !== id);
+    this.totalFormsarray = this.totalFormsarray.filter((form) => form.id !== id);
     this.loadSummary();
+    this.cd.detectChanges();
+  },
+  error: (err) => {
+    console.error(err);
+    alert('Error moving form to trash.');
+  }
+});
   }
 
 

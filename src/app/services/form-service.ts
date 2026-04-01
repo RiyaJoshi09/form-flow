@@ -67,6 +67,7 @@ export class FormService {
 
   createForm(formData: any): Observable<any> {
     const mappedData = this.mapToFormSchema(formData);
+    const token = localStorage.getItem("token");
     let data: any = this.http.post(this.url + 'user/createForm', mappedData, {
       responseType: 'text',
     })
@@ -97,5 +98,14 @@ export class FormService {
 
   getFormResponseById(id: number) {
     return this.http.get(this.url + "api/responses/" + id);
+  }
+
+
+  deleteFormById(id: number){
+  
+  return this.http.patch(
+    this.url + "user/form/moveToTrash/" + id,{},
+    { responseType: 'text' }
+  );
   }
 }
