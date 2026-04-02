@@ -23,6 +23,7 @@ import { FormSubmission } from '../form-submission/form-submission';
 import { ThemeSelector } from '../../components/theme-selector/theme-selector';
 import { ThemeService } from '../../services/theme-service';
 import { BuilderCheckBox } from '../../components/builder-cards/builder-check-box/builder-check-box';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-form-builder',
@@ -71,6 +72,7 @@ export class FormBuilder {
     private formService: FormService,
     private themeService: ThemeService,
     private cd: ChangeDetectorRef,
+    private toastr: ToastrService
   ) {}
 
   elements = [
@@ -122,7 +124,7 @@ export class FormBuilder {
       },
       error: (err) => {
         console.error(err);
-        alert('Could not load form for editing.');
+        this.toastr.error('Could not load form for editing.');
       },
     });
   }
@@ -133,12 +135,12 @@ export class FormBuilder {
     );
 
     if (!this.formTitle?.trim()) {
-      alert('Please provide a title for your form.');
+      this.toastr.error('Please provide a title for your form.');
       return;
     }
 
     if (!hasFields) {
-      alert('Cannot save an empty form.');
+      this.toastr.error('Cannot save an empty form.');
       return;
     }
 
@@ -155,24 +157,24 @@ export class FormBuilder {
       console.log(formToSave);
       this.formService.updateForm(formToSave).subscribe({
         next: (response) => {
-          alert('Form updated Successfully to Database!');
+          this.toastr.success('Form updated Successfully to Database!');
           this.router.navigate(['/']);
         },
         error: (err) => {
           console.error(err);
-          alert('Error saving form to backend. Check if Spring Boot is running.');
+          this.toastr.error('Error saving form to backend. Check if Spring Boot is running.');
         },
       });
       
     } else {
       this.formService.createForm(formToSave).subscribe({
       next: (response) => {
-        alert('Form Saved Successfully to Database!');
+        this.toastr.success('Form Saved Successfully to Database!');
         this.router.navigate(['/']);
       },
       error: (err) => {
         console.error(err);
-        alert('Error saving form.');
+        this.toastr.error('Error saving form.');
       },
     });
     }
@@ -193,7 +195,7 @@ export class FormBuilder {
     if (this.formSections.length > 1) {
       this.formSections.splice(index, 1);
     } else {
-      alert('A form must have at least one section.');
+      this.toastr.error('A form must have at least one section.');
     }
   }
 

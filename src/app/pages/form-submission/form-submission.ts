@@ -12,6 +12,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormService } from '../../services/form-service';
 import { MatIconModule } from '@angular/material/icon';
 import { Form } from '../../interfaces/form-schema';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-form-submission',
@@ -38,7 +39,8 @@ export class FormSubmission {
   constructor(private route: ActivatedRoute,
     private formService: FormService,
     private cd: ChangeDetectorRef,
-    @Optional() @Inject(MAT_DIALOG_DATA) public dialogData: any) { }
+    @Optional() @Inject(MAT_DIALOG_DATA) public dialogData: any,
+    private toastr: ToastrService) { }
 
   ngOnInit() {
     //Check if data was passed through the Dialog (Preview Mode)
@@ -60,7 +62,7 @@ export class FormSubmission {
           },
           error: (err) => {
             console.error("Could not fetch form:", err);
-            alert("Error: Form not found on server.");
+            this.toastr.error("Error: Form not found on server.");
           }
         });
       }
@@ -114,7 +116,7 @@ export class FormSubmission {
 
   submitResponse() {
     if (this.isReadOnly) {
-      alert("This is a preview. Data is not saved to the database.");
+      this.toastr.warning("This is a preview. Data is not saved to the database.");
       return;
     }
 
@@ -131,19 +133,19 @@ export class FormSubmission {
       this.formService.submitResponse(responseEntry).subscribe({
         next: (res) => {
           console.log(res);
-          alert("Response saved successfully!");
+          this.toastr.success("Response saved successfully!");
           this.formGroup.reset();
           this.isSubmitting = false;
         },
         error: (err) => {
           console.error("Submission failed", err);
-          alert("Could not save response. Please try again.");
+          this.toastr.error("Could not save response. Please try again.");
           this.isSubmitting = false;
         }
       });
     } else {
       this.formGroup.markAllAsTouched(); // Show errors to the user
-      alert("Please fix the errors before submitting.");
+      this.toastr.error("Please fix the errors before submitting.");
     }
   }
 }
