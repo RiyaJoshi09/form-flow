@@ -8,6 +8,7 @@ interface ValidationRules {
   email?:boolean;
   max?: number;
   maxSize?: number;
+  fileType?:string;
 }
 
 export interface BuilderFieldSchema {

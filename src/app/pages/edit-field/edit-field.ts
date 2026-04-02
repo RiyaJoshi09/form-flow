@@ -1,9 +1,13 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogRef,
+  MatDialogContent,
+  MatDialogActions,
+} from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatTabsModule } from '@angular/material/tabs';
-
 
 @Component({
   selector: 'app-edit-field',
@@ -11,96 +15,111 @@ import { MatTabsModule } from '@angular/material/tabs';
   templateUrl: './edit-field.html',
   styleUrl: './edit-field.css',
 })
-
 export class EditField {
+  field: any;
 
-  field : any;
+  validationOptions: any[] = [];
 
-  validationOptions : any[] = [];
+  availableFileTypes: string[] = ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx'];
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private dialogRef: MatDialogRef<EditField> ) {
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private dialogRef: MatDialogRef<EditField>,
+  ) {
     this.field = data;
     this.setValidationOptions();
   }
 
   setValidationOptions() {
-
     if (this.field.type === 'TEXT') {
       this.validationOptions = [
-        {key: 'required', label: 'Required', value: false},
-        {key: 'minLength', label: 'Min Length', value: null},
-        {key: 'maxLength', label: 'Max Length', value: null},
-        {key: 'email', label: 'Email', value: false}
+        { key: 'required', label: 'Required', value: false },
+        { key: 'minLength', label: 'Min Length', value: null },
+        { key: 'maxLength', label: 'Max Length', value: null },
+        { key: 'email', label: 'Email', value: false },
       ];
     }
 
     if (this.field.type === 'NUMBER') {
       this.validationOptions = [
-        {key: 'required', label: 'Required', value: false},
-        {key: 'min', label: 'Min Value', value: null},
-        {key: 'max', label: 'Max Value', value: null}
+        { key: 'required', label: 'Required', value: false },
+        { key: 'min', label: 'Min Value', value: null },
+        { key: 'max', label: 'Max Value', value: null },
       ];
     }
 
     if (this.field.type === 'CHECKBOX') {
       this.validationOptions = [
-        {key: 'required', label: 'Required (must be checked)', value: false}
+        { key: 'required', label: 'Required (must be checked)', value: false },
       ];
     }
 
     if (this.field.type === 'RADIO') {
       this.validationOptions = [
-        {key: 'required', label: 'Required (must select one option)', value: false}
+        { key: 'required', label: 'Required (must select one option)', value: false },
       ];
     }
 
     if (this.field.type === 'DROPDOWN') {
-      this.validationOptions = [
-        {key: 'required', label: 'Required', value: false}
-      ];
+      this.validationOptions = [{ key: 'required', label: 'Required', value: false }];
     }
 
     if (this.field.type === 'FILE') {
       this.validationOptions = [
-        {key: 'required', label: 'Required', value: false},
-        // {key: 'maxSize', label: 'Max File Size (KB)', value: null},
-        // {key: 'fileType', label: 'Allowed File Types (e.g. pdf, jpg)', value: ''}
+        { key: 'required', label: 'Required', value: false },
+        { key: 'maxSize', label: 'Max File Size (KB)', value: null },
+        { key: 'fileType', label: 'Allowed File Types', value: [] },
       ];
     }
 
     if (this.field.type === 'TEXTAREA') {
       this.validationOptions = [
-        {key: 'required', label: 'Required', value: false},
-        {key: 'minLength', label: 'Min Length', value: null},
-        {key: 'maxLength', label: 'Max Length', value: null}
+        { key: 'required', label: 'Required', value: false },
+        { key: 'minLength', label: 'Min Length', value: null },
+        { key: 'maxLength', label: 'Max Length', value: null },
       ];
     }
 
     if (this.field.validations) {
-      this.validationOptions.forEach(opt => {
+      this.validationOptions.forEach((opt) => {
         if (this.field.validations[opt.key] !== undefined) {
-          opt.value = this.field.validations[opt.key];
+          if (opt.key === 'fileType') {
+            opt.value = this.field.validations[opt.key]
+              .split(',')
+              .map((t: string) => t.trim().toLowerCase());
+          } else {
+            opt.value = this.field.validations[opt.key];
+          }
         }
       });
     }
   }
-
+  onFileTypeChange(option: any, type: string, checked: boolean) {
+    if (checked) {
+      option.value.push(type);
+    } else {
+      option.value = option.value.filter((t: string) => t !== type);
+    }
+  }
   save() {
-    const validations : any = {};
+    const validations: any = {};
 
-    this.validationOptions.forEach(opt => {
+    this.validationOptions.forEach((opt) => {
       if (opt.value !== null && opt.value !== false && opt.value !== '') {
-        validations[opt.key] = opt.value === true ? true : opt.value;
+        if (opt.key === 'fileType' && Array.isArray(opt.value)) {
+          validations[opt.key] = opt.value.join(',');
+        } else {
+          validations[opt.key] = opt.value === true ? true : opt.value;
+        }
       }
     });
 
     this.field.validations = validations;
 
-    this.dialogRef.close({...this.field});
+    this.dialogRef.close({ ...this.field });
   }
 
   cancel() {
     this.dialogRef.close();
   }
-
 }

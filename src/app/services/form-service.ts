@@ -99,6 +99,7 @@ export class FormService {
 
   submitResponse(data: any) {
     const mappedData = this.mapToBackendResponse(data);
+    console.log(mappedData);
     return this.http.post(this.url + 'api/responses', mappedData);
   }
 
@@ -107,9 +108,7 @@ export class FormService {
   }
 
   deleteFormById(id: number) {
-    return this.http.patch(this.url + 'user/form/moveToTrash/' + id,
-      {},
-      { responseType: 'text' });
+    return this.http.patch(this.url + 'user/form/moveToTrash/' + id, {}, { responseType: 'text' });
   }
 
   getTrashForms() {

@@ -15,3 +15,19 @@
     <span class="text-primary capitalize italic font-medium opacity-60">Required</span>
   </div>
 }
+@if (fieldData.validations?.fileType) {
+  <div class="flex items-end justify-start">
+    <mat-icon [style.color]="'var(--mat-sys-on-surface-variant)'" style="font-size: 16px;"  class="relative top-1">description</mat-icon>
+    <span class="text-primary capitalize italic font-medium opacity-60">
+      Allowed File Types: <span class="text-muted">{{ formatFileTypes(fieldData.validations?.fileType || '') }}</span>
+    </span>
+  </div>
+}
+@if (fieldData.validations?.maxSize) {
+  <div class="flex items-end justify-start">
+    <mat-icon [style.color]="'var(--mat-sys-on-surface-variant)'" style="font-size: 16px;"  class="relative top-1">storage</mat-icon>
+    <span class="text-primary capitalize italic font-medium opacity-60">
+      Max size: <span class="text-muted">{{ fieldData.validations?.maxSize }} KB</span>
+    </span>
+  </div>
+}
