@@ -60,7 +60,7 @@ export class AuthService {
   logout() {
     const refreshToken = this.getRefreshToken();
     this.http.post(`${this.baseUrl}/logout`, { refreshToken }).subscribe({
-      next: () => {},
+      next: () => { alert('logged out successfully !') },
       error: () => {}
     });
 

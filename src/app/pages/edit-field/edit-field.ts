@@ -63,8 +63,8 @@ export class EditField {
     if (this.field.type === 'FILE') {
       this.validationOptions = [
         {key: 'required', label: 'Required', value: false},
-        {key: 'maxSize', label: 'Max File Size (KB)', value: null},
-        {key: 'fileType', label: 'Allowed File Types (e.g. pdf, jpg)', value: ''}
+        // {key: 'maxSize', label: 'Max File Size (KB)', value: null},
+        // {key: 'fileType', label: 'Allowed File Types (e.g. pdf, jpg)', value: ''}
       ];
     }
 
