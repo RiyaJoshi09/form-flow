@@ -11,6 +11,8 @@ import { RouterLink } from '@angular/router';
 import { MatFormField, MatLabel, MatOption, MatSelect } from '@angular/material/select';
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { Form } from '../../interfaces/form-schema';
+import { DeleteDialog } from '../../delete-dialog/delete-dialog';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -27,7 +29,10 @@ export class MyForms {
   totalActive=0;
   totalRes=0;
 
-  constructor(private dialog:MatDialog, private formService: FormService, private cd:ChangeDetectorRef){}
+  constructor(private dialog:MatDialog, 
+    private formService: FormService, 
+    private cd:ChangeDetectorRef, 
+    private toastr: ToastrService){}
   
   ngOnInit(){
     if(this.type=='myForms'){
@@ -78,32 +83,37 @@ export class MyForms {
   }
 
   deleteForm(id : number){
-    this.formService.deleteFormById(id).subscribe({
-  next: () => {
-    this.forms = this.forms.filter((form) => form.id !== id);
-    this.totalFormsarray=this.forms;
-    this.loadSummary();
-    this.cd.detectChanges();
-    alert('Form moved to trash successfully!');
-    
-  },
-  error: (err) => {
-    console.error(err);
-    alert('Error moving form to trash.');
-  }
-});
-  }
+this.dialog.open(DeleteDialog).afterClosed().subscribe(result => {
+
+    if (result) {
+      this.formService.deleteFormById(id).subscribe({
+        next: () => {
+          this.forms = this.forms.filter((form) => form.id !== id);
+          this.totalFormsarray = this.forms;
+          this.loadSummary();
+          this.cd.detectChanges();
+          this.toastr.success('Form moved to trash!', 'Success');
+        },
+        error: (err) => {
+          console.error(err);
+          this.toastr.error('Error moving form to trash.', 'Error');
+        }
+      });
+    }
+
+  });
+}
+
 
 
   shareForm(id: number, published: boolean){
    if(published==false){
-    alert("It is just a draft form. You can,t share it");
+    this.toastr.warning("It is just a draft form. You can't share it", "Warning");
     return;
    }
 
   const link = `${window.location.origin}/form/${id}`;
 
-  console.log("Dialog open ho raha hai");
 
   this.dialog.open(ShareDialog, {
     width: '500px',
@@ -122,16 +132,14 @@ export class MyForms {
       this.totalFormsarray = this.forms;
       this.loadSummary();
       this.cd.detectChanges();
-      alert('Form restored successfully!');
+      this.toastr.success('Form restored successfully!', 'Success');
     },
     error: (err:any) => {
       console.error(err);
-      alert('Restore failed!');
+      this.toastr.error('Restore failed!', 'Error');
     }
   });
 }
-
-
 
 
   filterStatus(status: String){

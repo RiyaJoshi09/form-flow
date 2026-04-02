@@ -3,6 +3,7 @@ import { ChangeDetectorRef, Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatFormField } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-share-dialog',
@@ -16,7 +17,8 @@ link: string = '';
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private cd: ChangeDetectorRef,
-    private dialogRef: MatDialogRef<any>
+    private dialogRef: MatDialogRef<any>,
+    private toastr: ToastrService
   ) {}
 
   ngAfterViewInit() {
@@ -26,7 +28,7 @@ link: string = '';
 
   copyLink() {
     navigator.clipboard.writeText(this.link);
-    alert("Link copied!");
+    this.toastr.success('Link copied to clipboard!', 'Success');
   }
 
   closeDialog(){
