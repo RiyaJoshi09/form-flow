@@ -2,6 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap, throwError } from 'rxjs';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,7 @@ export class AuthService {
 
   isLoggedIn = signal(false);
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router, private toastr:ToastrService) {}
 
   getAccessToken(): string | null {
     return localStorage.getItem('accessToken');
@@ -42,7 +43,7 @@ export class AuthService {
   signup(payload: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/signup`, payload).pipe(
       tap((res: any) => {
-        alert(res.message + '. Please Login to continue');
+        this.toastr.warning(res.message + '. Please Login to continue');
         this.router.navigate(['/login']);
       }),
     );
@@ -60,13 +61,13 @@ export class AuthService {
   logout() {
     const refreshToken = this.getRefreshToken();
     this.http.post(`${this.baseUrl}/logout`, { refreshToken }).subscribe({
-      next: () => { alert('logged out successfully !') },
+      next: () => { this.toastr.success('logged out successfully !') },
       error: () => {}
     });
 
     this.clearTokens();
     this.isLoggedIn.set(false);
-    alert("Logged Out!!!")
+    this.toastr.success("Logged Out!!!")
     this.router.navigate(['/login']);
   }
 
