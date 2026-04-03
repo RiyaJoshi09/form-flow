@@ -93,7 +93,7 @@ export class FormBuilder {
   }
 
   loadFromForEditing(formId: string) {
-    this.formService.getFormById(+formId).subscribe({
+    this.formService.getFormById(formId).subscribe({
       next: (form) => {
         localStorage.setItem('prevTheme', localStorage.getItem('theme') || 'theme-pink');
         localStorage.setItem('theme', form.theme);

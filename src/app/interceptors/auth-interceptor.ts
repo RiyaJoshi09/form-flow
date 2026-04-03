@@ -6,6 +6,7 @@ import { AuthService } from '../services/auth-service';
 import { Router } from '@angular/router';
 import { LoaderService } from '../services/loader-service';
 import { finalize } from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr';
 
 let isRefreshing = false;
 const refreshTokenSubject = new BehaviorSubject<string | null>(null);
@@ -14,6 +15,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const loaderService = inject(LoaderService);
   const router = inject(Router);
+  const toastr = inject(ToastrService);
 
   const skipUrls = ['/login', '/refresh', '/signup'];
 
@@ -63,9 +65,14 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
             catchError((err) => {
               isRefreshing = false;
-              authService.clearTokens();
-              authService.isLoggedIn.set(false);
-              router.navigate(['/login']);
+              if (error.status === 401) {
+                authService.clearTokens();
+                authService.isLoggedIn.set(false);
+                router.navigate(['/login']);
+                toastr.error('Session TimeOut !! Login Again');
+              } else {
+                toastr.error('Permission Denied!!');
+              }
               return throwError(() => err);
             }),
           );
@@ -85,7 +92,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           }),
         );
       }
-
+      if (error.status === 500) toastr.error('Internal Server Error!!!');
+      if (error.status === 404) toastr.info('No data found!!!');
       return throwError(() => error);
     }),
   );
