@@ -49,7 +49,8 @@ export class FormSubmission {
     private formService: FormService,
     private cd: ChangeDetectorRef,
     @Optional() @Inject(MAT_DIALOG_DATA) public dialogData: any,
-    private toastr: ToastrService) { }
+    private toastr: ToastrService,
+  ) {}
 
   ngOnInit() {
     //Check if data was passed through the Dialog (Preview Mode)
@@ -63,16 +64,16 @@ export class FormSubmission {
       const formId = this.route.snapshot.paramMap.get('id');
       if (formId) {
         // Convert formId to number to match your service signature
-        this.formService.getResponseFormById(Number(formId)).subscribe({
+        this.formService.getResponseFormById(formId).subscribe({
           next: (form: Form) => {
             this.formStructure = form;
             this.isReadOnly = false;
             this.buildReactiveForm();
           },
           error: (err) => {
-            console.error("Could not fetch form:", err);
-            this.toastr.error("Error: Form not found on server.");
-          }
+            console.error('Could not fetch form:', err);
+            this.toastr.error('Error: Form not found on server.');
+          },
         });
       }
     }
@@ -134,38 +135,88 @@ export class FormSubmission {
     this.cd.detectChanges();
   }
 
+  // submitResponse() {
+  //   if (this.isReadOnly) {
+  //     this.toastr.warning("This is a preview. Data is not saved to the database.");
+  //     return;
+  //   }
+
+  //   if (this.formGroup.valid) {
+  //     this.isSubmitting = true;
+
+  //     const responseEntry = {
+  //       formId: this.formStructure.id,
+  //       response: this.formGroup.value,
+  //     };
+
+  //     console.log(this.formGroup.value);
+
+  //     this.formService.submitResponse(responseEntry).subscribe({
+  //       next: (res) => {
+  //         console.log(res);
+  //         this.toastr.success("Response saved successfully!");
+  //         this.formGroup.reset();
+  //         this.isSubmitting = false;
+  //       },
+  //       error: (err) => {
+  //         console.error("Submission failed", err);
+  //         this.toastr.error("Could not save response. Please try again.");
+  //         this.isSubmitting = false;
+  //       },
+  //     });
+  //   } else {
+  //     this.formGroup.markAllAsTouched(); // Show errors to the user
+  //     this.toastr.error("Please fix the errors before submitting.");
+  //   }
+  // }
+
   submitResponse() {
     if (this.isReadOnly) {
-      this.toastr.warning("This is a preview. Data is not saved to the database.");
+      this.toastr.warning('This is a preview. Data is not saved to the database.');
       return;
     }
 
     if (this.formGroup.valid) {
       this.isSubmitting = true;
+      const rawValue = this.formGroup.value;
+      const formData = new FormData();
+      const files: File[] = [];
 
-      const responseEntry = {
-        formId: this.formStructure.id,
-        response: this.formGroup.value,
-      };
+      Object.keys(rawValue).forEach((key) => {
+        const value = rawValue[key];
+        if (value instanceof File) {
+          files.push(value);
+        }
+      });
+      formData.append(
+        'response',
+        JSON.stringify({
+          formId: this.formStructure.id,
+          response: rawValue,
+        }),
+      );
 
-      console.log(this.formGroup.value);
+      // 👇 Append files
+      files.forEach((file) => {
+        formData.append('files', file);
+      });
 
-      this.formService.submitResponse(responseEntry).subscribe({
+      this.formService.submitResponse(formData).subscribe({
         next: (res) => {
           console.log(res);
-          this.toastr.success("Response saved successfully!");
+          this.toastr.success('Response saved successfully!');
           this.formGroup.reset();
           this.isSubmitting = false;
         },
         error: (err) => {
-          console.error("Submission failed", err);
-          this.toastr.error("Could not save response. Please try again.");
+          console.error('Submission failed', err);
+          this.toastr.error('Could not save response. Please try again.');
           this.isSubmitting = false;
         },
       });
     } else {
-      this.formGroup.markAllAsTouched(); // Show errors to the user
-      this.toastr.error("Please fix the errors before submitting.");
+      this.formGroup.markAllAsTouched();
+      this.toastr.error('Please fix the errors before submitting.');
     }
   }
 }

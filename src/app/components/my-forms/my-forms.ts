@@ -82,7 +82,7 @@ export class MyForms {
     this.totalRes = this.forms.reduce((sum, f:any)=> sum + (f.responses || 0), 0);
   }
 
-  deleteForm(id : number){
+  deleteForm(id : string){
 this.dialog.open(DeleteDialog).afterClosed().subscribe(result => {
 
     if (result) {
@@ -124,7 +124,7 @@ this.dialog.open(DeleteDialog).afterClosed().subscribe(result => {
   }
 
 
- restoreForm(id: number){
+ restoreForm(id: string){
   this.formService.restoreForms(id).subscribe({
     next: (data:any) => {
       console.log(data);
