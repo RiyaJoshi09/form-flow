@@ -3,7 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { FieldType } from '../../../enums/field-type.enum';
 import { FileUploadField } from '../../../interfaces/field-config-schema';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIcon } from "@angular/material/icon";
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-file-upload',
@@ -15,20 +15,11 @@ export class FileUpload {
   @Input() fieldConfig!: FileUploadField;
   @Input() control!: FormControl;
 
-  // control = new FormControl<File | null>(null, {
-  //   nonNullable: true,
-  //   validators: [Validators.required],
-  // });
-
-  // fieldConfig: FileUploadField = {
-  //   id: 'resume',
-  //   type: FieldType.FILE_UPLOAD,
-  //   label: 'Upload Resume',
-  //   order: 1,
-  // };
-
   onFileChange(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0] || null;
     this.control.setValue(file);
+    this.control.markAsTouched();
+    this.control.updateValueAndValidity();
   }
+  
 }

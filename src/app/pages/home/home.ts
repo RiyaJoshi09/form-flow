@@ -5,22 +5,34 @@ import { MyForms } from '../../components/my-forms/my-forms';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { ThemeSelector } from '../../components/theme-selector/theme-selector';
 import { ThemeService } from '../../services/theme-service';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatButtonModule} from '@angular/material/button';
 
 @Component({
   selector: 'app-home',
-  imports: [MatIconModule, CommonModule, MyForms, RouterLink, RouterOutlet,ThemeSelector],
+  imports: [MatIconModule, CommonModule, MyForms, RouterLink, RouterOutlet, ThemeSelector, MatMenuModule, MatButtonModule],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
 export class Home {
-  activesection="MyForm";
+  activesection = 'MyForm';
 
-  constructor(private themeService: ThemeService ) {}
+  constructor(
+    private themeService: ThemeService,
+    private router: Router,
+  ) {}
 
   ngOnInit() {
-    localStorage.setItem('theme',localStorage.getItem('prevTheme') || localStorage.getItem('theme')  || 'theme-pink')
+    localStorage.setItem(
+      'theme',
+      localStorage.getItem('prevTheme') || localStorage.getItem('theme') || 'theme-pink',
+    );
     localStorage.removeItem('prevTheme');
     this.themeService.loadTheme();
   }
-  
+  logout() {
+    if (confirm('Are you sure you want to logout?')) {
+      this.router.navigate(['/logout']);
+    }
+  }
 }

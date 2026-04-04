@@ -6,7 +6,17 @@
     <div class="nav-profile">
       <button class="create" type="button" [routerLink]="['/create']">Create New</button>
       <app-theme-selector></app-theme-selector>
-      <mat-icon>person</mat-icon>
+      <div>
+        <button matIconButton [matMenuTriggerFor]="menu" aria-label="User menu">
+          <mat-icon>person</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="logout()">
+            <mat-icon>logout</mat-icon>
+            <span>Log Out</span>
+          </button>
+        </mat-menu>
+      </div>
     </div>
   </div>
 
@@ -37,7 +47,11 @@
     <!--maincontent-->
     <div class="main-content">
       @if (activesection == 'MyForm') {
-        <app-my-forms></app-my-forms>
+        <app-my-forms type="myForms"></app-my-forms>
+      }
+
+      @if (activesection == 'Trash') {
+        <app-my-forms type="trash"></app-my-forms>
       }
     </div>
   </div>

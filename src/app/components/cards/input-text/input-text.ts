@@ -4,10 +4,11 @@ import { MatInputModule } from '@angular/material/input';
 import { TextField } from '../../../interfaces/field-config-schema';
 import { FieldType } from '../../../enums/field-type.enum';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-input-text',
-  imports: [MatFormFieldModule, MatInputModule, ReactiveFormsModule],
+  imports: [MatFormFieldModule, MatInputModule, ReactiveFormsModule, MatIconModule],
   templateUrl: './input-text.html',
   styleUrl: './input-text.css',
 })

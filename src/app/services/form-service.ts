@@ -8,10 +8,12 @@ import { ThemeService } from './theme-service';
   providedIn: 'root',
 })
 export class FormService {
-
   url = 'http://localhost:8082/formflow/';
 
-  constructor(private http: HttpClient, private themeService: ThemeService) { }
+  constructor(
+    private http: HttpClient,
+    private themeService: ThemeService,
+  ) {}
 
   mapToFormSchema(rawForm: any): Form {
     return {
@@ -41,7 +43,7 @@ export class FormService {
             fontSize: field.fontSize,
             bold: field.bold,
             italic: field.italic,
-            underline: field.underline
+            underline: field.underline,
           },
 
           /*
@@ -61,15 +63,16 @@ export class FormService {
   private mapToBackendResponse(data: any) {
     return {
       formId: data.formId,
-      response: data.response
+      response: data.response,
     };
   }
 
   createForm(formData: any): Observable<any> {
     const mappedData = this.mapToFormSchema(formData);
+    const token = localStorage.getItem('token');
     let data: any = this.http.post(this.url + 'user/createForm', mappedData, {
       responseType: 'text',
-    })
+    });
     return data;
   }
 
@@ -77,7 +80,7 @@ export class FormService {
     const mappedData = this.mapToFormSchema(formData);
     let data: any = this.http.put(this.url + 'user/updateForm/' + formData.id, mappedData, {
       responseType: 'text',
-    })
+    });
     return data;
   }
 
@@ -90,16 +93,33 @@ export class FormService {
   }
 
   getAllForms(): Observable<Form[]> {
-    return this.http.get<Form[]>(this.url + "user/allForm");
+    return this.http.get<Form[]>(this.url + 'user/allForm');
   }
-  getFormByStatus() { }
+  getFormByStatus() {}
 
   submitResponse(data: any) {
     const mappedData = this.mapToBackendResponse(data);
-    return this.http.post(this.url + "api/responses", mappedData);
+    console.log(mappedData);
+    return this.http.post(this.url + 'api/responses', mappedData);
   }
 
   getFormResponseById(id: number) {
-    return this.http.get(this.url + "api/responses/" + id);
+    return this.http.get(this.url + 'api/responses/' + id);
+  }
+
+  deleteFormById(id: number) {
+    return this.http.patch(this.url + 'user/form/moveToTrash/' + id, {}, { responseType: 'text' });
+  }
+
+  getTrashForms() {
+    return this.http.get(this.url + 'user/form/trash');
+  }
+
+  restoreForms(id: number) {
+    return this.http.patch(
+      this.url + 'user/form/restoreFromTrash/' + id,
+      {},
+      { responseType: 'text' },
+    );
   }
 }

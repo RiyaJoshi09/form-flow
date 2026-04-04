@@ -1,6 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, Inject, Optional } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { InputText } from '../../components/cards/input-text/input-text';
 import { FileUpload } from '../../components/cards/file-upload/file-upload';
@@ -12,10 +18,13 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormService } from '../../services/form-service';
 import { MatIconModule } from '@angular/material/icon';
 import { Form } from '../../interfaces/form-schema';
+import { fileSizeValidator, fileTypeValidator } from '../../validators/file.validators';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-form-submission',
-  imports: [CommonModule,
+  imports: [
+    CommonModule,
     InputText,
     FileUpload,
     CheckBox,
@@ -24,21 +33,23 @@ import { Form } from '../../interfaces/form-schema';
     Textarea,
     FormsModule,
     ReactiveFormsModule,
-    MatIconModule],
+    MatIconModule,
+  ],
   templateUrl: './form-submission.html',
   styleUrl: './form-submission.css',
 })
 export class FormSubmission {
-
   formGroup: FormGroup = new FormGroup({});
   formStructure: any;
   isReadOnly: boolean = false;
   isSubmitting: boolean = false;
 
-  constructor(private route: ActivatedRoute,
+  constructor(
+    private route: ActivatedRoute,
     private formService: FormService,
     private cd: ChangeDetectorRef,
-    @Optional() @Inject(MAT_DIALOG_DATA) public dialogData: any) { }
+    @Optional() @Inject(MAT_DIALOG_DATA) public dialogData: any,
+    private toastr: ToastrService) { }
 
   ngOnInit() {
     //Check if data was passed through the Dialog (Preview Mode)
@@ -60,7 +71,7 @@ export class FormSubmission {
           },
           error: (err) => {
             console.error("Could not fetch form:", err);
-            alert("Error: Form not found on server.");
+            this.toastr.error("Error: Form not found on server.");
           }
         });
       }
@@ -69,11 +80,11 @@ export class FormSubmission {
 
   getFieldStyle(config: any) {
     return {
-      'color': config?.color || '#000000',
+      color: config?.color || '#000000',
       'font-size': config?.fontSize || '12px',
       'font-weight': config?.bold ? 'bold' : 'normal',
       'font-style': config?.italic ? 'italic' : 'normal',
-      'text-decoration': config?.underline ? 'underline' : 'none'
+      'text-decoration': config?.underline ? 'underline' : 'none',
     };
   }
 
@@ -97,14 +108,25 @@ export class FormSubmission {
         const validators = [];
         if (config.validations?.required) validators.push(Validators.required);
         if (config.validations?.email) validators.push(Validators.email);
-        if (config.validations?.minLength) validators.push(Validators.minLength(config.validations.minLength));
-        if (config.validations?.maxLength) validators.push(Validators.maxLength(config.validations.maxLength));
-        if (config.validations?.fileType) validators.push(Validators.pattern(config.validations.fileType));
+        if (config.validations?.minLength)
+          validators.push(Validators.minLength(config.validations.minLength));
+        if (config.validations?.maxLength)
+          validators.push(Validators.maxLength(config.validations.maxLength));
         if (config.validations?.min) validators.push(Validators.min(config.validations.min));
         if (config.validations?.max) validators.push(Validators.max(config.validations.max));
-        if (config.validations?.maxSize) validators.push(Validators.max(config.validations.maxSize));
-
-        controls[controlKey] = new FormControl('', validators);
+        if (field.fieldType === 'FILE') {
+          if (config.validations?.maxSize) {
+            validators.push(fileSizeValidator(config.validations.maxSize));
+          }
+          if (config.validations?.fileType) {
+            const types = config.validations.fileType
+              .split(',')
+              .map((t: string) => t.trim().toLowerCase());
+            validators.push(fileTypeValidator(types));
+          }
+        }
+        const initialValue = field.fieldType === 'FILE' ? null : '';
+        controls[controlKey] = new FormControl(initialValue, validators);
       });
     });
 
@@ -114,7 +136,7 @@ export class FormSubmission {
 
   submitResponse() {
     if (this.isReadOnly) {
-      alert("This is a preview. Data is not saved to the database.");
+      this.toastr.warning("This is a preview. Data is not saved to the database.");
       return;
     }
 
@@ -123,7 +145,7 @@ export class FormSubmission {
 
       const responseEntry = {
         formId: this.formStructure.id,
-        response: this.formGroup.value
+        response: this.formGroup.value,
       };
 
       console.log(this.formGroup.value);
@@ -131,19 +153,19 @@ export class FormSubmission {
       this.formService.submitResponse(responseEntry).subscribe({
         next: (res) => {
           console.log(res);
-          alert("Response saved successfully!");
+          this.toastr.success("Response saved successfully!");
           this.formGroup.reset();
           this.isSubmitting = false;
         },
         error: (err) => {
           console.error("Submission failed", err);
-          alert("Could not save response. Please try again.");
+          this.toastr.error("Could not save response. Please try again.");
           this.isSubmitting = false;
-        }
+        },
       });
     } else {
       this.formGroup.markAllAsTouched(); // Show errors to the user
-      alert("Please fix the errors before submitting.");
+      this.toastr.error("Please fix the errors before submitting.");
     }
   }
 }

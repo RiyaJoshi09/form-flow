@@ -1,6 +1,6 @@
 <div
   (click)="fileInput.click()"
-  class="flex items-center justify-between px-4 py-2 border border-theme rounded-lg cursor-pointer hover:outline-1 transition"
+  class="flex items-center justify-between px-4 py-2 mb-3 border border-theme rounded-lg cursor-pointer hover:outline-1 transition"
 >
   <span class="text-gray-500 text-sm">
     {{ control?.value?.name || 'Choose a file...' }}
@@ -11,9 +11,21 @@
 
 <input type="file" #fileInput class="hidden" (change)="onFileChange($event)" />
 
-@if (control.hasError('required')) {
-  <div class="text-xs italic text-red-500 flex justify-start items-start mt-5">
-    <mat-icon style="font-size: 16px; font-weight:500;">error_outline</mat-icon>
-    <mat-error class="text-red-500! ">Required.</mat-error>
+@if (control.touched && control.hasError('required')) {
+  <div class="text-xs italic text-red-500 flex justify-start items-start">
+    <mat-icon style="font-size: 16px; font-weight: 500">error_outline</mat-icon>
+    <mat-error class="text-red-500!">Required.</mat-error>
+  </div>
+}
+@if (control.touched && control.hasError('maxSize')) {
+  <div class="text-xs italic text-red-500 flex justify-start items-start">
+    <mat-icon style="font-size: 16px; font-weight: 500">error_outline</mat-icon>
+    <mat-error class="text-red-500!">Max Size Exceeded</mat-error>
+  </div>
+}
+@if (control.touched && control.hasError('fileType')) {
+  <div class="text-xs italic text-red-500 flex justify-start items-start">
+    <mat-icon style="font-size: 16px; font-weight: 500">error_outline</mat-icon>
+    <mat-error class="text-red-500!">Wrong File Type</mat-error>
   </div>
 }

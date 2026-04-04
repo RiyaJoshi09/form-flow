@@ -5,12 +5,12 @@ import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-builder-file-upload',
-  imports: [MatFormFieldModule,MatIconModule],
+  imports: [MatFormFieldModule, MatIconModule],
   templateUrl: './builder-file-upload.html',
   styleUrl: './builder-file-upload.css',
 })
 export class BuilderFileUpload {
-  @Input() bluePrint!:BuilderFieldSchema;
+  @Input() bluePrint!: BuilderFieldSchema;
   fieldData: BuilderFieldSchema = this.bluePrint;
 
   ngOnChanges(changes: SimpleChanges) {
@@ -21,5 +21,11 @@ export class BuilderFileUpload {
   }
   updateUI(data: BuilderFieldSchema) {
     this.fieldData = data;
+  }
+  formatFileTypes(types: string): string {
+    return types
+      .split(',')
+      .map((t) => t.toUpperCase())
+      .join(', ');
   }
 }

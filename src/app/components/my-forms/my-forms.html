@@ -1,19 +1,30 @@
 <div class="heading-sec">
-  <h1>My Forms</h1>
-  <p>Manage and track your data collection</p>
+  @if(type=='myForms'){
+    <h1>My Forms</h1>
+    <p>Manage and track your data collection</p>
+  }
+  @else if(type=='trash'){
+    <h1>Trash</h1>
+    <p>View and restore your deleted forms</p>
+  }
 </div>
 
 <div class="summary">
   <div class="cards">
     <div class="details">
-      <h3>Total Forms</h3>
+      @if(type=='myForms'){
+        <h3>Total Forms</h3>
+      }
+      @else if(type=='trash'){
+        <h3>Total Deleted Forms</h3>
+      }
       <h1>{{ totalForms }}</h1>
     </div>
     <mat-icon>description</mat-icon>
   </div>
   <div class="cards">
     <div class="details">
-      <h3>Total Active Forms</h3>
+      <h3>Total Published Forms</h3>
       <h1>{{ totalActive }}</h1>
     </div>
     <mat-icon>check_circle</mat-icon>
@@ -65,17 +76,28 @@
         </td>
         <td>
           <div class="actions">
-            <button mat-icon-button [routerLink]="['/edit-form', form.id]">
+            @if(type=='myForms'){
+              <button mat-icon-button [routerLink]="['/edit-form', form.id]">
               <mat-icon>edit</mat-icon>
             </button>
-            <button mat-icon-button (click)="shareForm(form.id)" class="!cursor-pointer">
-              <mat-icon>share</mat-icon>
-            </button>
-            <mat-icon
+              <button mat-icon-button (click)="shareForm(form.id, form.published)" class="!cursor-pointer">
+                <mat-icon>share</mat-icon>
+              </button>
+              <mat-icon
               (click)="deleteForm(form.id)"
               class="!text-red-500 hover:text-red-700 cursor-pointer"
-              >delete</mat-icon
-            >
+              >delete</mat-icon>
+            }
+            @else if(type=='trash'){
+              <button mat-icon-button (click)="restoreForm(form.id)" class="!cursor-pointer">
+                <mat-icon>restore</mat-icon>
+              </button>
+
+              <!-- <mat-icon
+              (click)="permanentDeleteForm(form.id)"
+              class="!text-red-500 hover:text-red-700 cursor-pointer"
+              >delete_forever</mat-icon> -->
+            }
           </div>
         </td>
       </tr>

@@ -4,43 +4,47 @@ import { BehaviorSubject, throwError } from 'rxjs';
 import { catchError, filter, switchMap, take } from 'rxjs/operators';
 import { AuthService } from '../services/auth-service';
 import { Router } from '@angular/router';
+import { LoaderService } from '../services/loader-service';
+import { finalize } from 'rxjs/operators';
 
 let isRefreshing = false;
 const refreshTokenSubject = new BehaviorSubject<string | null>(null);
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
+  const loaderService = inject(LoaderService);
   const router = inject(Router);
 
   const skipUrls = ['/login', '/refresh', '/signup'];
 
-  if (skipUrls.some(url => req.url.includes(url))) {
+  if (skipUrls.some((url) => req.url.includes(url))) {
     return next(req);
   }
 
-  const accessToken = authService.getAccessToken();
+  if (!skipUrls.some((url) => req.url.includes(url))) {
+    loaderService.show();
+  }
 
+  const accessToken = authService.getAccessToken();
   let authReq = req;
 
   if (accessToken) {
     authReq = req.clone({
       setHeaders: {
-        Authorization: `Bearer ${accessToken}`
-      }
+        Authorization: `Bearer ${accessToken}`,
+      },
     });
   }
 
   return next(authReq).pipe(
+    finalize(() => loaderService.hide()),
     catchError((error: HttpErrorResponse) => {
-
-      if (error.status === 401) {
-
+      if (error.status === 401 || error.status === 403) {
         if (!isRefreshing) {
           isRefreshing = true;
           refreshTokenSubject.next(null);
 
           return authService.refreshToken().pipe(
-
             switchMap((res: any) => {
               isRefreshing = false;
 
@@ -50,8 +54,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
               const retryReq = req.clone({
                 setHeaders: {
-                  Authorization: `Bearer ${newAccessToken}`
-                }
+                  Authorization: `Bearer ${newAccessToken}`,
+                },
               });
 
               return next(retryReq);
@@ -63,26 +67,26 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
               authService.isLoggedIn.set(false);
               router.navigate(['/login']);
               return throwError(() => err);
-            })
+            }),
           );
         }
 
         return refreshTokenSubject.pipe(
-          filter(token => token !== null),
+          filter((token) => token !== null),
           take(1),
-          switchMap(token => {
+          switchMap((token) => {
             const retryReq = req.clone({
               setHeaders: {
-                Authorization: `Bearer ${token!}`
-              }
+                Authorization: `Bearer ${token!}`,
+              },
             });
 
             return next(retryReq);
-          })
+          }),
         );
       }
 
       return throwError(() => error);
-    })
+    }),
   );
 };
