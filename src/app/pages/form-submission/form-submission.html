@@ -1,12 +1,13 @@
 <div class="min-h-screen bg-surface py-12 px-4 transition-colors duration-300">
-  
+
   <div class="max-w-3xl mx-auto bg-container shadow-xl rounded-3xl overflow-hidden border border-theme">
-    
+
     <div class="bg-primary p-10">
       <h1 class="text-3xl font-bold text-white rounded-t-lg">{{ formStructure?.title }}</h1>
       <p class="opacity-80 mt-2 text-white">Please fill out the details below accurately.</p>
     </div>
 
+    @if (!isSubmitted){
     <form [formGroup]="formGroup" (ngSubmit)="submitResponse()" class="p-10">
       <div *ngFor="let section of formStructure?.sections" class="mb-12">
         <h2 class="text-xl font-bold text-primary mb-6 border-b pb-2 border-theme">
@@ -14,34 +15,51 @@
         </h2>
 
         <div *ngFor="let field of section.fields" class="mb-8">
-          <label class="block text-sm font-bold text-muted uppercase tracking-wider mb-2" [ngStyle]="getFieldStyle(field.fieldConfig)">
-          <!--[ngStyle]="getFieldStyle(field.fieldStyle)-->
+          <label class="block text-sm font-bold text-muted uppercase tracking-wider mb-2"
+            [ngStyle]="getFieldStyle(field.fieldConfig)">
+            <!--[ngStyle]="getFieldStyle(field.fieldStyle)-->
             {{ field.fieldConfig?.label}}
-            <span *ngIf="field.validations?.required" class="text-red-500">*</span>
+            <span *ngIf="field.fieldConfig.validations.required" class="text-red-500">*</span>
           </label>
 
           <div [ngSwitch]="field.fieldType">
-            <app-input-text *ngSwitchCase="'TEXT'" [fieldConfig]="field.fieldConfig" [control]="getControl(field)"></app-input-text>
-            <app-check-box *ngSwitchCase="'CHECKBOX'" [fieldConfig]="field.fieldConfig" [control]="getControl(field)"></app-check-box>
-            <app-file-upload *ngSwitchCase="'FILE'" [fieldConfig]="field.fieldConfig" [control]="getControl(field)"></app-file-upload>
-            <app-radio-button *ngSwitchCase="'RADIO'" [fieldConfig]="field.fieldConfig" [control]="getControl(field)"></app-radio-button>
-            <app-select-card *ngSwitchCase="'DROPDOWN'" [fieldConfig]="field.fieldConfig" [control]="getControl(field)"></app-select-card>
-            <app-textarea *ngSwitchCase="'TEXTAREA'" [fieldConfig]="field.fieldConfig " [control]="getControl(field)"></app-textarea>
+            <app-input-text *ngSwitchCase="'TEXT'" [fieldConfig]="field.fieldConfig"
+              [control]="getControl(field)"></app-input-text>
+            <app-check-box *ngSwitchCase="'CHECKBOX'" [fieldConfig]="field.fieldConfig"
+              [control]="getControl(field)"></app-check-box>
+            <app-file-upload *ngSwitchCase="'FILE'" [fieldConfig]="field.fieldConfig"
+              [control]="getControl(field)"></app-file-upload>
+            <app-radio-button *ngSwitchCase="'RADIO'" [fieldConfig]="field.fieldConfig"
+              [control]="getControl(field)"></app-radio-button>
+            <app-select-card *ngSwitchCase="'DROPDOWN'" [fieldConfig]="field.fieldConfig"
+              [control]="getControl(field)"></app-select-card>
+            <app-textarea *ngSwitchCase="'TEXTAREA'" [fieldConfig]="field.fieldConfig "
+              [control]="getControl(field)"></app-textarea>
           </div>
 
-          <!-- <div *ngIf="formGroup.get(field.id)?.invalid && formGroup.get(field.id || field.fieldOrder)?.touched" 
-               class="text-red-500 text-xs mt-2 italic flex items-center gap-1">
+          <!-- <div *ngIf="formGroup.get(field.id)?.invalid && formGroup.get(field.id || field.fieldOrder)?.touched"
+            class="text-red-500 text-xs mt-2 italic flex items-center gap-1">
             <mat-icon class="text-sm scale-75">error_outline</mat-icon>
             This field is required or formatted incorrectly.
           </div> -->
         </div>
       </div>
 
-      <button type="submit" 
-              [disabled]="formGroup.invalid"
-              class="w-full btn-primary font-bold py-4 rounded-2xl transition-all shadow-lg opacity-90 hover:opacity-100 cursor-pointer disabled:opacity-50 disabled:grayscale">
+      <button type="submit" [disabled]="formGroup.invalid"
+        class="w-full btn-primary font-bold py-4 rounded-2xl transition-all shadow-lg opacity-90 hover:opacity-100 cursor-pointer disabled:opacity-50 disabled:grayscale">
         SUBMIT RESPONSE
       </button>
     </form>
+    } @else {
+    <div class="text-center p-20 bg-container rounded-3xl shadow-xl border border-theme">
+      <!--<mat-icon class="text-6xl text-primary mb-4" style="width: 60px; height: 60px;">check_circle</mat-icon>-->
+      <h1 class="text-3xl font-bold text-primary mb-2">Thank You!</h1>
+      <p class="text-muted mb-8">Your response has been successfully recorded.</p>
+
+      <button (click)="resetForm()" class="btn-primary px-6 py-2 rounded-xl font-bold">
+        SUBMIT ANOTHER RESPONSE
+      </button>
+    </div>
+    }
   </div>
 </div>

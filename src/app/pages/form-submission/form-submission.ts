@@ -43,6 +43,7 @@ export class FormSubmission {
   formStructure: any;
   isReadOnly: boolean = false;
   isSubmitting: boolean = false;
+  isSubmitted: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -68,6 +69,8 @@ export class FormSubmission {
             this.formStructure = form;
             this.isReadOnly = false;
             this.buildReactiveForm();
+            this.loadDraft(formId);
+            this.setupDraftTimer(formId);
           },
           error: (err) => {
             console.error("Could not fetch form:", err);
@@ -134,6 +137,20 @@ export class FormSubmission {
     this.cd.detectChanges();
   }
 
+  setupDraftTimer(formId: string) {
+    this.formGroup.valueChanges.subscribe(values => {
+      localStorage.setItem(`form_draft_${formId}`, JSON.stringify(values));
+    })
+  }
+
+  loadDraft(formId: string) {
+    const savedDraft = localStorage.getItem(`form_draft_${formId}`);
+    if (savedDraft){
+      const draftValues = JSON.parse(savedDraft);
+      this.formGroup.patchValue(draftValues);
+    }
+  }
+
   submitResponse() {
     if (this.isReadOnly) {
       this.toastr.warning("This is a preview. Data is not saved to the database.");
@@ -156,6 +173,8 @@ export class FormSubmission {
           this.toastr.success("Response saved successfully!");
           this.formGroup.reset();
           this.isSubmitting = false;
+          this.isSubmitted = true;
+          localStorage.removeItem(`form_draft_${responseEntry.formId}`);
         },
         error: (err) => {
           console.error("Submission failed", err);
@@ -167,5 +186,11 @@ export class FormSubmission {
       this.formGroup.markAllAsTouched(); // Show errors to the user
       this.toastr.error("Please fix the errors before submitting.");
     }
+  }
+
+  resetForm() {
+    this.isSubmitted = false;
+    this.isSubmitting = false;
+    this.formGroup.reset();
   }
 }
