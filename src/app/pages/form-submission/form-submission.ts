@@ -20,6 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Form } from '../../interfaces/form-schema';
 import { fileSizeValidator, fileTypeValidator } from '../../validators/file.validators';
 import { ToastrService } from 'ngx-toastr';
+import { FormSettingsSchema } from '../../interfaces/form-settings-schema';
 
 @Component({
   selector: 'app-form-submission',
@@ -44,13 +45,16 @@ export class FormSubmission {
   isReadOnly: boolean = false;
   isSubmitting: boolean = false;
   isSubmitted: boolean = false;
+  closeMessage: string = '';
+  isClosed: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
     private formService: FormService,
     private cd: ChangeDetectorRef,
     @Optional() @Inject(MAT_DIALOG_DATA) public dialogData: any,
-    private toastr: ToastrService) { }
+    private toastr: ToastrService
+   ) { }
 
   ngOnInit() {
     //Check if data was passed through the Dialog (Preview Mode)
@@ -68,9 +72,14 @@ export class FormSubmission {
           next: (form: Form) => {
             this.formStructure = form;
             this.isReadOnly = false;
-            this.buildReactiveForm();
-            this.loadDraft(formId);
-            this.setupDraftTimer(formId);
+            if(this.checkAvailability(form)){
+              this.buildReactiveForm();
+              this.loadDraft(formId);
+              this.setupDraftTimer(formId);
+            } else {
+              this.isClosed = true;
+              this.closeMessage = form.settings?.closeMessage || "This form is closed";
+            }
           },
           error: (err) => {
             console.error("Could not fetch form:", err);
@@ -79,6 +88,15 @@ export class FormSubmission {
         });
       }
     }
+  }
+
+  checkAvailability(form: any): boolean{
+    if (!form.settings?.deadline) return true; 
+    const now = new Date();
+    const deadline = new Date(form.settings.deadline);
+    if (isNaN(deadline.getTime())) return true; 
+
+    return now < deadline;
   }
 
   getFieldStyle(config: any) {

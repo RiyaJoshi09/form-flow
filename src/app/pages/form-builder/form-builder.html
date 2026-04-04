@@ -1,8 +1,12 @@
 <div class="flex h-screen flex-col bg-gray-100">
   <div class="h-16 bg-container flex items-center justify-between px-8 shadow-sm">
-    <input [(ngModel)]="formTitle" class="text-xl font-bold border-none focus:ring-0 text-primary" placeholder="Form Title">
+    <input [(ngModel)]="formTitle" class="text-xl font-bold border-none focus:ring-0 text-primary"
+      placeholder="Form Title">
     <div class="flex gap-4">
       <app-theme-selector></app-theme-selector>
+      <button mat-icon-button (click)="openSettings()" matTooltip="Form Settings">
+        <mat-icon>settings</mat-icon>
+      </button>
       <button mat-stroked-button color="accent" class="btn-primary action-button" (click)="addSection()">
         <mat-icon>add_to_photos</mat-icon>
         <span>Add Section</span>
@@ -12,9 +16,9 @@
         <span>Save Form</span>
       </button>
       <button mat-raised-button color="primary" class="btn-primary action-button" (click)="openPreview()">
-      <mat-icon class="text-sm">visibility</mat-icon>
-      <span>Preview</span>
-    </button>
+        <mat-icon class="text-sm">visibility</mat-icon>
+        <span>Preview</span>
+      </button>
     </div>
   </div>
 
@@ -35,7 +39,8 @@
     </div>
 
     <div class="flex-1 p-10 overflow-y-auto">
-      <div class="max-w-3xl mx-auto flex flex-col gap-10" cdkDropList [cdkDropListData]="formSections" (cdkDropListDropped)="onSectionDrop($event)">
+      <div class="max-w-3xl mx-auto flex flex-col gap-10" cdkDropList [cdkDropListData]="formSections"
+        (cdkDropListDropped)="onSectionDrop($event)">
 
         <div *ngFor=" let section of formSections; let sectionIndex=index" cdkDrag
           class="bg-surface rounded-xl shadow-md overflow-hidden">
@@ -47,10 +52,12 @@
             <input [(ngModel)]="section.title"
               class="bg-transparent font-bold text-lg border-none text-primary opacity-90 focus:ring-1 focus:ring-(--mat-sys-primary) rounded px-2">
             <div class="flex gap-1">
-              <button mat-icon-button color="primary" (click)="duplicateSection(sectionIndex)" title="Duplicate Section">
+              <button mat-icon-button color="primary" (click)="duplicateSection(sectionIndex)"
+                title="Duplicate Section">
                 <mat-icon>content_copy</mat-icon>
               </button>
-              <button mat-icon-button color="warn" (click)="removeSection(sectionIndex)" [disabled]="formSections.length === 1">
+              <button mat-icon-button color="warn" (click)="removeSection(sectionIndex)"
+                [disabled]="formSections.length === 1">
                 <mat-icon>delete_sweep</mat-icon>
               </button>
             </div>
@@ -59,12 +66,13 @@
           <div class="p-6 min-h-[150px]" cdkDropList [id]="section.id" [cdkDropListData]="section.fields"
             [cdkDropListConnectedTo]="[sidebarList, ...sectionsIds]"
             (cdkDropListDropped)="onDrop($event, sectionIndex)">
-            <div *ngFor="let field of section.fields; let fieldIndex = index" cdkDrag class="group relative p-6 mb-6 bg-surface border border-theme rounded-2xl hover:shadow-md hover:scale-[1.01] transition-all">
+            <div *ngFor="let field of section.fields; let fieldIndex = index" cdkDrag
+              class="group relative p-6 mb-6 bg-surface border border-theme rounded-2xl hover:shadow-md hover:scale-[1.01] transition-all">
 
               <div class="mb-4">
                 <mat-icon cdkDragHandle class="text-muted cursor-move text-base">drag_handle</mat-icon>
-                <input [(ngModel)]="field.label"   (click)="selectField(sectionIndex, fieldIndex); $event.stopPropagation()"
-                                                        [ngStyle]="{
+                <input [(ngModel)]="field.label"
+                  (click)="selectField(sectionIndex, fieldIndex); $event.stopPropagation()" [ngStyle]="{
                                                         'font-size': field.fontSize,
                                                         'font-weight': field.bold ? 'bold' : 'normal',
                                                         'font-style': field.italic ? 'italic' : 'normal',
@@ -74,57 +82,57 @@
                   class="text-xs font-bold text-muted uppercase tracking-widest bg-transparent border-none focus:ring-1 focus:ring-indigo-100 rounded w-full p-1"
                   placeholder="CLICK TO EDIT LABEL">
               </div>
-       
-       <!-- Toolbar        -->
-               <div *ngIf="selectedFieldIndex === fieldIndex && selectedSectionIndex === sectionIndex" (click)="$event.stopPropagation()"
-               class="absolute -top-12 left-4 bg-surface border shadow-md rounded-lg px-3 py-2 flex gap-2 z-50">
 
-              <button (click)="field.bold = !field.bold"
-              [class.bg-indigo-100]="field.bold"
-              class="px-2 py-1 rounded font-bold">B</button>
+              <!-- Toolbar        -->
+              <div *ngIf="selectedFieldIndex === fieldIndex && selectedSectionIndex === sectionIndex"
+                (click)="$event.stopPropagation()"
+                class="absolute -top-12 left-4 bg-surface border shadow-md rounded-lg px-3 py-2 flex gap-2 z-50">
 
-              <button (click)="field.italic = !field.italic"
-              [class.bg-indigo-100]="field.italic"
-              class="px-2 py-1 rounded italic">I</button>
+                <button (click)="field.bold = !field.bold" [class.bg-indigo-100]="field.bold"
+                  class="px-2 py-1 rounded font-bold">B</button>
 
-              <button (click)="field.underline = !field.underline"
-              [class.bg-indigo-100]="field.underline"
-              class="px-2 py-1 rounded underline">U</button>
+                <button (click)="field.italic = !field.italic" [class.bg-indigo-100]="field.italic"
+                  class="px-2 py-1 rounded italic">I</button>
 
-              <select [(ngModel)]="field.fontSize" class="border rounded px-1 text-sm" (click)="$event.stopPropagation()">
-              <option value="12px">S</option>
-              <option value="15px">M</option>
-              <option value="20px">L</option>
-              </select>
+                <button (click)="field.underline = !field.underline" [class.bg-indigo-100]="field.underline"
+                  class="px-2 py-1 rounded underline">U</button>
 
-              <div class="flex gap-1 items-center">
-               <div *ngFor="let color of predefinedColours" (click)="field.color = color" [style.background]="color"
-                class="w-5 h-5 rounded-full cursor-pointer border hover:scale-110 transition">
+                <select [(ngModel)]="field.fontSize" class="border rounded px-1 text-sm"
+                  (click)="$event.stopPropagation()">
+                  <option value="12px">S</option>
+                  <option value="15px">M</option>
+                  <option value="20px">L</option>
+                </select>
+
+                <div class="flex gap-1 items-center">
+                  <div *ngFor="let color of predefinedColours" (click)="field.color = color" [style.background]="color"
+                    class="w-5 h-5 rounded-full cursor-pointer border hover:scale-110 transition">
+                  </div>
+                </div>
+                <input type="color" [(ngModel)]="field.color" [value]="field.color || '#000000'"
+                  (click)="$event.stopPropagation()" />
+
               </div>
-              </div>
-             <input type="color" [(ngModel)]="field.color" [value]="field.color || '#000000'" (click)="$event.stopPropagation()"/>
 
-            </div>
-
-   <!-- toolbar end -->
+              <!-- toolbar end -->
 
 
               <div class="opacity-90">
-                <app-builder-input-text *ngIf="field.type === 'TEXT' || field.type === 'number'" [bluePrint]="field"></app-builder-input-text>
+                <app-builder-input-text *ngIf="field.type === 'TEXT' || field.type === 'number'"
+                  [bluePrint]="field"></app-builder-input-text>
                 <app-builder-file-upload *ngIf="field.type === 'FILE'" [bluePrint]="field"></app-builder-file-upload>
                 <app-builder-check-box *ngIf="field.type === 'CHECKBOX'" [bluePrint]="field"></app-builder-check-box>
                 <app-builder-radio-button *ngIf="field.type === 'RADIO'" [bluePrint]="field"></app-builder-radio-button>
-                <app-builder-select-card *ngIf="field.type === 'DROPDOWN'" [bluePrint]="field"></app-builder-select-card>
+                <app-builder-select-card *ngIf="field.type === 'DROPDOWN'"
+                  [bluePrint]="field"></app-builder-select-card>
                 <app-builder-textarea *ngIf="field.type === 'TEXTAREA'" [bluePrint]="field"></app-builder-textarea>
               </div>
 
               <div class="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button (click)="duplicateField(sectionIndex, fieldIndex)"
-                  class="p-1.5 text-muted hover:text-primary">
+                <button (click)="duplicateField(sectionIndex, fieldIndex)" class="p-1.5 text-muted hover:text-primary">
                   <mat-icon class="text-sm">content_copy</mat-icon>
                 </button>
-                <button (click)="editField(sectionIndex, fieldIndex)"
-                  class="p-1.5 text-muted hover:text-primary">
+                <button (click)="editField(sectionIndex, fieldIndex)" class="p-1.5 text-muted hover:text-primary">
                   <mat-icon class="text-sm">settings</mat-icon>
                 </button>
                 <button (click)="removeField(sectionIndex, fieldIndex)" class="p-1.5 text-muted hover:text-red-500">

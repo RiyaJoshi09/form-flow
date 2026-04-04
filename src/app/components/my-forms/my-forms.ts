@@ -11,7 +11,7 @@ import { RouterLink } from '@angular/router';
 import { MatFormField, MatLabel, MatOption, MatSelect } from '@angular/material/select';
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { Form } from '../../interfaces/form-schema';
-import { DeleteDialog } from '../../delete-dialog/delete-dialog';
+import { DeleteDialog } from '../delete-dialog/delete-dialog';
 import { ToastrService } from 'ngx-toastr';
 
 

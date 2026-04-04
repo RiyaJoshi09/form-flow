@@ -24,6 +24,8 @@ import { ThemeSelector } from '../../components/theme-selector/theme-selector';
 import { ThemeService } from '../../services/theme-service';
 import { BuilderCheckBox } from '../../components/builder-cards/builder-check-box/builder-check-box';
 import { ToastrService } from 'ngx-toastr';
+import { FormSettingsDialog } from '../../components/form-settings-dialog/form-settings-dialog';
+import { FormSettingsSchema } from '../../interfaces/form-settings-schema';
 
 @Component({
   selector: 'app-form-builder',
@@ -58,6 +60,7 @@ export class FormBuilder {
       fields: [],
     },
   ];
+  formSettings: any;
   editingFormId: string | null = null;
 
   selectedFieldIndex: number | null = null;
@@ -72,8 +75,8 @@ export class FormBuilder {
     private formService: FormService,
     private themeService: ThemeService,
     private cd: ChangeDetectorRef,
-    private toastr: ToastrService
-  ) {}
+    private toastr: ToastrService,
+  ) { }
 
   elements = [
     { type: 'TEXT', label: 'Text Input' },
@@ -99,6 +102,7 @@ export class FormBuilder {
         localStorage.setItem('theme', form.theme);
         this.themeService.loadTheme();
         this.formTitle = form.title;
+        this.formSettings = form.settings;
         this.formSections = form.sections.map((section: any) => ({
           id: section.id ? section.id.toString() : Date.now().toString(),
           title: section.sectionTitle,
@@ -111,11 +115,11 @@ export class FormBuilder {
               validations: field.fieldConfig.validations || {},
               options: field.fieldConfig.options || [],
               placeholder: field.fieldConfig.placeholder || '',
-              color: field.fieldConfig.color ||'#000000', //field.fieldStyle.color ||'#000000'
+              color: field.fieldConfig.color || '#000000', //field.fieldStyle.color ||'#000000'
               fontSize: field.fieldConfig.fontSize || '12px', //field.fieldStyle.fontSize ||'12px'
               bold: field.fieldConfig.bold || false, //field.fieldStyle.bold || false
               italic: field.fieldConfig.italic || false, //field.fieldStyle.italics || false
-              underline: field.fieldConfig.underline ||false, //field.fieldStyle.undelrine || false
+              underline: field.fieldConfig.underline || false, //field.fieldStyle.undelrine || false
             })),
         }));
         this.formSections = [...this.formSections];
@@ -126,6 +130,19 @@ export class FormBuilder {
         console.error(err);
         this.toastr.error('Could not load form for editing.');
       },
+    });
+  }
+
+  openSettings() {
+    const dialogRef = this.dialog.open(FormSettingsDialog, {
+      width: '400px',
+      data: { ...this.formSettings }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.formSettings = result;
+      }
     });
   }
 
@@ -149,6 +166,7 @@ export class FormBuilder {
       title: this.formTitle,
       sections: this.formSections,
       status: 'active',
+      settings: this.formSettings
     };
 
     console.log(formToSave);
@@ -165,18 +183,18 @@ export class FormBuilder {
           this.toastr.error('Error saving form to backend. Check if Spring Boot is running.');
         },
       });
-      
+
     } else {
       this.formService.createForm(formToSave).subscribe({
-      next: (response) => {
-        this.toastr.success('Form Saved Successfully to Database!');
-        this.router.navigate(['/']);
-      },
-      error: (err) => {
-        console.error(err);
-        this.toastr.error('Error saving form.');
-      },
-    });
+        next: (response) => {
+          this.toastr.success('Form Saved Successfully to Database!');
+          this.router.navigate(['/']);
+        },
+        error: (err) => {
+          console.error(err);
+          this.toastr.error('Error saving form.');
+        },
+      });
     }
     localStorage.setItem('theme', localStorage.getItem('prevTheme') || 'theme-pink');
     localStorage.removeItem('prevTheme');
