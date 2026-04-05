@@ -1,0 +1,99 @@
+<div class="assign-page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div>
+      <h1>Assign Form</h1>
+      <p>Assign form to users or a group of users</p>
+    </div>
+  </div>
+
+  <!-- MAIN GRID -->
+  <div class="content">
+
+    <!-- LEFT SECTION -->
+    <div class="left">
+
+      <!-- SELECT FORM -->
+      <div class="card">
+        <label>SELECTED FORM</label>
+        <div class="select-box">
+          <mat-icon>description</mat-icon>
+          <div class="form-info">
+            <span class="title">Demo Form</span>
+            <span class="sub">Created on 4th april 2026</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ASSIGN RECIPIENTS -->
+      <div class="card">
+        <div class="card-header">
+          <label>ASSIGN RECIPIENTS</label>
+        </div>
+
+        <!-- SEARCH -->
+        <div class="search">
+          <mat-icon>search</mat-icon>
+          <input type="text" placeholder="Search teams or people..." [(ngModel)]="searchText" />
+        </div>
+
+        <!-- LIST -->
+        <div class="list">
+
+          <div class="item" *ngFor="let r of filteredRecipients(); let i = index">
+                <div class="left-info">
+                <div>
+                    <span class="title">{{ r.name }}</span>
+                </div>
+                </div>
+                <mat-checkbox [(ngModel)]="r.selected" (change)="updateSummary()"></mat-checkbox>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT SECTION -->
+    <div class="right">
+
+      <!-- DEADLINE -->
+      <div class="card">
+        <label>SET DEADLINE</label>
+        <div class="date-box">
+          <mat-icon>calendar_today</mat-icon>
+          <input type="date" [(ngModel)]="deadline" (change)="updateSummary()" />
+        </div>
+      </div>
+
+      <!-- NOTE -->
+      <div class="card">
+        <label>RECIPIENT NOTE</label>
+        <textarea rows="5">Please fill this form.</textarea>
+      </div>
+
+      <!-- SUMMARY -->
+      <div class="summary">
+        <h3>Assignment Summary</h3>
+
+        <div class="row">
+          <span>Selected Form</span>
+          <strong>Demo Form</strong>
+        </div>
+
+        <div class="row">
+          <span>Target Audience</span>
+          <strong>{{ selectedCount }} Selected</strong>
+        </div>
+
+        <div class="row">
+          <span>Deadline</span>
+          <strong>{{ deadline || 'NA' }}</strong>
+        </div>
+
+
+        <button class="assign-btn" (click)="assignForm()">Assign Form</button>
+      </div>
+
+    </div>
+  </div>
+</div>
