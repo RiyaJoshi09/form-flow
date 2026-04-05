@@ -11,8 +11,17 @@ export class AuthService {
   private baseUrl = 'http://localhost:8082/formflow/auth';
 
   isLoggedIn = signal(false);
+  mail = signal('pritish@gmail.com');
 
   constructor(private http: HttpClient, private router: Router, private toastr:ToastrService) {}
+
+  // sendOtp(mailToSend: string) : Observable<any> {
+
+  // }
+
+  // verifyOtp(enteredOtp: number) : Observable<any> {
+    
+  // }
 
   getAccessToken(): string | null {
     return localStorage.getItem('accessToken');

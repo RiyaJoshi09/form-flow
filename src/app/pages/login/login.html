@@ -10,7 +10,6 @@
         <mat-label>Username</mat-label>
         <input matInput type="text" [(ngModel)]="username" name="username" required />
       </mat-form-field>
-
       <mat-form-field appearance="outline" class="w-full">
         <mat-label>Password</mat-label>
         <input
@@ -31,9 +30,18 @@
         Login
       </button>
     </form>
-    <div class="flex justify-center items-center gap-3 mt-10">
+    <div class="flex justify-center items-start mt-6">
+      <a
+        routerLink="/forgot-password"
+        class="text-blue-500 text-sm underline opacity-80 cursor-pointer hover:opacity-100"
+        >Forgot Password?</a
+      >
+    </div>
+    <div class="flex justify-center items-center gap-3 mt-6">
       <span>Don't have an account? </span>
-      <a routerLink="/signup" class="text-blue-500 underline opacity-70 cursor-pointer hover:opacity-100"
+      <a
+        routerLink="/signup"
+        class="text-blue-500 underline opacity-80 cursor-pointer hover:opacity-100"
         >Sign Up</a
       >
     </div>
