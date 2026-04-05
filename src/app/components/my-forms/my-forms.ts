@@ -92,11 +92,11 @@ this.dialog.open(DeleteDialog).afterClosed().subscribe(result => {
           this.totalFormsarray = this.forms;
           this.loadSummary();
           this.cd.detectChanges();
-          this.toastr.success('Form moved to trash!', 'Success');
+          this.toastr.success('Form moved to trash!');
         },
         error: (err) => {
           console.error(err);
-          this.toastr.error('Error moving form to trash.', 'Error');
+          this.toastr.error('Error moving form to trash.');
         }
       });
     }
@@ -108,7 +108,7 @@ this.dialog.open(DeleteDialog).afterClosed().subscribe(result => {
 
   shareForm(id: number, published: boolean){
    if(published==false){
-    this.toastr.warning("It is just a draft form. You can't share it", "Warning");
+    this.toastr.warning("It is just a draft form. You can't share it");
     return;
    }
 
@@ -132,11 +132,11 @@ this.dialog.open(DeleteDialog).afterClosed().subscribe(result => {
       this.totalFormsarray = this.forms;
       this.loadSummary();
       this.cd.detectChanges();
-      this.toastr.success('Form restored successfully!', 'Success');
+      this.toastr.success('Form restored successfully!');
     },
     error: (err:any) => {
       console.error(err);
-      this.toastr.error('Restore failed!', 'Error');
+      this.toastr.error('Restore failed!');
     }
   });
 }

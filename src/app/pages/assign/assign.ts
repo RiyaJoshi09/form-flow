@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatMenuModule } from '@angular/material/menu';
@@ -7,6 +7,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { FormService } from '../../services/form-service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-assign',
@@ -17,21 +19,41 @@ import { ActivatedRoute } from '@angular/router';
 export class Assign {
 
   formId! : string;
+  form:any;
 
-  constructor (private router : Router, private route: ActivatedRoute) {
+  constructor (private router : Router, 
+    private route: ActivatedRoute, 
+    private formService: FormService,
+    private cd: ChangeDetectorRef,
+    private toastr: ToastrService) {
     this.formId = this.route.snapshot.paramMap.get('id')!;
   }
+  
 
   searchText: string = '';
-  deadline: string = '';
+  //deadline: string = '';
   selectedCount: number = 0;
+  recipients: any[]= [];
 
-  recipients = [
-    { name: 'Customers', selected: false },
-    { name: 'IT Team', selected: false },
-    { name: 'HR Team', selected: false },
-    { name: 'All Staff', selected: false }
-  ];
+ngOnInit() {
+    this.formService.getFormById(this.formId).subscribe(data => {
+      this.form = data;
+    console.log(this.form);
+      this.cd.detectChanges();
+    });
+    
+    this.formService.getAllUsers().subscribe(data => {
+      console.log(data);
+     const users = data as any[];
+     this.recipients = users.map(user => ({
+     id: user.userId,
+     name: user.username,
+     selected: false
+  }));
+    console.log(this.recipients);
+    this.cd.detectChanges();
+   });
+  }
 
   filteredRecipients() {
     return this.recipients.filter(r => r.name.toLowerCase().includes(this.searchText.toLowerCase()));
@@ -43,17 +65,16 @@ export class Assign {
 
   assignForm() {
     if (this.selectedCount === 0) {
-      alert('Please select at least one recipient.');
+      this.toastr.error('Please select at least one recipient.');
       return;
     }
 
-    if (!this.deadline) {
-      alert('Please set a deadline.');
-      return;
-    }
+    // if (!this.deadline) {
+    //   this.toastr.error('Please set a deadline.');
+    //   return;
+    // }
 
-    alert(`Form assigned successfully`);
-
+    this.toastr.success('Form assigned successfully');
     this.router.navigate(['/']);
   }
 }

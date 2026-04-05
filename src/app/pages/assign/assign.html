@@ -20,7 +20,7 @@
         <div class="select-box">
           <mat-icon>description</mat-icon>
           <div class="form-info">
-            <span class="title">Demo Form</span>
+            <span class="title">{{form?.title}}</span>
             <span class="sub">Created on 4th april 2026</span>
           </div>
         </div>
@@ -57,13 +57,13 @@
     <div class="right">
 
       <!-- DEADLINE -->
-      <div class="card">
+      <!-- <div class="card">
         <label>SET DEADLINE</label>
         <div class="date-box">
           <mat-icon>calendar_today</mat-icon>
           <input type="date" [(ngModel)]="deadline" (change)="updateSummary()" />
         </div>
-      </div>
+      </div> -->
 
       <!-- NOTE -->
       <div class="card">
@@ -77,7 +77,7 @@
 
         <div class="row">
           <span>Selected Form</span>
-          <strong>Demo Form</strong>
+          <strong>{{form?.title}}</strong>
         </div>
 
         <div class="row">
@@ -85,10 +85,10 @@
           <strong>{{ selectedCount }} Selected</strong>
         </div>
 
-        <div class="row">
+        <!-- <div class="row">
           <span>Deadline</span>
           <strong>{{ deadline || 'NA' }}</strong>
-        </div>
+        </div> -->
 
 
         <button class="assign-btn" (click)="assignForm()">Assign Form</button>

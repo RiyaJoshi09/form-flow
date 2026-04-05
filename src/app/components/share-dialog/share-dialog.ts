@@ -28,7 +28,7 @@ link: string = '';
 
   copyLink() {
     navigator.clipboard.writeText(this.link);
-    this.toastr.success('Link copied to clipboard!', 'Success');
+    this.toastr.success('Link copied to clipboard!');
   }
 
   closeDialog(){

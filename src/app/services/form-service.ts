@@ -133,4 +133,9 @@ export class FormService {
       { responseType: 'text' },
     );
   }
+
+
+  getAllUsers(){
+    return this.http.get(this.url + 'admin/getAllUsers');
+  }
 }
