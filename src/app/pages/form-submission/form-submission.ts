@@ -242,7 +242,7 @@ export class FormSubmission {
           this.formGroup.reset();
           this.isSubmitting = false;
           this.isSubmitted = true;
-          localStorage.removeItem(`form_draft_${responseEntry.formId}`);
+          localStorage.removeItem(`form_draft_${this.formStructure.id}`);
         },
         error: (err) => {
           console.error('Submission failed', err);

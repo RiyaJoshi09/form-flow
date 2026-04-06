@@ -134,8 +134,15 @@ export class FormService {
     );
   }
 
-
+  // Get All Users for Assigning Forms
   getAllUsers(){
     return this.http.get(this.url + 'admin/getAllUsers');
+  }
+
+// Save Form Access for Assigned Users
+  saveFormAccess(data: any) {
+    return this.http.post(this.url+'user/save', data,
+      { responseType: 'text' }
+    );
   }
 }
