@@ -43,11 +43,18 @@
 
           <div class="item" *ngFor="let r of filteredRecipients(); let i = index">
                 <div class="left-info">
-                <div>
                     <span class="title">{{ r.name }}</span>
                 </div>
+            
+                <div class="right-group">
+                  <mat-checkbox [(ngModel)]="r.selected" (change)="updateSummary()"></mat-checkbox>
+  
+                  <select class="role-dropdown" [(ngModel)]="r.role">
+                    <option value="Viewer">Viewer</option>
+                    <option value="Respondent">Respondent</option>
+                    <option value="Editor">Editor</option>
+                  </select>
                 </div>
-                <mat-checkbox [(ngModel)]="r.selected" (change)="updateSummary()"></mat-checkbox>
             </div>
         </div>
       </div>
