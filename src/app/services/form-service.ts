@@ -17,7 +17,7 @@ export class FormService {
 
   mapToFormSchema(rawForm: any): Form {
     return {
-      id: Number(rawForm.id),
+      id: rawForm.id,
       theme: localStorage.getItem('theme') || 'theme-pink',
       title: rawForm.title,
       description: rawForm.description,
@@ -84,11 +84,11 @@ export class FormService {
     return data;
   }
 
-  getFormById(id: number): Observable<Form> {
+  getFormById(id: string): Observable<Form> {
     return this.http.get<Form>(this.url + 'user/form/' + id);
   }
 
-  getResponseFormById(id: number): Observable<Form> {
+  getResponseFormById(id: string): Observable<Form> {
     return this.http.get<Form>(this.url + 'public/form/' + id);
   }
 
@@ -98,16 +98,27 @@ export class FormService {
   getFormByStatus() {}
 
   submitResponse(data: any) {
-    const mappedData = this.mapToBackendResponse(data);
-    console.log(mappedData);
-    return this.http.post(this.url + 'api/responses', mappedData);
+    // const mappedData = this.mapToBackendResponse(data);
+
+    if (data instanceof FormData) {
+      data.forEach((value, key) => {
+        console.log(key, value);
+        if (value instanceof File) {
+          console.log('File Name:', value.name);
+          console.log('File Size:', value.size);
+          console.log('File Type:', value.type);
+        }
+      });
+    }
+
+    return this.http.post(this.url + 'api/responses', data);
   }
 
-  getFormResponseById(id: number) {
+  getFormResponseById(id: string) {
     return this.http.get(this.url + 'api/responses/' + id);
   }
 
-  deleteFormById(id: number) {
+  deleteFormById(id: string) {
     return this.http.patch(this.url + 'user/form/moveToTrash/' + id, {}, { responseType: 'text' });
   }
 
@@ -115,11 +126,16 @@ export class FormService {
     return this.http.get(this.url + 'user/form/trash');
   }
 
-  restoreForms(id: number) {
+  restoreForms(id: string) {
     return this.http.patch(
       this.url + 'user/form/restoreFromTrash/' + id,
       {},
       { responseType: 'text' },
     );
+  }
+
+
+  getAllUsers(){
+    return this.http.get(this.url + 'admin/getAllUsers');
   }
 }
