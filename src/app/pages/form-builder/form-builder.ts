@@ -151,10 +151,7 @@ export class FormBuilder {
       status: 'active',
     };
 
-    console.log(formToSave);
-
     if (this.editingFormId) {
-      console.log(formToSave);
       this.formService.updateForm(formToSave).subscribe({
         next: (response) => {
           this.toastr.success('Form updated Successfully to Database!');

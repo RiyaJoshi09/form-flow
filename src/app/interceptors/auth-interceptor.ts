@@ -17,10 +17,12 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const toastr = inject(ToastrService);
 
-  const skipUrls = ['/login', '/refresh', '/signup'];
+  const skipUrls = ['/login', '/refresh', '/signup', '/forgot-password'];
 
   if (skipUrls.some((url) => req.url.includes(url))) {
-    return next(req);
+    loaderService.show();
+    return next(req).pipe(
+    finalize(() => loaderService.hide()));
   }
 
   if (!skipUrls.some((url) => req.url.includes(url))) {

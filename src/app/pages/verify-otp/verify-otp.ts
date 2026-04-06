@@ -5,6 +5,7 @@ import { MatInputModule } from '@angular/material/input';
 import { AuthService } from '../../services/auth-service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-verify-otp',
@@ -17,30 +18,32 @@ export class VerifyOtp {
     public authService: AuthService,
     private router: Router,
     private toastr: ToastrService,
+    private route: ActivatedRoute,
   ) {}
-  
+
   otp!: string;
+  email: string = '';
+  maskedEmail: string = '';
 
-  maskedEmail = computed(() => {
-    const email = this.authService.mail();
-    if (!email) return '';
-
-    const [name, domain] = email.split('@');
-    const last3 = name.slice(-3);
-
-    return `xxxxxxx${last3}@${domain}`;
-  });
+  ngOnInit() {
+    this.email = this.route.snapshot.queryParamMap.get('email') || '';
+    if (this.email !== '') {
+      const [name, domain] = this.email.split('@');
+      const last3 = name.slice(-3);
+      this.maskedEmail = `xxxxxxx${last3}@${domain}`;
+    }
+  }
 
   submit() {
-    // this.authService.verifyOtp(this.otp).subscribe({
-    //   next: (res: any) => {
-    //     this.toastr.success('OTP verified successfully ✅');
-    //     this.router.navigate(['/home']);
-    //   },
-    //   error: (err : any) => {
-    //     console.error('OTP verification failed', err);
-    //     this.toastr.error('Invalid OTP ❌');
-    //   },
-    // });
+    this.authService.verifyOtp(this.email, this.otp).subscribe({
+      next: (res: any) => {
+        this.toastr.success('OTP verified successfully');
+        this.router.navigate(['/home']);
+      },
+      error: (err : any) => {
+        console.error('OTP verification failed', err);
+        this.toastr.error('Invalid OTP');
+      },
+    });
   }
 }
