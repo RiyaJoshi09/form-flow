@@ -20,7 +20,7 @@ export class FormService {
       id: Number(rawForm.id),
       theme: localStorage.getItem('theme') || 'theme-pink',
       title: rawForm.title,
-      description: '',
+      description: rawForm.description,
       published: rawForm.status === 'active',
 
       sections: rawForm.sections.map((section: any, sectionIndex: number) => ({

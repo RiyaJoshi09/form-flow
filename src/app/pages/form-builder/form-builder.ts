@@ -25,7 +25,6 @@ import { ThemeService } from '../../services/theme-service';
 import { BuilderCheckBox } from '../../components/builder-cards/builder-check-box/builder-check-box';
 import { ToastrService } from 'ngx-toastr';
 import { FormSettingsDialog } from '../../components/form-settings-dialog/form-settings-dialog';
-import { FormSettingsSchema } from '../../interfaces/form-settings-schema';
 
 @Component({
   selector: 'app-form-builder',
@@ -53,6 +52,7 @@ import { FormSettingsSchema } from '../../interfaces/form-settings-schema';
 })
 export class FormBuilder {
   formTitle: string = 'Untitled Form';
+  formDescription: string = '';
   formSections: any[] = [
     {
       id: Date.now().toString(),
@@ -102,6 +102,7 @@ export class FormBuilder {
         localStorage.setItem('theme', form.theme);
         this.themeService.loadTheme();
         this.formTitle = form.title;
+        this.formDescription =form.description;
         this.formSettings = form.settings;
         this.formSections = form.sections.map((section: any) => ({
           id: section.id ? section.id.toString() : Date.now().toString(),
@@ -164,6 +165,7 @@ export class FormBuilder {
     const formToSave = {
       id: this.editingFormId,
       title: this.formTitle,
+      description: this.formDescription,
       sections: this.formSections,
       status: 'active',
       settings: this.formSettings
@@ -326,6 +328,7 @@ export class FormBuilder {
   openPreview() {
     const previewData = {
       title: this.formTitle,
+      description: this.formDescription,
       sections: this.formSections.map((section, sIndex) => ({
         sectionTitle: section.title,
         sectionOrder: sIndex + 1,
