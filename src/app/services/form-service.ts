@@ -21,7 +21,7 @@ export class FormService {
       theme: localStorage.getItem('theme') || 'theme-pink',
       title: rawForm.title,
       description: rawForm.description,
-      published: rawForm.status === 'active',
+      published: rawForm.pubilshed,
 
       sections: rawForm.sections.map((section: any, sectionIndex: number) => ({
         id: section.id,

@@ -147,7 +147,7 @@ export class FormBuilder {
     });
   }
 
-  saveForm() {
+  saveForm(isPublished: boolean) {
     const hasFields = this.formSections.some(
       (section) => section.fields && section.fields.length > 0,
     );
@@ -167,7 +167,7 @@ export class FormBuilder {
       title: this.formTitle,
       description: this.formDescription,
       sections: this.formSections,
-      status: 'active',
+      pubilshed: isPublished,
       settings: this.formSettings
     };
 
@@ -177,7 +177,11 @@ export class FormBuilder {
       console.log(formToSave);
       this.formService.updateForm(formToSave).subscribe({
         next: (response) => {
-          this.toastr.success('Form updated Successfully to Database!');
+          if(!isPublished){
+            this.toastr.success('Form Updated Successfully to Database!');
+          }else{
+            this.toastr.success('Form is Published!');
+          }
           this.router.navigate(['/']);
         },
         error: (err) => {
@@ -189,7 +193,12 @@ export class FormBuilder {
     } else {
       this.formService.createForm(formToSave).subscribe({
         next: (response) => {
-          this.toastr.success('Form Saved Successfully to Database!');
+          if(!isPublished){
+            this.toastr.success('Form Saved Successfully to Database!');
+          }else{
+            this.toastr.success('Form is Published!');
+          }
+          
           this.router.navigate(['/']);
         },
         error: (err) => {
