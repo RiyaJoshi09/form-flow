@@ -43,8 +43,6 @@ export class AuthService {
   }
 
   verifyResetOtp(data: any): Observable<any> {
-    console.log(data);
-
     return this.http
       .post(`${this.baseUrl}/verify-reset-otp`, data, {
         responseType: 'text',

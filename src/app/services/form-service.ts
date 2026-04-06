@@ -90,7 +90,6 @@ export class FormService {
 
   createForm(formData: any): Observable<any> {
     const mappedData = this.mapToFormSchema(formData);
-    const token = localStorage.getItem('token');
     let data: any = this.http.post(this.url + 'user/createForm', mappedData, {
       responseType: 'text',
     });
