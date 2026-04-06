@@ -48,7 +48,8 @@ ngOnInit() {
      this.recipients = users.map(user => ({
      id: user.userId,
      name: user.username,
-     selected: false
+     selected: false,
+     role: 'Respondent' //default value/role
   }));
     console.log(this.recipients);
     this.cd.detectChanges();
