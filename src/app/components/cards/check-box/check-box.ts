@@ -32,7 +32,7 @@ export class CheckBox {
   };
   */
   onChange(option: string, checked: boolean) {
-    const current = this.control.value;
+    const current = this.control.value ?? [];
     if (checked) {
       this.control.setValue([...current, option]);
     } else {

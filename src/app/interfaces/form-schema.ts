@@ -1,3 +1,5 @@
+import { FormSettingsSchema } from "./form-settings-schema";
+
 export interface Field {
   id?:number;
   fieldType: string;
@@ -21,6 +23,7 @@ export interface Form {
   title: string;
   description: string;
   published: boolean;
+  settings?: FormSettingsSchema;
   sections: Section[];
 }
 
