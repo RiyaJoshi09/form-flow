@@ -1,0 +1,25 @@
+<h2 mat-dialog-title class="text-primary font-bold">Form Settings</h2>
+<mat-dialog-content class="flex flex-col gap-4">
+
+  <mat-form-field appearance="outline">
+    <mat-label>Submission Deadline</mat-label>
+    <input matInput [matDatepicker]="picker" [(ngModel)]="data.deadline">
+    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Maximum Responses</mat-label>
+    <input matInput type="number" [(ngModel)]="data.maxResponses">
+  </mat-form-field>
+
+  <mat-slide-toggle [(ngModel)]="data.isPrivate" color="primary">
+    Require Login to View
+  </mat-slide-toggle>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" [mat-dialog-close]="data">Save Settings</button>
+</mat-dialog-actions>

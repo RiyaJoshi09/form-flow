@@ -180,3 +180,40 @@ textarea {
     color: white;
     cursor: pointer;
 }
+
+.list .item {
+    display: flex;
+    align-items: center;
+}
+
+.right-group {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.role-dropdown {
+    background-color: var(--mat-sys-surface-container);
+    border: 1px solid transparent;
+    border-radius: 8px;
+    padding: 5px 10px;
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.role-dropdown:hover {
+    border-color: var(--mat-sys-primary);
+}
+
+.role-dropdown:focus {
+    border-color: var(--mat-sys-primary);
+    box-shadow: 0 0 0 2px rgba(100, 100, 255, 0.15);
+}
+
+.role-dropdown:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

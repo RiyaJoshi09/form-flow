@@ -20,6 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Form } from '../../interfaces/form-schema';
 import { fileSizeValidator, fileTypeValidator } from '../../validators/file.validators';
 import { ToastrService } from 'ngx-toastr';
+import { FormSettingsSchema } from '../../interfaces/form-settings-schema';
 
 @Component({
   selector: 'app-form-submission',
@@ -43,6 +44,9 @@ export class FormSubmission {
   formStructure: any;
   isReadOnly: boolean = false;
   isSubmitting: boolean = false;
+  isSubmitted: boolean = false;
+  closeMessage: string = '';
+  isClosed: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -68,7 +72,14 @@ export class FormSubmission {
           next: (form: Form) => {
             this.formStructure = form;
             this.isReadOnly = false;
-            this.buildReactiveForm();
+            if(this.checkAvailability(form)){
+              this.buildReactiveForm();
+              this.loadDraft(formId);
+              this.setupDraftTimer(formId);
+            } else {
+              this.isClosed = true;
+              this.closeMessage = form.settings?.closeMessage || "This form is closed";
+            }
           },
           error: (err) => {
             console.error('Could not fetch form:', err);
@@ -77,6 +88,15 @@ export class FormSubmission {
         });
       }
     }
+  }
+
+  checkAvailability(form: any): boolean{
+    if (!form.settings?.deadline) return true; 
+    const now = new Date();
+    const deadline = new Date(form.settings.deadline);
+    if (isNaN(deadline.getTime())) return true; 
+
+    return now < deadline;
   }
 
   getFieldStyle(config: any) {
@@ -135,6 +155,55 @@ export class FormSubmission {
     this.cd.detectChanges();
   }
 
+  setupDraftTimer(formId: string) {
+    this.formGroup.valueChanges.subscribe(values => {
+      localStorage.setItem(`form_draft_${formId}`, JSON.stringify(values));
+    })
+  }
+
+  loadDraft(formId: string) {
+    const savedDraft = localStorage.getItem(`form_draft_${formId}`);
+    if (savedDraft){
+      const draftValues = JSON.parse(savedDraft);
+      this.formGroup.patchValue(draftValues);
+    }
+  }
+  
+  // submitResponse() {
+  //   if (this.isReadOnly) {
+  //     this.toastr.warning("This is a preview. Data is not saved to the database.");
+  //     return;
+  //   }
+
+  //   if (this.formGroup.valid) {
+  //     this.isSubmitting = true;
+
+  //     const responseEntry = {
+  //       formId: this.formStructure.id,
+  //       response: this.formGroup.value,
+  //     };
+
+  //     console.log(this.formGroup.value);
+
+  //     this.formService.submitResponse(responseEntry).subscribe({
+  //       next: (res) => {
+  //         console.log(res);
+  //         this.toastr.success("Response saved successfully!");
+  //         this.formGroup.reset();
+  //         this.isSubmitting = false;
+  //       },
+  //       error: (err) => {
+  //         console.error("Submission failed", err);
+  //         this.toastr.error("Could not save response. Please try again.");
+  //         this.isSubmitting = false;
+  //       },
+  //     });
+  //   } else {
+  //     this.formGroup.markAllAsTouched(); // Show errors to the user
+  //     this.toastr.error("Please fix the errors before submitting.");
+  //   }
+  // }
+
   submitResponse() {
     if (this.isReadOnly) {
       this.toastr.warning('This is a preview. Data is not saved to the database.');
@@ -150,6 +219,8 @@ export class FormSubmission {
           this.toastr.success('Response saved successfully!');
           this.formGroup.reset();
           this.isSubmitting = false;
+          this.isSubmitted = true;
+          localStorage.removeItem(`form_draft_${this.formStructure.id}`);
         },
         error: (err) => {
           console.error('Submission failed', err);
@@ -161,5 +232,11 @@ export class FormSubmission {
       this.formGroup.markAllAsTouched();
       this.toastr.error('Please fix the errors before submitting.');
     }
+  }
+
+  resetForm() {
+    this.isSubmitted = false;
+    this.isSubmitting = false;
+    this.formGroup.reset();
   }
 }

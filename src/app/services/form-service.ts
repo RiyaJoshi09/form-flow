@@ -20,8 +20,8 @@ export class FormService {
       id: rawForm.id,
       theme: localStorage.getItem('theme') || 'theme-pink',
       title: rawForm.title,
-      description: '',
-      published: rawForm.status === 'active',
+      description: rawForm.description,
+      published: rawForm.pubilshed,
 
       sections: rawForm.sections.map((section: any, sectionIndex: number) => ({
         id: section.id,
@@ -139,6 +139,18 @@ export class FormService {
       this.url + 'user/form/restoreFromTrash/' + id,
       {},
       { responseType: 'text' },
+    );
+  }
+
+  // Get All Users for Assigning Forms
+  getAllUsers(){
+    return this.http.get(this.url + 'admin/getAllUsers');
+  }
+
+// Save Form Access for Assigned Users
+  saveFormAccess(data: any) {
+    return this.http.post(this.url+'user/save', data,
+      { responseType: 'text' }
     );
   }
 }
