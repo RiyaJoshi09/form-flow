@@ -2,7 +2,13 @@
   <div class="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
     <div class="text-center mb-8">
       <h1 class="text-2xl font-bold text-primary">FormFlow</h1>
-      <p class="text-sm text-slate-500 mt-1">Recover your account</p>
+      <p class="text-sm text-slate-500 mt-1">
+        @if(maskedEmail===''){
+          <span>Recover your account</span>
+        } @else {
+          <span>An OTP has been sent to {{maskedEmail}}</span>
+        }
+      </p>
     </div>
     <mat-form-field appearance="outline" class="w-full">
       <mat-label>Username or Email</mat-label>
@@ -24,7 +30,7 @@
       </mat-form-field>
       <div class="flex justify-end items-start">
         <button
-          (click)="submit()"
+          (click)="sendOtp()"
           class="text-muted hover:text-primary text-sm font-medium underline opacity-70 cursor-pointer hover:opacity-100"
         >
           Resend OTP?
@@ -41,7 +47,7 @@
       </button>
     } @else {
       <button
-        (click)="submit()"
+        (click)="sendOtp()"
         class="w-full h-11 text-base font-semibold btn-primary opacity-90 hover:opacity-100 cursor-pointer"
       >
         Send Otp

@@ -60,16 +60,36 @@ export class FormService {
     };
   }
 
-  private mapToBackendResponse(data: any) {
-    return {
-      formId: data.formId,
-      response: data.response,
-    };
+  private mapToFormData(formId: string, rawValue: any): FormData {
+    const formData = new FormData();
+    const cleanedResponse: any = {};
+    const files: File[] = [];
+
+    Object.keys(rawValue).forEach((key) => {
+      const value = rawValue[key];
+
+      if (value instanceof File) {
+        files.push(value);
+        cleanedResponse[key] = value.name;
+      } else {
+        cleanedResponse[key] = value;
+      }
+    });
+    formData.append(
+      'response',
+      JSON.stringify({
+        formId: formId,
+        response: cleanedResponse,
+      }),
+    );
+    files.forEach((file) => {
+      formData.append('files', file);
+    });
+    return formData;
   }
 
   createForm(formData: any): Observable<any> {
     const mappedData = this.mapToFormSchema(formData);
-    const token = localStorage.getItem('token');
     let data: any = this.http.post(this.url + 'user/createForm', mappedData, {
       responseType: 'text',
     });
@@ -97,21 +117,9 @@ export class FormService {
   }
   getFormByStatus() {}
 
-  submitResponse(data: any) {
-    // const mappedData = this.mapToBackendResponse(data);
-
-    if (data instanceof FormData) {
-      data.forEach((value, key) => {
-        console.log(key, value);
-        if (value instanceof File) {
-          console.log('File Name:', value.name);
-          console.log('File Size:', value.size);
-          console.log('File Type:', value.type);
-        }
-      });
-    }
-
-    return this.http.post(this.url + 'api/responses', data);
+  submitResponse(formId: string, rawValue: any) {
+    const formData = this.mapToFormData(formId, rawValue);
+    return this.http.post(this.url + 'api/responses', formData);
   }
 
   getFormResponseById(id: string) {

@@ -212,30 +212,8 @@ export class FormSubmission {
 
     if (this.formGroup.valid) {
       this.isSubmitting = true;
-      const rawValue = this.formGroup.value;
-      const formData = new FormData();
-      const files: File[] = [];
-
-      Object.keys(rawValue).forEach((key) => {
-        const value = rawValue[key];
-        if (value instanceof File) {
-          files.push(value);
-        }
-      });
-      formData.append(
-        'response',
-        JSON.stringify({
-          formId: this.formStructure.id,
-          response: rawValue,
-        }),
-      );
-
-      // 👇 Append files
-      files.forEach((file) => {
-        formData.append('files', file);
-      });
-
-      this.formService.submitResponse(formData).subscribe({
+      
+      this.formService.submitResponse(this.formStructure.id, this.formGroup.value).subscribe({
         next: (res) => {
           console.log(res);
           this.toastr.success('Response saved successfully!');

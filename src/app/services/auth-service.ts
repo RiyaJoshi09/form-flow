@@ -2,7 +2,6 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap, throwError } from 'rxjs';
 import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root',
@@ -11,17 +10,58 @@ export class AuthService {
   private baseUrl = 'http://localhost:8082/formflow/auth';
 
   isLoggedIn = signal(false);
-  mail = signal('pritish@gmail.com');
 
-  constructor(private http: HttpClient, private router: Router, private toastr:ToastrService) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+  ) {}
 
-  // sendOtp(mailToSend: string) : Observable<any> {
+  verifyOtp(email: string, otp: string): Observable<any> {
+    return this.http
+      .post(`${this.baseUrl}/varifyaccount`, {
+        email,
+        otp,
+      })
+      .pipe(
+        tap((res: any) => {
+          this.setTokens(res.accessToken, res.refreshToken);
+          this.isLoggedIn.set(true);
+        }),
+      );
+  }
 
-  // }
+  sendOtp(data: string) {
+    return this.http
+      .post(`${this.baseUrl}/forgot-password`, {
+        email: data,
+      })
+      .pipe(
+        tap((res: any) => {
+          console.log('An OTP has been sent to the registered Email!!');
+        }),
+      );
+  }
 
-  // verifyOtp(enteredOtp: number) : Observable<any> {
-    
-  // }
+  verifyResetOtp(data: any): Observable<any> {
+    return this.http
+      .post(`${this.baseUrl}/verify-reset-otp`, data, {
+        responseType: 'text',
+      })
+      .pipe(
+        tap((res: string) => {
+          console.log(res);
+        }),
+      );
+  }
+
+  resetPassword(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/reset-password`, data).pipe(
+      tap((res: any) => {
+        this.setTokens(res.accessToken, res.refreshToken);
+        this.isLoggedIn.set(true);
+      }),
+    );
+  }
 
   getAccessToken(): string | null {
     return localStorage.getItem('accessToken');
@@ -52,8 +92,9 @@ export class AuthService {
   signup(payload: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/signup`, payload).pipe(
       tap((res: any) => {
-        this.toastr.warning(res.message + '. Please Login to continue');
-        this.router.navigate(['/login']);
+        this.router.navigate(['/verify'], {
+          queryParams: { email: payload.email },
+        });
       }),
     );
   }
@@ -70,13 +111,14 @@ export class AuthService {
   logout() {
     const refreshToken = this.getRefreshToken();
     this.http.post(`${this.baseUrl}/logout`, { refreshToken }).subscribe({
-      next: () => { this.toastr.success('logged out successfully !') },
-      error: () => {}
+      next: () => {
+        console.log('logged out successfully !');
+      },
+      error: () => {},
     });
 
     this.clearTokens();
     this.isLoggedIn.set(false);
-    this.toastr.success("Logged Out!!!")
     this.router.navigate(['/login']);
   }
 
@@ -92,7 +134,7 @@ export class AuthService {
     return this.http.post(`${this.baseUrl}/refresh`, { refreshToken }).pipe(
       tap((res: any) => {
         this.setTokens(res.accessToken, res.refreshToken);
-      })
+      }),
     );
   }
 }
