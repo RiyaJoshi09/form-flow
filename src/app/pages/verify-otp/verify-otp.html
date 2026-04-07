@@ -9,10 +9,24 @@
         <mat-label>Enter OTP</mat-label>
         <input matInput type="text" [(ngModel)]="otp" name="otp" required placeholder="x x x - x x x" [minlength]="6" maxlength="6"/>
       </mat-form-field>
-
+      @if(timeLeft()!==0){
+        <div class="flex justify-end items-center gap-x-2">
+          <span class="text-muted opacity-70 font-medium">Resend OTP in </span>
+          <app-timer [timeLeft]="timeLeft"></app-timer>
+        </div>
+      } @else {
+        <div class="flex justify-end items-start">
+        <button
+          (click)="sendOtp()"
+          class="text-muted hover:text-primary text-sm font-medium underline opacity-70 cursor-pointer hover:opacity-100"
+        >
+          Resend OTP?
+        </button>
+      </div>
+      }
       <button
         (click)="submit()"
-        class="w-full h-11 text-base font-semibold btn-primary opacity-90 hover:opacity-100 cursor-pointer"
+        class="w-full h-11 mt-6 text-base font-semibold btn-primary opacity-90 hover:opacity-100 cursor-pointer"
       >
         Verify Otp
       </button>
