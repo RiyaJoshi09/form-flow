@@ -40,7 +40,7 @@ export class AuthService {
   }
   sendOtp(data: string) {
     return this.http
-      .post(`${this.baseUrl}/forgot-password`, {
+      .post(`${this.baseUrl}/forgotPassword`, {
         email: data,
       })
       .pipe(
@@ -52,7 +52,7 @@ export class AuthService {
 
   verifyResetOtp(data: any): Observable<any> {
     return this.http
-      .post(`${this.baseUrl}/verify-reset-otp`, data, {
+      .post(`${this.baseUrl}/verifyResetOtp`, data, {
         responseType: 'text',
       })
       .pipe(
@@ -63,11 +63,17 @@ export class AuthService {
   }
 
   resetPassword(data: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/reset-password`, data).pipe(
+    return this.http.post(`${this.baseUrl}/resetPassword`, data).pipe(
       tap((res: any) => {
         this.setTokens(res.accessToken, res.refreshToken);
         this.isLoggedIn.set(true);
       }),
+    );
+  }
+
+  checkUsernameAailability(data : string){
+    return this.http.post(`${this.baseUrl}/usernameCheck`, data).pipe(
+      tap((res: any) => { }),
     );
   }
 
