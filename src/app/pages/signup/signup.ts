@@ -31,6 +31,11 @@ export class Signup {
       return;
     }
 
+    if (this.username.length<3) {
+      this.toastr.error('Username must be at least 3 characters');
+      return;
+    }
+
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(this.email)) {
       this.toastr.error('Please enter a valid email address');

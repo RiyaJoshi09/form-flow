@@ -3,16 +3,16 @@
     <div class="text-center mb-8">
       <h1 class="text-2xl font-bold text-primary">FormFlow</h1>
       <p class="text-sm text-slate-500 mt-1">
-        @if(maskedEmail===''){
+        @if (maskedEmail === '') {
           <span>Recover your account</span>
         } @else {
-          <span>An OTP has been sent to {{maskedEmail}}</span>
+          <span>An OTP has been sent to {{ maskedEmail }}</span>
         }
       </p>
     </div>
     <mat-form-field appearance="outline" class="w-full">
       <mat-label>Username or Email</mat-label>
-      <input matInput type="text" [(ngModel)]="credential" name="email" required />
+      <input matInput type="text" [(ngModel)]="credential" name="email" required [disabled]="maskedEmail !== ''"/>
     </mat-form-field>
     @if (takeOtp()) {
       <mat-form-field appearance="outline" class="w-full">
@@ -28,14 +28,23 @@
           maxlength="6"
         />
       </mat-form-field>
-      <div class="flex justify-end items-start">
-        <button
-          (click)="sendOtp()"
-          class="text-muted hover:text-primary text-sm font-medium underline opacity-70 cursor-pointer hover:opacity-100"
-        >
-          Resend OTP?
-        </button>
-      </div>
+      @if(!isVisible){
+        <span class="text-muted opacity-70 font-medium">Sending OTP...</span>
+      } @else if (timeLeft() !== 0) {
+        <div class="flex justify-end items-center gap-x-2">
+          <span class="text-muted opacity-70 font-medium">Resend OTP in </span>
+          <app-timer [timeLeft]="timeLeft"></app-timer>
+        </div>
+      } @else {
+        <div class="flex justify-end items-start">
+          <button
+            (click)="sendOtp()"
+            class="text-muted hover:text-primary text-sm font-medium underline opacity-70 cursor-pointer hover:opacity-100"
+          >
+            Resend OTP?
+          </button>
+        </div>
+      }
     }
     <div class="mt-6"></div>
     @if (takeOtp()) {

@@ -18,7 +18,7 @@ export class AuthService {
 
   verifyOtp(email: string, otp: string): Observable<any> {
     return this.http
-      .post(`${this.baseUrl}/varifyaccount`, {
+      .post(`${this.baseUrl}/verifyAccount`, {
         email,
         otp,
       })
@@ -29,7 +29,15 @@ export class AuthService {
         }),
       );
   }
-
+  resendOtp(data: string) {
+    return this.http
+      .post(`${this.baseUrl}/resendOtpVerifyaccount`, data)
+      .pipe(
+        tap((res: any) => {
+          console.log('OTP Re-sent');
+        }),
+      );
+  }
   sendOtp(data: string) {
     return this.http
       .post(`${this.baseUrl}/forgot-password`, {
@@ -37,7 +45,7 @@ export class AuthService {
       })
       .pipe(
         tap((res: any) => {
-          console.log('An OTP has been sent to the registered Email!!');
+          console.log('An OTP has been sent to the registered Email');
         }),
       );
   }
