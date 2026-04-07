@@ -6,6 +6,7 @@ interface ValidationRules {
   maxLength?: number;
   min?: number;
   email?:boolean;
+  number?:boolean;
   max?: number;
   maxSize?: number;
   fileType?:string;

@@ -10,6 +10,5 @@ import { VerifyEmail } from '../../components/verify-email/verify-email';
   styleUrl: './forgot-password.css',
 })
 export class ForgotPassword {
-  verified = signal(false);
-
+  verified = signal('');
 }

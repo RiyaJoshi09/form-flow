@@ -44,7 +44,6 @@ export class MyForms {
 
   getFormData(){
      this.formService.getAllForms().subscribe((data:any[])=>{
-      console.log(data);
       this.forms = data;
       this.totalFormsarray=data;
       this.forms.forEach((form:any)=>{

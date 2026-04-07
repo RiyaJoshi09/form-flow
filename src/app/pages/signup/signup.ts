@@ -25,7 +25,7 @@ export class Signup {
     private toastr: ToastrService,
   ) {}
 
-  onLogin() {
+  onSignup() {
     if (!this.username || !this.password || !this.email) {
       this.toastr.error('Please enter valid credentials');
       return;
@@ -50,15 +50,20 @@ export class Signup {
     this.authService
       .signup({
         username: this.username,
+        email: this.email,
         password: this.password,
       })
       .subscribe({
         next: (res) => {
-          this.router.navigate(['/home']);
+          this.toastr.success('An OTP has been sent to your provided Mail!!');
         },
         error: (err) => {
           console.error('Login failed', err);
-          this.toastr.error('Invalid credentials');
+          if(err.status===409){
+            this.toastr.info('User already exists');
+          } else {
+            this.toastr.error('Invalid credentials');
+          }
         },
       });
   }

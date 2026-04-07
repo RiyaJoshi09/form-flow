@@ -21,6 +21,7 @@ import { Form } from '../../interfaces/form-schema';
 import { fileSizeValidator, fileTypeValidator } from '../../validators/file.validators';
 import { ToastrService } from 'ngx-toastr';
 import { FormSettingsSchema } from '../../interfaces/form-settings-schema';
+import { ThemeService } from '../../services/theme-service';
 
 @Component({
   selector: 'app-form-submission',
@@ -51,6 +52,7 @@ export class FormSubmission {
   constructor(
     private route: ActivatedRoute,
     private formService: FormService,
+    private themeService : ThemeService,
     private cd: ChangeDetectorRef,
     @Optional() @Inject(MAT_DIALOG_DATA) public dialogData: any,
     private toastr: ToastrService,
@@ -71,6 +73,9 @@ export class FormSubmission {
         this.formService.getResponseFormById(formId).subscribe({
           next: (form: Form) => {
             this.formStructure = form;
+            localStorage.setItem('prevTheme', localStorage.getItem('theme') || 'theme-pink');
+            this.themeService.setTheme(form.theme);
+            this.themeService.loadTheme();
             this.isReadOnly = false;
             if(this.checkAvailability(form)){
               this.buildReactiveForm();
@@ -212,37 +217,14 @@ export class FormSubmission {
 
     if (this.formGroup.valid) {
       this.isSubmitting = true;
-      const rawValue = this.formGroup.value;
-      const formData = new FormData();
-      const files: File[] = [];
-
-      Object.keys(rawValue).forEach((key) => {
-        const value = rawValue[key];
-        if (value instanceof File) {
-          files.push(value);
-        }
-      });
-      formData.append(
-        'response',
-        JSON.stringify({
-          formId: this.formStructure.id,
-          response: rawValue,
-        }),
-      );
-
-      // 👇 Append files
-      files.forEach((file) => {
-        formData.append('files', file);
-      });
-
-      this.formService.submitResponse(formData).subscribe({
+      
+      this.formService.submitResponse(this.formStructure.id, this.formGroup.value).subscribe({
         next: (res) => {
-          console.log(res);
           this.toastr.success('Response saved successfully!');
           this.formGroup.reset();
           this.isSubmitting = false;
           this.isSubmitted = true;
-          localStorage.removeItem(`form_draft_${responseEntry.formId}`);
+          localStorage.removeItem(`form_draft_${this.formStructure.id}`);
         },
         error: (err) => {
           console.error('Submission failed', err);

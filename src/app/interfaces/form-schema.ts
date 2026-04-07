@@ -1,7 +1,7 @@
 import { FormSettingsSchema } from "./form-settings-schema";
 
 export interface Field {
-  id?:number;
+  id?:string;
   fieldType: string;
   fieldOrder: number;
   fieldConfig: {};
@@ -9,14 +9,14 @@ export interface Field {
 }
 
 export interface Section {
-  id?:number;
+  id?:string;
   sectionTitle: string;
   sectionOrder: number;
   fields: Field[];
 }
 
 export interface Form {
-  id?: number;
+  id?: string;
   userId?:number;
   createdBy?: string;
   theme:string;

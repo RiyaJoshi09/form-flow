@@ -171,10 +171,7 @@ export class FormBuilder {
       settings: this.formSettings
     };
 
-    console.log(formToSave);
-
     if (this.editingFormId) {
-      console.log(formToSave);
       this.formService.updateForm(formToSave).subscribe({
         next: (response) => {
           if(!isPublished){

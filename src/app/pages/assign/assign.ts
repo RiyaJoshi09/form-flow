@@ -65,17 +65,48 @@ ngOnInit() {
   }
 
   assignForm() {
-    if (this.selectedCount === 0) {
-      this.toastr.error('Please select at least one recipient.');
-      return;
+     if (this.selectedCount === 0) {
+    this.toastr.error('Please select at least one recipient.');
+    return;
+  }
+
+  const editor: String[] = [];
+  const responder: String[] = [];
+  const viewer: String[] = [];
+
+  this.recipients.forEach((r: any) => {
+    if (r.selected) {
+      if (r.role === 'Editor') {
+        editor.push(r.name);   
+      } else if (r.role === 'Respondent') {
+        responder.push(r.name);
+      } else {
+        viewer.push(r.name);
+      }
     }
+  });
 
-    // if (!this.deadline) {
-    //   this.toastr.error('Please set a deadline.');
-    //   return;
-    // }
+  const payload = {
+    formId: this.formId,
+    owner: this.form.createdBy, 
+    access: {
+      editor: editor,
+      responder: responder,
+      viewer: viewer
+    }
+  };
 
-    this.toastr.success('Form assigned successfully');
-    this.router.navigate(['/']);
+  console.log("Payload:", payload);
+
+  this.formService.saveFormAccess(payload).subscribe({
+    next: (res) => {
+      this.toastr.success('Form assigned successfully');
+      this.router.navigate(['/']);
+    },
+    error: (err) => {
+      console.error(err);
+      this.toastr.error('Something went wrong!');
+    }
+  });
   }
 }
