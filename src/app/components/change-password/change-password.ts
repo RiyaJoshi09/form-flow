@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, WritableSignal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatError, MatFormField, MatInputModule } from '@angular/material/input';
@@ -13,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './change-password.css',
 })
 export class ChangePassword {
+  @Input() verified!: WritableSignal<string>;
   password: string = '';
   confirmPassword: string = '';
   constructor(
@@ -26,14 +27,22 @@ export class ChangePassword {
       this.toastr.error('Password must be at least 6 characters');
       return;
     }
-
     if (this.password !== this.confirmPassword) {
       this.toastr.error('Confirm your password');
       return;
     }
-
-    this.toastr.success('Password changed successfully');
-    this.router.navigate(["/home"]);
-
+    this.authService.resetPassword({
+      email: this.verified(),
+      newPassword: this.password
+    }).subscribe({
+      next: (res) => {
+        this.router.navigate(["/home"]);
+        this.toastr.info('Password reset successful!!');
+      },
+      error: (err) => {
+        console.error('Email verification failed', err);
+        this.toastr.error('Password reset unsuccessful!!');
+      },
+    });
   }
 }

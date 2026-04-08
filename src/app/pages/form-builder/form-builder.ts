@@ -76,7 +76,7 @@ export class FormBuilder {
     private themeService: ThemeService,
     private cd: ChangeDetectorRef,
     private toastr: ToastrService,
-  ) { }
+  ) {}
 
   elements = [
     { type: 'TEXT', label: 'Text Input' },
@@ -93,6 +93,11 @@ export class FormBuilder {
     if (this.editingFormId) {
       this.loadFromForEditing(this.editingFormId);
     }
+
+    if (localStorage.getItem('prevTheme') === null) {
+      localStorage.setItem('prevTheme', localStorage.getItem('theme') || 'theme-pink');
+    }
+    this.themeService.loadTheme();
   }
 
   loadFromForEditing(formId: string) {
@@ -102,7 +107,7 @@ export class FormBuilder {
         localStorage.setItem('theme', form.theme);
         this.themeService.loadTheme();
         this.formTitle = form.title;
-        this.formDescription =form.description;
+        this.formDescription = form.description;
         this.formSettings = form.settings;
         this.formSections = form.sections.map((section: any) => ({
           id: section.id ? section.id.toString() : Date.now().toString(),
@@ -137,10 +142,10 @@ export class FormBuilder {
   openSettings() {
     const dialogRef = this.dialog.open(FormSettingsDialog, {
       width: '400px',
-      data: { ...this.formSettings }
+      data: { ...this.formSettings },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.formSettings = result;
       }
@@ -168,18 +173,15 @@ export class FormBuilder {
       description: this.formDescription,
       sections: this.formSections,
       pubilshed: isPublished,
-      settings: this.formSettings
+      settings: this.formSettings,
     };
 
-    console.log(formToSave);
-
     if (this.editingFormId) {
-      console.log(formToSave);
       this.formService.updateForm(formToSave).subscribe({
         next: (response) => {
-          if(!isPublished){
+          if (!isPublished) {
             this.toastr.success('Form Updated Successfully to Database!');
-          }else{
+          } else {
             this.toastr.success('Form is Published!');
           }
           this.router.navigate(['/']);
@@ -189,16 +191,15 @@ export class FormBuilder {
           this.toastr.error('Error saving form to backend. Check if Spring Boot is running.');
         },
       });
-
     } else {
       this.formService.createForm(formToSave).subscribe({
         next: (response) => {
-          if(!isPublished){
+          if (!isPublished) {
             this.toastr.success('Form Saved Successfully to Database!');
-          }else{
+          } else {
             this.toastr.success('Form is Published!');
           }
-          
+
           this.router.navigate(['/']);
         },
         error: (err) => {
@@ -355,7 +356,7 @@ export class FormBuilder {
             fontSize: field.fontSize,
             bold: field.bold,
             italics: field.italics,
-            underline: field.underline
+            underline: field.underline,
           },
           /*
           fieldStyle: {
