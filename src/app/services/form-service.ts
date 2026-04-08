@@ -149,6 +149,7 @@ export class FormService {
 
 // Save Form Access for Assigned Users
   saveFormAccess(data: any) {
+    console.log(data);
     return this.http.post(this.url+'user/save', data,
       { responseType: 'text' }
     );

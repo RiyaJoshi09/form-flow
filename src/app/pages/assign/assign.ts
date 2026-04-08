@@ -116,9 +116,10 @@ export class Assign {
     access: {
       editor: editor,
       responder: responder,
-      viewer: viewer
+      viewer: viewer,
+      message: [this.description]
     },
-    description: this.description
+    
   };
 
   console.log("Payload:", payload);
