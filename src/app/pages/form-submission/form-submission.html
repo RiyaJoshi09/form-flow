@@ -7,7 +7,7 @@
       <p class="opacity-80 mt-2 text-white">{{ formStructure?.description }}</p>
     </div>
 
-    @if (!isSubmitted){
+    @if (!isSubmitted && !isClosed){
     <form [formGroup]="formGroup" (ngSubmit)="submitResponse()" class="p-10">
       <div *ngFor="let section of formStructure?.sections" class="mb-12">
         <h2 class="text-xl font-bold text-primary mb-6 border-b pb-2 border-theme">
@@ -16,8 +16,7 @@
 
         <div *ngFor="let field of section.fields" class="mb-8">
           <label class="block text-sm font-bold text-muted uppercase tracking-wider mb-2"
-            [ngStyle]="getFieldStyle(field.fieldConfig)">
-            <!--[ngStyle]="getFieldStyle(field.fieldStyle)-->
+            [ngStyle]="getFieldStyle(field.fieldStyle)">
             {{ field.fieldConfig?.label}}
             <span *ngIf="field.fieldConfig.validations.required" class="text-red-500">*</span>
           </label>
@@ -50,8 +49,8 @@
         SUBMIT RESPONSE
       </button>
     </form>
-    } @else {
-    <div class="text-center p-20 bg-container rounded-3xl shadow-xl border border-theme">
+    } @else if(isSubmitted) {
+    <div class="text-center p-20 bg-container shadow-xl border border-theme">
       <!--<mat-icon class="text-6xl text-primary mb-4" style="width: 60px; height: 60px;">check_circle</mat-icon>-->
       <h1 class="text-3xl font-bold text-primary mb-2">Thank You!</h1>
       <p class="text-muted mb-8">Your response has been successfully recorded.</p>
@@ -59,6 +58,12 @@
       <button (click)="resetForm()" class="btn-primary px-6 py-2 rounded-xl font-bold">
         SUBMIT ANOTHER RESPONSE
       </button>
+    </div>
+    } @else {
+    <div class="text-center p-10 bg-container border border-theme">
+      <p class="text-muted">
+        {{ closeMessage }}
+      </p>
     </div>
     }
   </div>

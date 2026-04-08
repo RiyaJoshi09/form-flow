@@ -22,6 +22,7 @@ export class FormService {
       title: rawForm.title,
       description: rawForm.description,
       published: rawForm.pubilshed,
+      settings: rawForm.settings,
 
       sections: rawForm.sections.map((section: any, sectionIndex: number) => ({
         id: section.id,
@@ -38,15 +39,7 @@ export class FormService {
             validations: field.validations,
             options: field.options,
             placeholder: field.placeholder,
-            //Field Style
-            color: field.color,
-            fontSize: field.fontSize,
-            bold: field.bold,
-            italic: field.italic,
-            underline: field.underline,
           },
-
-          /*
           fieldStyle: {
             color: field.color,
             fontSize: field.fontSize,
@@ -54,7 +47,6 @@ export class FormService {
             italic: field.italic,
             underline: field.underline
           }
-          */
         })),
       })),
     };
