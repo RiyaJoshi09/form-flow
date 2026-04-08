@@ -1,3 +1,4 @@
+import { FieldStyleSchema } from "./field-style-schema";
 import { FormSettingsSchema } from "./form-settings-schema";
 
 export interface Field {
@@ -5,7 +6,7 @@ export interface Field {
   fieldType: string;
   fieldOrder: number;
   fieldConfig: {};
- // fieldStyle: {}
+  fieldStyle: FieldStyleSchema;
 }
 
 export interface Section {

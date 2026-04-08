@@ -1,21 +1,36 @@
-<h2 mat-dialog-title class="text-primary font-bold">Form Settings</h2>
-<mat-dialog-content class="flex flex-col gap-4">
+<h2 mat-dialog-title class="text-primary font-bold text-center">Form Settings</h2>
+<mat-dialog-content class="flex flex-col gap-4 p-10">
+  <div class="mt-10">
+    <mat-form-field appearance="outline">
+      <mat-label>Deadline</mat-label>
+      <input matInput [matDatepicker]="myPicker" [(ngModel)]="data.deadline">
+      <mat-datepicker-toggle matIconSuffix [for]="myPicker"></mat-datepicker-toggle>
+      <mat-datepicker #myPicker></mat-datepicker>
+    </mat-form-field>
+  </div>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Submission Deadline</mat-label>
-    <input matInput [matDatepicker]="picker" [(ngModel)]="data.deadline">
-    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
-  </mat-form-field>
-
-  <mat-form-field appearance="outline">
-    <mat-label>Maximum Responses</mat-label>
-    <input matInput type="number" [(ngModel)]="data.maxResponses">
-  </mat-form-field>
-
-  <mat-slide-toggle [(ngModel)]="data.isPrivate" color="primary">
-    Require Login to View
-  </mat-slide-toggle>
+  @if (data.deadline) {
+  <div>
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Custom Close Message</mat-label>
+      <textarea matInput rows="1" [(ngModel)]="data.closeMessage"></textarea>
+    </mat-form-field>
+    <!--<button mat-button color="warn" (click)="clearDeadline()" class="mt-2">
+      <mat-icon>delete_sweep</mat-icon> Remove Deadline
+    </button>-->
+  </div>
+  }
+  <div>
+    <mat-form-field appearance="outline">
+      <mat-label>Maximum Responses</mat-label>
+      <input matInput type="number" [(ngModel)]="data.maxResponses">
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-slide-toggle [(ngModel)]="data.isPrivate" color="primary">
+      Require Login to View
+    </mat-slide-toggle>
+  </div>
 
 </mat-dialog-content>
 
