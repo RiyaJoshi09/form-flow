@@ -18,7 +18,7 @@ export class AuthService {
 
   verifyOtp(email: string, otp: string): Observable<any> {
     return this.http
-      .post(`${this.baseUrl}/varifyaccount`, {
+      .post(`${this.baseUrl}/verifyAccount`, {
         email,
         otp,
       })
@@ -29,22 +29,30 @@ export class AuthService {
         }),
       );
   }
-
+  resendOtp(data: string) {
+    return this.http
+      .post(`${this.baseUrl}/resendOtpVerifyaccount`, data)
+      .pipe(
+        tap((res: any) => {
+          console.log('OTP Re-sent');
+        }),
+      );
+  }
   sendOtp(data: string) {
     return this.http
-      .post(`${this.baseUrl}/forgot-password`, {
+      .post(`${this.baseUrl}/forgotPassword`, {
         email: data,
       })
       .pipe(
         tap((res: any) => {
-          console.log('An OTP has been sent to the registered Email!!');
+          console.log('An OTP has been sent to the registered Email');
         }),
       );
   }
 
   verifyResetOtp(data: any): Observable<any> {
     return this.http
-      .post(`${this.baseUrl}/verify-reset-otp`, data, {
+      .post(`${this.baseUrl}/verifyResetOtp`, data, {
         responseType: 'text',
       })
       .pipe(
@@ -55,11 +63,17 @@ export class AuthService {
   }
 
   resetPassword(data: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/reset-password`, data).pipe(
+    return this.http.post(`${this.baseUrl}/resetPassword`, data).pipe(
       tap((res: any) => {
         this.setTokens(res.accessToken, res.refreshToken);
         this.isLoggedIn.set(true);
       }),
+    );
+  }
+
+  checkUsernameAailability(data : string){
+    return this.http.post(`${this.baseUrl}/usernameCheck`, data).pipe(
+      tap((res: any) => { }),
     );
   }
 

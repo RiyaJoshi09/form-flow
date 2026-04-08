@@ -35,8 +35,18 @@
         <!-- SEARCH -->
         <div class="search">
           <mat-icon>search</mat-icon>
-          <input type="text" placeholder="Search teams or people..." [(ngModel)]="searchText" />
+          <input type="text" placeholder="Search teams or people..." [(ngModel)]="searchText" (keyup.enter)="searchUser()" />
         </div>
+
+
+        <!-- SEARCH RESULT DROPDOWN -->
+<div *ngIf="searchedUser" class="search-result">
+  <span>{{ searchedUser }}</span>
+  <span>{{searchText}}</span>
+  <button (click)="addRecipient()">Add</button>
+</div>
+
+
 
         <!-- LIST -->
         <div class="list">
@@ -44,12 +54,13 @@
           <div class="item" *ngFor="let r of filteredRecipients(); let i = index">
                 <div class="left-info">
                     <span class="title">{{ r.name }}</span>
+                    <span class="assigned-badge" *ngIf="r.preAssigned">Assigned</span>
                 </div>
             
                 <div class="right-group">
-                  <mat-checkbox [(ngModel)]="r.selected" (change)="updateSummary()"></mat-checkbox>
+                  <mat-checkbox [(ngModel)]="r.selected" (change)="updateSummary()" [disabled]="r.preAssigned"></mat-checkbox>
   
-                  <select class="role-dropdown" [(ngModel)]="r.role">
+                  <select class="role-dropdown" [(ngModel)]="r.role" (change)="updateSummary()" [disabled]="r.preAssigned">
                     <option value="Viewer">Viewer</option>
                     <option value="Respondent">Respondent</option>
                     <option value="Editor">Editor</option>
@@ -75,7 +86,7 @@
       <!-- NOTE -->
       <div class="card">
         <label>RECIPIENT NOTE</label>
-        <textarea rows="5">Please fill this form.</textarea>
+        <textarea rows="5" [(ngModel)]="description">Please fill this form.</textarea>
       </div>
 
       <!-- SUMMARY -->
@@ -90,6 +101,12 @@
         <div class="row">
           <span>Target Audience</span>
           <strong>{{ selectedCount }} Selected</strong>
+        </div>
+
+        <div class="audience-breakdown">
+          <div class="chip editor">Editor: {{ editorCount }}</div>
+          <div class="chip responder">Respondent: {{ responderCount }}</div>
+          <div class="chip viewer">Viewer: {{ viewerCount }}</div>
         </div>
 
         <!-- <div class="row">

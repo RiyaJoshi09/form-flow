@@ -73,7 +73,9 @@ export class FormSubmission {
         this.formService.getResponseFormById(formId).subscribe({
           next: (form: Form) => {
             this.formStructure = form;
-            localStorage.setItem('prevTheme', localStorage.getItem('theme') || 'theme-pink');
+            if(localStorage.getItem('prevTheme')===null){
+              localStorage.setItem('prevTheme', localStorage.getItem('theme') || 'theme-pink');
+            }
             this.themeService.setTheme(form.theme);
             this.themeService.loadTheme();
             this.isReadOnly = false;

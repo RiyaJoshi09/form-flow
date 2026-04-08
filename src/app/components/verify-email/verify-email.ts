@@ -4,10 +4,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AuthService } from '../../services/auth-service';
 import { ToastrService } from 'ngx-toastr';
+import { Timer } from "../timer/timer";
 
 @Component({
   selector: 'app-verify-email',
-  imports: [MatFormFieldModule, MatInputModule, FormsModule],
+  imports: [MatFormFieldModule, MatInputModule, FormsModule, Timer],
   templateUrl: './verify-email.html',
   styleUrl: './verify-email.css',
 })
@@ -18,6 +19,8 @@ export class VerifyEmail {
   otp!: string;
   takeOtp = signal(false);
   @Input() verified!: WritableSignal<string>;
+  timeLeft = signal(120)
+  isVisible = false;
 
   constructor(
     private authService: AuthService,
@@ -28,26 +31,32 @@ export class VerifyEmail {
     this.authService.sendOtp(this.credential).subscribe({
       next: (res) => {
         this.email = res.email;
+        this.timeLeft.set(120)
+        this.isVisible = true;
+        this.takeOtp.set(true);
         if (this.email !== '') {
           const [name, domain] = this.email.split('@');
           const last3 = name.slice(-3);
           this.maskedEmail = `xxxxxxx${last3}@${domain}`;
         }
-        this.toastr.info('An OTP has been sent to your registered Mail!!');
+        this.toastr.info('OTP sent to your registered Mail');
       },
       error: (err) => {
         console.error('Email verification failed', err);
         if(err.status==409){
           this.toastr.info('OTP already sent to email');
         } else {
-          this.toastr.error('Invalid credentials');
+          this.toastr.error('User with given credentials does not exist');
         }
       },
     });
-    this.takeOtp.set(true);
   }
 
   verifyOtp() {
+    if(this.otp.length!=6){
+       this.toastr.warning('Please enter a valid otp')
+       return;
+    }
     this.authService
       .verifyResetOtp({
         email: this.email,

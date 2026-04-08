@@ -1,33 +1,81 @@
-import { Component } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Component, OnInit, OnDestroy, signal } from '@angular/core';
+import { debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs/operators';
+import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { MatError, MatFormField, MatInputModule } from '@angular/material/input';
+import { MatInputModule } from '@angular/material/input';
 import { AuthService } from '../../services/auth-service';
 import { ToastrService } from 'ngx-toastr';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-signup',
-  imports: [FormsModule, MatFormField, MatInputModule, MatIconModule, RouterLink],
+  standalone: true,
+  imports: [FormsModule, MatFormFieldModule, MatInputModule, MatIconModule, RouterLink],
   templateUrl: './signup.html',
   styleUrl: './signup.css',
 })
-export class Signup {
+export class Signup implements OnInit, OnDestroy {
+
   username: string = '';
   password: string = '';
   confirmPassword: string = '';
   email: string = '';
 
+  usernameExists = signal(true);
+
+  private usernameSubject = new Subject<string>();
+  private sub!: Subscription;
+
   constructor(
-    private router: Router,
     private authService: AuthService,
     private toastr: ToastrService,
   ) {}
 
+  ngOnInit() {
+    this.sub = this.usernameSubject.pipe(
+      debounceTime(750),
+      distinctUntilChanged(),
+      filter(value => value!=null && value.trim().length >= 3),
+      switchMap(value => {
+        const trimmed = value.trim();
+        return this.authService.checkUsernameAailability(trimmed);
+      })
+    ).subscribe({
+      next: (res: any) => {
+        this.usernameExists.set(!res.available);
+      },
+      error: () => {
+        this.usernameExists.set(true);
+      }
+    });
+  }
+
+  onUsernameChange(value: string) {
+    if (!value || value.trim().length < 3) {
+      return;
+    }
+    this.usernameSubject.next(value);
+  }
+
+  ngOnDestroy() {
+    this.sub?.unsubscribe();
+  }
+
   onSignup() {
     if (!this.username || !this.password || !this.email) {
       this.toastr.error('Please enter valid credentials');
+      return;
+    }
+
+    if (this.username.trim().length < 3) {
+      this.toastr.error('Username must be at least 3 characters');
+      return;
+    }
+
+    if (this.usernameExists() === true) {
+      this.toastr.error('Username already taken');
       return;
     }
 
@@ -49,20 +97,19 @@ export class Signup {
 
     this.authService
       .signup({
-        username: this.username,
+        username: this.username.trim(),
         email: this.email,
         password: this.password,
       })
       .subscribe({
-        next: (res) => {
-          this.toastr.success('An OTP has been sent to your provided Mail!!');
+        next: () => {
+          this.toastr.success('An OTP has been sent to your provided Mail');
         },
         error: (err) => {
-          console.error('Login failed', err);
-          if(err.status===409){
-            this.toastr.info('User already exists');
+          if (err.status === 409) {
+            this.toastr.info('Email already linked with other account');
           } else {
-            this.toastr.error('Invalid credentials');
+            this.toastr.error('Something went wrong');
           }
         },
       });
