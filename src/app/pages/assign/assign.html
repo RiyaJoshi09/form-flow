@@ -35,8 +35,18 @@
         <!-- SEARCH -->
         <div class="search">
           <mat-icon>search</mat-icon>
-          <input type="text" placeholder="Search teams or people..." [(ngModel)]="searchText" />
+          <input type="text" placeholder="Search teams or people..." [(ngModel)]="searchText" (keyup.enter)="searchUser()" />
         </div>
+
+
+        <!-- SEARCH RESULT DROPDOWN -->
+<div *ngIf="searchedUser" class="search-result">
+  <span>{{ searchedUser }}</span>
+  <span>{{searchText}}</span>
+  <button (click)="addRecipient()">Add</button>
+</div>
+
+
 
         <!-- LIST -->
         <div class="list">
@@ -75,7 +85,7 @@
       <!-- NOTE -->
       <div class="card">
         <label>RECIPIENT NOTE</label>
-        <textarea rows="5">Please fill this form.</textarea>
+        <textarea rows="5" [(ngModel)]="description">Please fill this form.</textarea>
       </div>
 
       <!-- SUMMARY -->

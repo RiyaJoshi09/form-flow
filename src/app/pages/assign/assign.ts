@@ -20,7 +20,7 @@ export class Assign {
 
   formId! : string;
   form:any;
-
+  description: string = 'Please fill this form.';
   constructor (private router : Router, 
     private route: ActivatedRoute, 
     private formService: FormService,
@@ -31,9 +31,12 @@ export class Assign {
   
 
   searchText: string = '';
-  //deadline: string = '';
   selectedCount: number = 0;
   recipients: any[]= [];
+  searchedUser: string | null = null;
+  selectedRole: string = 'Respondent';
+
+  
 
 ngOnInit() {
     this.formService.getFormById(this.formId).subscribe(data => {
@@ -41,23 +44,11 @@ ngOnInit() {
     console.log(this.form);
       this.cd.detectChanges();
     });
-    
-    this.formService.getAllUsers().subscribe(data => {
-      console.log(data);
-     const users = data as any[];
-     this.recipients = users.map(user => ({
-     id: user.userId,
-     name: user.username,
-     selected: false,
-     role: 'Respondent' //default value/role
-  }));
-    console.log(this.recipients);
-    this.cd.detectChanges();
-   });
-  }
+}
 
   filteredRecipients() {
-    return this.recipients.filter(r => r.name.toLowerCase().includes(this.searchText.toLowerCase()));
+    //return this.recipients.filter(r => r.name.toLowerCase().includes(this.searchText.toLowerCase()));
+    return this.recipients;
   }
 
   updateSummary() {
@@ -93,7 +84,8 @@ ngOnInit() {
       editor: editor,
       responder: responder,
       viewer: viewer
-    }
+    },
+    description: this.description
   };
 
   console.log("Payload:", payload);
@@ -109,4 +101,46 @@ ngOnInit() {
     }
   });
   }
+
+
+ searchUser() {
+  console.log("Searching for:", this.searchText);
+  if (!this.searchText) return;
+ console.log("Searching for:", this.searchText);
+  this.formService.getUsernameByEmail(this.searchText).subscribe({
+    next: (res: any) => {
+      console.log(res);
+      this.searchedUser = res;  // JSON case
+    },
+    error: () => {
+      this.toastr.error('User not found');
+      this.searchedUser = null;
+    }
+  });
+}
+
+addRecipient() {
+
+  // duplicate check 🔥
+  const exists = this.recipients.some(r => r.name === this.searchedUser);
+  if (exists) {
+    this.toastr.warning('User already added');
+    return;
+  }
+
+  this.recipients.push({
+    name: this.searchedUser,
+    selected: true,
+    role: this.selectedRole
+  });
+
+  this.updateSummary();
+
+  // reset
+  this.searchedUser = null;
+  this.searchText = '';
+  this.selectedRole = 'Respondent';
+}
+
+
 }

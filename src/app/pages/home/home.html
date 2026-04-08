@@ -34,9 +34,9 @@
           <mat-icon>dashboard</mat-icon>
           <span>Templates</span>
         </li>
-        <li (click)="activesection = 'Recent'" [class.active]="activesection == 'Recent'">
+        <li (click)="activesection = 'SharedWithMe'" [class.active]="activesection == 'SharedWithMe'">
           <mat-icon>history</mat-icon>
-          <span>Recent</span>
+          <span>Shared With Me</span>
         </li>
         <li (click)="activesection = 'Trash'" [class.active]="activesection == 'Trash'">
           <mat-icon>delete</mat-icon>
@@ -52,6 +52,10 @@
 
       @if (activesection == 'Trash') {
         <app-my-forms type="trash"></app-my-forms>
+      }
+
+      @if(activesection == 'SharedWithMe') {
+        <app-shared-with-me></app-shared-with-me>
       }
     </div>
   </div>

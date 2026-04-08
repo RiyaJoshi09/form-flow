@@ -158,4 +158,11 @@ getSavedAccess(form_id: string){
   return this.http.get(this.url + 'user/access/' + form_id);
 }
 
+
+getUsernameByEmail(email: string) {
+  return this.http.get(`${this.url}user/username-by-email`, {
+    params: { email: email },
+    responseType: 'text'   // 🔥 important
+  });
+}
 }
