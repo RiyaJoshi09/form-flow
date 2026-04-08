@@ -154,6 +154,8 @@ export class FormService {
     );
   }
 
+getSavedAccess(form_id: string){
+  return this.http.get(this.url + 'user/access/' + form_id);
+}
 
-  
 }
