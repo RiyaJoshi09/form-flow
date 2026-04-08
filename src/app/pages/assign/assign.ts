@@ -35,16 +35,43 @@ export class Assign {
   recipients: any[]= [];
   searchedUser: string | null = null;
   selectedRole: string = 'Respondent';
+  editorCount: number = 0;
+  responderCount: number = 0;
+  viewerCount: number = 0;
 
   
 
-ngOnInit() {
+  ngOnInit() {
     this.formService.getFormById(this.formId).subscribe(data => {
       this.form = data;
-    console.log(this.form);
       this.cd.detectChanges();
     });
-}
+
+    // Load already assigned users
+    this.formService.getSavedAccess(this.formId).subscribe({
+      next: (access: any) => {
+        if (access) {
+          const editorList: string[] = access.access?.editor || [];
+          const responderList: string[] = access.access?.responder || [];
+          const viewerList: string[] = access.access?.viewer || [];
+
+          const preAssigned: any[] = [];
+
+          editorList.forEach(name => preAssigned.push({ name, selected: true, role: 'Editor', preAssigned: true }));
+          responderList.forEach(name => preAssigned.push({ name, selected: true, role: 'Respondent', preAssigned: true }));
+          viewerList.forEach(name => preAssigned.push({ name, selected: true, role: 'Viewer', preAssigned: true }));
+
+          this.recipients = preAssigned;
+          this.updateSummary();
+          this.cd.detectChanges();
+        }
+      },
+      error: () => {
+        // No previous assignments, recipients stays empty
+        this.recipients = [];
+      }
+    });
+  }
 
   filteredRecipients() {
     //return this.recipients.filter(r => r.name.toLowerCase().includes(this.searchText.toLowerCase()));
@@ -52,7 +79,13 @@ ngOnInit() {
   }
 
   updateSummary() {
-    this.selectedCount = this.recipients.filter(r => r.selected).length;
+    const selected = this.recipients.filter(r => r.selected);
+
+    this.selectedCount = selected.length;
+
+    this.editorCount = selected.filter(r => r.role === 'Editor').length;
+    this.responderCount = selected.filter(r => r.role === 'Respondent').length;
+    this.viewerCount = selected.filter(r => r.role === 'Viewer').length;
   }
 
   assignForm() {
