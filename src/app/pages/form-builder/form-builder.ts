@@ -116,15 +116,14 @@ export class FormBuilder {
               validations: field.fieldConfig.validations || {},
               options: field.fieldConfig.options || [],
               placeholder: field.fieldConfig.placeholder || '',
-              color: field.fieldConfig.color || '#000000', //field.fieldStyle.color ||'#000000'
-              fontSize: field.fieldConfig.fontSize || '12px', //field.fieldStyle.fontSize ||'12px'
-              bold: field.fieldConfig.bold || false, //field.fieldStyle.bold || false
-              italic: field.fieldConfig.italic || false, //field.fieldStyle.italics || false
-              underline: field.fieldConfig.underline || false, //field.fieldStyle.undelrine || false
+              color: field.fieldStyle.color ||'#000000',
+              fontSize: field.fieldStyle.fontSize ||'12px',
+              bold: field.fieldStyle.bold || false,
+              italic: field.fieldStyle.italics || false,
+              underline: field.fieldStyle.underline || false,
             })),
         }));
         this.formSections = [...this.formSections];
-        console.log(this.formSections);
         this.cd.detectChanges();
       },
       error: (err) => {
@@ -136,7 +135,7 @@ export class FormBuilder {
 
   openSettings() {
     const dialogRef = this.dialog.open(FormSettingsDialog, {
-      width: '400px',
+      width: '800px',
       data: { ...this.formSettings }
     });
 
@@ -170,6 +169,7 @@ export class FormBuilder {
       pubilshed: isPublished,
       settings: this.formSettings
     };
+    console.log(formToSave);
 
     if (this.editingFormId) {
       this.formService.updateForm(formToSave).subscribe({
@@ -347,14 +347,7 @@ export class FormBuilder {
             placeholder: field.placeholder,
             options: field.options,
             validations: field.validations,
-            //Field Style
-            color: field.color,
-            fontSize: field.fontSize,
-            bold: field.bold,
-            italics: field.italics,
-            underline: field.underline
           },
-          /*
           fieldStyle: {
             color: field.color,
             fontSize: field.fontSize,
@@ -362,7 +355,6 @@ export class FormBuilder {
             italics: field.italics,
             underline: field.underline
           }
-          */
         })),
       })),
       isReadOnly: true,
