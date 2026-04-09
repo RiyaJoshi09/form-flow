@@ -8,11 +8,13 @@ import { ToastrService } from 'ngx-toastr';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { Subject, Subscription } from 'rxjs';
+import { GoogleAuthButton } from "../../components/google-auth-button/google-auth-button";
+import { GithubAuthButton } from "../../components/github-auth-button/github-auth-button";
 
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [FormsModule, MatFormFieldModule, MatInputModule, MatIconModule, RouterLink],
+  imports: [FormsModule, MatFormFieldModule, MatInputModule, MatIconModule, RouterLink, GoogleAuthButton, GithubAuthButton],
   templateUrl: './signup.html',
   styleUrl: './signup.css',
 })
