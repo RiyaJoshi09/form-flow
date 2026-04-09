@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Form } from '../interfaces/form-schema';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { ThemeService } from './theme-service';
+import { ChartData } from '../interfaces/chart-data-response-schema';
+import { FormResponseData } from '../interfaces/form-response-schema';
 
 @Injectable({
   providedIn: 'root',
@@ -45,8 +47,8 @@ export class FormService {
             fontSize: field.fontSize,
             bold: field.bold,
             italic: field.italic,
-            underline: field.underline
-          }
+            underline: field.underline,
+          },
         })),
       })),
     };
@@ -104,6 +106,16 @@ export class FormService {
     return this.http.get<Form>(this.url + 'public/form/' + id);
   }
 
+  getUniqueUsersByFormId(id: string): Observable<ChartData> {
+    // return this.http.get<ChartData>(this.url + 'api/responses/assignees' + id);
+    return of({ count: 3 });
+  }
+
+  getAssignedUsersByFormId(id: string): Observable<ChartData> {
+    // return this.http.get<ChartData>(this.url + 'api/responses/respondents' + id);
+    return of({ count: 7 });
+  }
+
   getAllForms(): Observable<Form[]> {
     return this.http.get<Form[]>(this.url + 'user/allForm');
   }
@@ -118,6 +130,9 @@ export class FormService {
     return this.http.get(this.url + 'api/responses/' + id);
   }
 
+  getAllFormResponsesById(id: string): Observable<FormResponseData[]> {
+    return this.http.get<FormResponseData[]>(this.url + 'api/responses/' + id);
+  }
   deleteFormById(id: string) {
     return this.http.patch(this.url + 'user/form/moveToTrash/' + id, {}, { responseType: 'text' });
   }
@@ -135,22 +150,19 @@ export class FormService {
   }
 
   // Get All Users for Assigning Forms
-  getAllUsers(){
+  getAllUsers() {
     return this.http.get(this.url + 'admin/getAllUsers');
   }
 
-// Save Form Access for Assigned Users
+  // Save Form Access for Assigned Users
   saveFormAccess(data: any) {
     console.log(data);
-    return this.http.post(this.url+'user/save', data,
-      { responseType: 'text' }
-    );
+    return this.http.post(this.url + 'user/save', data, { responseType: 'text' });
   }
 
-getSavedAccess(form_id: string){
-  return this.http.get(this.url + 'user/access/' + form_id);
-}
-
+  getSavedAccess(form_id: string) {
+    return this.http.get(this.url + 'user/access/' + form_id);
+  }
 
 getUsernameByEmail(email: string) {
   return this.http.get(`${this.url}user/username-by-email`, {
