@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
   private baseUrl = 'http://localhost:8082/formflow/auth';
+  private oAuthurl = 'http://localhost:8082/oauth2/authorization'
 
   isLoggedIn = signal(false);
 
@@ -111,6 +112,15 @@ export class AuthService {
         });
       }),
     );
+  }
+
+  googleLogin() {
+    window.location.assign(`${this.oAuthurl}/google`);
+  }
+
+
+  githubLogin() {
+    window.location.assign(`${this.oAuthurl}/github`);
   }
 
   login(payload: any): Observable<any> {
