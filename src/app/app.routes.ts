@@ -11,6 +11,7 @@ import { Logout } from './pages/logout/logout';
 import { Assign } from './pages/assign/assign';
 import { VerifyOtp } from './pages/verify-otp/verify-otp';
 import { ForgotPassword } from './pages/forgot-password/forgot-password';
+import { FormResponse } from './pages/form-response/form-response';
 
 export const routes: Routes = [
     {path: "", redirectTo: "home", pathMatch: "full"},
@@ -23,6 +24,7 @@ export const routes: Routes = [
     {path: "logout", component: Logout, canActivate: [authGuard]},
     {path: "create", component: FormBuilder,canActivate: [authGuard]},
     { path: 'edit-form/:id', component: FormBuilder, canActivate: [authGuard]},
+    {path: "response/:id", component: FormResponse, canActivate: [authGuard]},
     {path: "form/:id", component: FormSubmission},
     {path: "**", component:NotFound}
 ];
