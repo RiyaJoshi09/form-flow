@@ -107,13 +107,11 @@ export class FormService {
   }
 
   getUniqueAssigneesByFormId(id: string): Observable<ChartData> {
-    // return this.http.get<ChartData>(this.url + 'api/responses/assignees' + id);
-    return of({ count: 3 });
+    return this.http.get<ChartData>(this.url + 'api/responses/assignees' + id);
   }
 
   getUniqueRespondentsByFormId(id: string): Observable<ChartData> {
-    // return this.http.get<ChartData>(this.url + 'api/responses/respondents' + id);
-    return of({ count: 7 });
+    return this.http.get<ChartData>(this.url + 'api/responses/respondents' + id);
   }
 
   getAllForms(): Observable<Form[]> {
