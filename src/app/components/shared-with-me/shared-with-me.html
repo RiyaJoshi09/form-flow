@@ -1,2 +1,87 @@
-<h1>Recent Assignments</h1>
-<p>Check your recent assignments here.</p>
+<div class="shared-container">
+
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <h2>Shared With Me</h2>
+      <p>Forms assigned to you</p>
+    </div>
+
+    <div class="header-actions">
+      <input type="text" placeholder="Search forms..." />
+    </div>
+  </div>
+
+  <!-- Recent Section -->
+  <div class="recent-section">
+    <h3>Recently Assigned</h3>
+
+    <div class="card-container">
+      <div class="form-card" *ngFor="let form of recentForms">
+        <div class="card-icon">
+          <mat-icon>description</mat-icon>
+        </div>
+
+        <div class="card-content">
+          <h4>{{ form.name }}</h4>
+          <p>Assigned {{ form.date }}</p>
+        </div>
+
+        <span class="role" [ngClass]="form.role.toLowerCase()">
+          {{ form.role }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- All Assigned Forms -->
+  <div class="table-section">
+
+    <div class="table-header">
+      <h3>All Assigned Forms</h3>
+
+      <div class="tabs">
+        <button class="active">Active</button>
+        <button>Archived</button>
+      </div>
+    </div>
+
+    <div class="table">
+
+      <div class="table-row header-row">
+        <span>Form Name</span>
+        <span>Role</span>
+        <span>Date Assigned</span>
+        <span>Action</span>
+      </div>
+
+      <div class="table-row" *ngFor="let form of assignedForms">
+        <span class="form-name">
+          <mat-icon>description</mat-icon>
+          {{ form.name }}
+        </span>
+
+        <span>
+          <span [ngClass]="form.role.toLowerCase()">
+            {{ form.role }}
+          </span>
+        </span>
+
+        <span>{{ form.date }}</span>
+
+        <span>
+          <button class="open-btn">Open</button>
+        </span>
+      </div>
+
+    </div>
+
+    <div class="pagination">
+      <button>&lt;</button>
+      <button class="active">1</button>
+      <button>2</button>
+      <button>&gt;</button>
+    </div>
+
+  </div>
+</div>

@@ -164,10 +164,14 @@ export class FormService {
     return this.http.get(this.url + 'user/access/' + form_id);
   }
 
-  getUsernameByEmail(email: string) {
-    return this.http.get(`${this.url}user/username-by-email`, {
-      params: { email: email },
-      responseType: 'text', // 🔥 important
-    });
-  }
+getUsernameByEmail(email: string) {
+  return this.http.get(`${this.url}user/username-by-email`, {
+    params: { email: email },
+    responseType: 'text'   // 🔥 important
+  });
+}
+
+getSharedForms(){
+  return this.http.get(this.url + 'user/shared-forms');
+}
 }

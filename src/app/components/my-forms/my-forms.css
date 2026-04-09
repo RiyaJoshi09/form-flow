@@ -93,3 +93,40 @@
    display: flex;
    justify-content: space-between;
 }
+
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 999px; 
+  text-transform: capitalize;
+  margin-left: 8px;
+}
+
+
+/* Private = Blue */
+.status-badge.private {
+  background-color: #e3f2fd;
+  color: #1565c0;
+  border: 1px solid #bbdefb;
+}
+
+/* Public = Green */
+.status-badge.public {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #c8e6c9;
+}
+
+.status-badge:hover {
+  opacity: 0.85;
+  cursor: default;
+}
+
+button[disabled] {
+  cursor: not-allowed !important;
+  pointer-events: auto !important; /* VERY IMPORTANT */
+  opacity: 0.5;
+}
