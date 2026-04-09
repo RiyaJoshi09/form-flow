@@ -65,16 +65,16 @@ openAssignment(role: string , formId: string){
     if(role=='RESPONDER'){
         window.open('/form/' + formId, '_blank');
     }
-    else if(role=='VEIWER'){
-      const previewData = this.formService.getFormById(formId).subscribe({
-        next: (data: any) => {
-          console.log("Form Data:", data)
-        }});
-       this.dialog.open(FormSubmission, {
+    else if(role=='VIEWER'){
+        this.formService.getFormById(formId).subscribe(data =>{
+          const previewData = data;
+          this.dialog.open(FormSubmission, {
              width: '90vw',
              height: '90vh',
              data: previewData,
            });
+        })
+     
     }
     else if(role=='EDITOR'){
         window.open('/edit-form/' + formId, '_blank');
