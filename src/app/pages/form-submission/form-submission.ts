@@ -7,7 +7,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { InputText } from '../../components/cards/input-text/input-text';
 import { FileUpload } from '../../components/cards/file-upload/file-upload';
 import { CheckBox } from '../../components/cards/check-box/check-box';
@@ -22,6 +22,8 @@ import { fileSizeValidator, fileTypeValidator } from '../../validators/file.vali
 import { ToastrService } from 'ngx-toastr';
 import { FormSettingsSchema } from '../../interfaces/form-settings-schema';
 import { ThemeService } from '../../services/theme-service';
+import { AuthService } from '../../services/auth-service';
+import { Loader } from '../../components/loader/loader';
 
 @Component({
   selector: 'app-form-submission',
@@ -36,6 +38,8 @@ import { ThemeService } from '../../services/theme-service';
     FormsModule,
     ReactiveFormsModule,
     MatIconModule,
+    RouterLink,
+    Loader
   ],
   templateUrl: './form-submission.html',
   styleUrl: './form-submission.css',
@@ -48,6 +52,8 @@ export class FormSubmission {
   isSubmitted: boolean = false;
   closeMessage: string = '';
   isClosed: boolean = false;
+  responseCount: any;
+  isFormReady: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -56,40 +62,47 @@ export class FormSubmission {
     private cd: ChangeDetectorRef,
     @Optional() @Inject(MAT_DIALOG_DATA) public dialogData: any,
     private toastr: ToastrService,
+    private authService: AuthService,
+    private router: Router,
   ) { }
 
   ngOnInit() {
-    //Check if data was passed through the Dialog (Preview Mode)
+    //Preview Mode
     if (this.dialogData) {
       this.formStructure = this.dialogData;
       this.isReadOnly = this.dialogData.isReadOnly;
       this.buildReactiveForm();
     }
-    //Check URL (Live Mode)
+    //Response Mode
     else {
       const formId = this.route.snapshot.paramMap.get('id');
       if (formId) {
-        // Convert formId to number to match your service signature
         this.formService.getResponseFormById(formId).subscribe({
           next: (form: Form) => {
             this.formStructure = form;
-            if(localStorage.getItem('prevTheme')===null){
-              localStorage.setItem('prevTheme', localStorage.getItem('theme') || 'theme-pink');
-            }
-            this.themeService.setTheme(form.theme);
-            this.themeService.loadTheme();
+            // if (localStorage.getItem('prevTheme') === null) {
+            //   localStorage.setItem('prevTheme', localStorage.getItem('theme') || 'theme-pink');
+            // }
+            // this.themeService.setTheme(form.theme);
+            // this.themeService.loadTheme();
             this.isReadOnly = false;
-            if (this.checkAvailability(form)) {
-              this.buildReactiveForm();
-              this.loadDraft(formId);
-              this.setupDraftTimer(formId);
-            } else {
-              this.isClosed = true;
-              this.closeMessage = form.settings?.closeMessage || "This form is closed";
-            }
+            this.formService.getFormResponseById(formId).subscribe((res: any) => {
+              this.responseCount = res.length;
+              if (this.checkAvailability(form)) {
+                this.handleTheme(form);
+                this.buildReactiveForm();
+                this.isFormReady = true;
+                this.loadDraft(formId);
+                this.setupDraftTimer(formId);
+              } else {
+                this.isClosed = true;
+                this.isFormReady = true;
+              }
+               this.cd.detectChanges();
+            });
           },
           error: (err) => {
-            console.error('Could not fetch form:', err);
+            //console.error('Could not fetch form:', err);
             this.toastr.error('Error: Form not found on server.');
           },
         });
@@ -98,25 +111,36 @@ export class FormSubmission {
   }
 
   checkAvailability(form: any): boolean {
-    //console.log('Checking availability for:', form.settings?.deadline);
-
-    if (!form.settings?.deadline) {
-      //console.log('No deadline found, allowing form.');
-      return true;
-    }
+    const settings = form.settings;
+    if (!settings) return true;
 
     const now = new Date();
-    const deadline = new Date(form.settings.deadline);
+    const deadline = settings.deadline ? new Date(form.settings.deadline) : null;
 
-    if (isNaN(deadline.getTime())) {
-      //console.warn('Invalid deadline date format:', form.settings.deadline);
-      return true;
+    if (deadline && now > deadline) {
+      this.closeMessage = settings.closeMessage || "This form is closed";
+      return false;
     }
 
-    const isAvailable = now < deadline;
-   // console.log(`Current Time: ${now} | Deadline: ${deadline} | Available: ${isAvailable}`);
+    if (settings.maxResponses && Number(this.responseCount) >= Number(settings.maxResponses)) {
+      this.closeMessage = "This form has reached the maximum number of allowed responses.";
+      return false;
+    }
 
-    return isAvailable;
+    if (settings.isPrivate && !this.authService.isLoggedIn()) {
+      this.closeMessage = "This is a private form. Please log in to view and submit.";
+      return false;
+    }
+
+    return true;
+  }
+
+  handleTheme(form: Form) {
+    if (localStorage.getItem('prevTheme') === null) {
+      localStorage.setItem('prevTheme', localStorage.getItem('theme') || 'theme-pink');
+    }
+    this.themeService.setTheme(form.theme);
+    this.themeService.loadTheme();
   }
 
   getFieldStyle(config: any) {
@@ -189,41 +213,6 @@ export class FormSubmission {
     }
   }
 
-  // submitResponse() {
-  //   if (this.isReadOnly) {
-  //     this.toastr.warning("This is a preview. Data is not saved to the database.");
-  //     return;
-  //   }
-
-  //   if (this.formGroup.valid) {
-  //     this.isSubmitting = true;
-
-  //     const responseEntry = {
-  //       formId: this.formStructure.id,
-  //       response: this.formGroup.value,
-  //     };
-
-  //     console.log(this.formGroup.value);
-
-  //     this.formService.submitResponse(responseEntry).subscribe({
-  //       next: (res) => {
-  //         console.log(res);
-  //         this.toastr.success("Response saved successfully!");
-  //         this.formGroup.reset();
-  //         this.isSubmitting = false;
-  //       },
-  //       error: (err) => {
-  //         console.error("Submission failed", err);
-  //         this.toastr.error("Could not save response. Please try again.");
-  //         this.isSubmitting = false;
-  //       },
-  //     });
-  //   } else {
-  //     this.formGroup.markAllAsTouched(); // Show errors to the user
-  //     this.toastr.error("Please fix the errors before submitting.");
-  //   }
-  // }
-
   submitResponse() {
     if (this.isReadOnly) {
       this.toastr.warning('This is a preview. Data is not saved to the database.');
@@ -233,8 +222,13 @@ export class FormSubmission {
     if (this.formGroup.valid) {
       this.isSubmitting = true;
 
+      // const submissionData = {
+      //   submittedBy: this.authService.getCurrentUser()
+      // }
+
       this.formService.submitResponse(this.formStructure.id, this.formGroup.value).subscribe({
         next: (res) => {
+          console.log(res);
           this.toastr.success('Response saved successfully!');
           this.formGroup.reset();
           this.isSubmitting = false;
@@ -253,9 +247,25 @@ export class FormSubmission {
     }
   }
 
+  get currentUser(): string | null {
+    return this.authService.getCurrentUser();
+  }
+
+  get isLoggedIn(): boolean {
+  return this.authService.isLoggedIn();
+}
+
   resetForm() {
     this.isSubmitted = false;
     this.isSubmitting = false;
-    this.formGroup.reset();
+    this.ngOnInit();
+  }
+
+
+  logoutAndSwitch() {
+    this.authService.logout();
+    this.router.navigate(['/login'], {
+      queryParams: { returnUrl: this.router.url }
+    });
   }
 }

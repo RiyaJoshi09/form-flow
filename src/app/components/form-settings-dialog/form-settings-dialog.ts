@@ -37,15 +37,7 @@ export class FormSettingsDialog {
     @Inject(MAT_DIALOG_DATA) public data: FormSettingsSchema
   ) {
     if (!this.data) {
-      this.data = {};
-    }
-
-    if (this.data.deadline) {
-      const deadlineDate = new Date(this.data.deadline);
-      this.selectedDate = deadlineDate;
-      this.selectedDate.setHours(23, 59, 59, 999);
-      this.data.deadline = this.selectedDate;
-      //console.log(this.data.deadline);
+      this.data = {deadline: undefined, closeMessage: '', maxResponses: undefined, isPrivate: false};
     }
   }
 
@@ -55,6 +47,13 @@ export class FormSettingsDialog {
   // }
 
   onSave() {
+    if (this.data.deadline) {
+    const finalDate = new Date(this.data.deadline);
+    finalDate.setHours(23, 59, 59, 999);
+    this.data.deadline = finalDate.toISOString();
+    
+    console.log("Saving deadline as:", this.data.deadline);
+  }
     this.dialogRef.close(this.data);
   }
 
