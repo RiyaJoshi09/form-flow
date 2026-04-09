@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatError, MatFormField, MatInputModule } from '@angular/material/input';
 import { AuthService } from '../../services/auth-service';
@@ -18,7 +18,8 @@ export class Login {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private toastr:ToastrService
+    private toastr:ToastrService,
+    private route: ActivatedRoute,
   ) {}
 
   onLogin() {
@@ -39,7 +40,9 @@ export class Login {
       })
       .subscribe({
         next: (res) => {
-          this.router.navigate(['/home']);
+          // this.router.navigate(['/home']);
+          const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
+          this.router.navigateByUrl(returnUrl);
           this.toastr.success("LoggedIn sucessfully")
         },
         error: (err) => {
