@@ -11,14 +11,14 @@
 }
 
 .header h2 {
-    margin: 0;
-    font-size: 22px;
-    color: var(--mat-sys-on-surface);
+    font-size: 40px;
+    font-weight: bold;
+    color: var(--mat-sys-primary); 
 }
 
 .header p {
     margin: 5px 0 0;
-    font-size: 13px;
+    font-size: 18px;
     color: var(--mat-sys-on-surface-variant);
 }
 

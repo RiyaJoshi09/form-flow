@@ -118,6 +118,7 @@ export class Assign {
       editor: editor,
       responder: responder,
       viewer: viewer,
+      responseViewer:[],
       message: [this.description]
     },
     

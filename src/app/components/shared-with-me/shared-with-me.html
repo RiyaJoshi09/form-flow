@@ -8,7 +8,9 @@
     </div>
 
     <div class="header-actions">
-      <input type="text" placeholder="Search forms..." />
+      <input type="text" placeholder="Search forms..." 
+      [(ngModel)]="searchText"
+      (input)="onSearch()" />
     </div>
   </div>
 
@@ -18,16 +20,16 @@
 
     <div class="card-container">
       <div class="form-card" *ngFor="let form of recentForms">
-        <div class="card-icon">
+        <div class="card-icon"  (click)="openAssignment(form.role, form.formId)" class="!cursor-pointer">
           <mat-icon>description</mat-icon>
         </div>
 
-        <div class="card-content">
-          <h4>{{ form.name }}</h4>
-          <p>Assigned {{ form.date }}</p>
+        <div class="card-content" >
+          <h4>{{ form.formName }}</h4>
+          <p>Assigned {{ form.assignedAt | date: 'dd/MM/yyyy hh:mm a'}}</p>
         </div>
 
-        <span class="role" [ngClass]="form.role.toLowerCase()">
+        <span class="role" [ngClass]="form.role?.toLowerCase()">
           {{ form.role }}
         </span>
       </div>
@@ -55,10 +57,10 @@
         <span>Action</span>
       </div>
 
-      <div class="table-row" *ngFor="let form of assignedForms">
+      <div class="table-row" *ngFor="let form of paginatedForms">
         <span class="form-name">
           <mat-icon>description</mat-icon>
-          {{ form.name }}
+          {{ form.formName }}
         </span>
 
         <span>
@@ -67,21 +69,37 @@
           </span>
         </span>
 
-        <span>{{ form.date }}</span>
+        <span>{{ form.assignedAt | date: 'dd/MM/yyyy hh:mm a'}}</span>
 
         <span>
-          <button class="open-btn">Open</button>
+          <button class="open-btn" (click)="openAssignment(form.role, form.formId)">Open</button>
         </span>
       </div>
 
     </div>
 
     <div class="pagination">
-      <button>&lt;</button>
-      <button class="active">1</button>
-      <button>2</button>
-      <button>&gt;</button>
-    </div>
+  
+  <!-- Previous -->
+  <button (click)="prevPage()" [disabled]="currentPage === 1">
+    &lt;
+  </button>
+
+  <!-- Page Numbers -->
+  <button 
+    *ngFor="let page of [].constructor(totalPages); let i = index"
+    (click)="goToPage(i + 1)"
+    [class.active]="currentPage === i + 1"
+  >
+    {{ i + 1 }}
+  </button>
+
+  <!-- Next -->
+  <button (click)="nextPage()" [disabled]="currentPage === totalPages">
+    &gt;
+  </button>
+
+</div>
 
   </div>
 </div>
