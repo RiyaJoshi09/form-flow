@@ -1,7 +1,11 @@
 import { Component } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
+
+import { FormService } from '../../services/form-service';
+
 
 @Component({
   selector: 'app-shared-with-me',
@@ -10,6 +14,8 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './shared-with-me.css',
 })
 export class SharedWithMe {
+  constructor(private formService: FormService){}
+
 
   recentForms = [
     { name: 'Form 1', date: 'Apr 4, 2026', role: 'Editor' },
@@ -22,5 +28,17 @@ export class SharedWithMe {
     { name: 'Feedback Form', date: 'Apr 2, 2026', role: 'Respondent' },
     { name: 'Q&A Form', date: 'Apr 3, 2026', role: 'Viewer' }
   ];
+
+
+  ngOnInit() {
+    this.formService.getSharedForms().subscribe({
+      next: (data) => {
+        console.log("Shared Forms:", data);
+      },
+      error: (error) => {
+        console.error("Error fetching shared forms:", error);
+      }
+    });   
+}
 
 }

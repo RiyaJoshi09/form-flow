@@ -52,11 +52,11 @@ export class FormSubmission {
   constructor(
     private route: ActivatedRoute,
     private formService: FormService,
-    private themeService : ThemeService,
+    private themeService: ThemeService,
     private cd: ChangeDetectorRef,
     @Optional() @Inject(MAT_DIALOG_DATA) public dialogData: any,
     private toastr: ToastrService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     //Check if data was passed through the Dialog (Preview Mode)
@@ -79,7 +79,7 @@ export class FormSubmission {
             this.themeService.setTheme(form.theme);
             this.themeService.loadTheme();
             this.isReadOnly = false;
-            if(this.checkAvailability(form)){
+            if (this.checkAvailability(form)) {
               this.buildReactiveForm();
               this.loadDraft(formId);
               this.setupDraftTimer(formId);
@@ -97,18 +97,31 @@ export class FormSubmission {
     }
   }
 
-  checkAvailability(form: any): boolean{
-    if (!form.settings?.deadline) return true; 
+  checkAvailability(form: any): boolean {
+    //console.log('Checking availability for:', form.settings?.deadline);
+
+    if (!form.settings?.deadline) {
+      //console.log('No deadline found, allowing form.');
+      return true;
+    }
+
     const now = new Date();
     const deadline = new Date(form.settings.deadline);
-    if (isNaN(deadline.getTime())) return true; 
 
-    return now < deadline;
+    if (isNaN(deadline.getTime())) {
+      //console.warn('Invalid deadline date format:', form.settings.deadline);
+      return true;
+    }
+
+    const isAvailable = now < deadline;
+   // console.log(`Current Time: ${now} | Deadline: ${deadline} | Available: ${isAvailable}`);
+
+    return isAvailable;
   }
 
   getFieldStyle(config: any) {
     return {
-      color: config?.color || '#000000',
+      'color': config?.color || '#000000',
       'font-size': config?.fontSize || '12px',
       'font-weight': config?.bold ? 'bold' : 'normal',
       'font-style': config?.italic ? 'italic' : 'normal',
@@ -120,7 +133,7 @@ export class FormSubmission {
     const controlId = String(field.id || field.fieldOrder);
     const control = this.formGroup.get(controlId);
     if (!control) {
-      throw new Error('Control with id ${id} not found in FormGroup');
+      throw new Error(`Control with id ${controlId} not found in FormGroup`);
     }
     return control as FormControl;
   }
@@ -170,12 +183,12 @@ export class FormSubmission {
 
   loadDraft(formId: string) {
     const savedDraft = localStorage.getItem(`form_draft_${formId}`);
-    if (savedDraft){
+    if (savedDraft) {
       const draftValues = JSON.parse(savedDraft);
       this.formGroup.patchValue(draftValues);
     }
   }
-  
+
   // submitResponse() {
   //   if (this.isReadOnly) {
   //     this.toastr.warning("This is a preview. Data is not saved to the database.");
@@ -219,7 +232,7 @@ export class FormSubmission {
 
     if (this.formGroup.valid) {
       this.isSubmitting = true;
-      
+
       this.formService.submitResponse(this.formStructure.id, this.formGroup.value).subscribe({
         next: (res) => {
           this.toastr.success('Response saved successfully!');
