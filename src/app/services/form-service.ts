@@ -158,4 +158,8 @@ getUsernameByEmail(email: string) {
     responseType: 'text'   // 🔥 important
   });
 }
+
+getSharedForms(){
+  return this.http.get(this.url + 'user/shared-forms');
+}
 }
