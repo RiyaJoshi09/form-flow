@@ -47,7 +47,6 @@ export class Assign {
       this.cd.detectChanges();
     });
 
-    // Load already assigned users
     this.formService.getSavedAccess(this.formId).subscribe({
       next: (access: any) => {
         if (access) {
@@ -67,7 +66,6 @@ export class Assign {
         }
       },
       error: () => {
-        // No previous assignments, recipients stays empty
         this.recipients = [];
       }
     });
