@@ -14,7 +14,7 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private router: Router,
-  ) {}
+  ) { }
 
   verifyOtp(email: string, otp: string): Observable<any> {
     return this.http
@@ -71,7 +71,7 @@ export class AuthService {
     );
   }
 
-  checkUsernameAailability(data : string){
+  checkUsernameAailability(data: string) {
     return this.http.post(`${this.baseUrl}/usernameCheck`, data).pipe(
       tap((res: any) => { }),
     );
@@ -128,7 +128,7 @@ export class AuthService {
       next: () => {
         console.log('logged out successfully !');
       },
-      error: () => {},
+      error: () => { },
     });
 
     this.clearTokens();
@@ -150,5 +150,17 @@ export class AuthService {
         this.setTokens(res.accessToken, res.refreshToken);
       }),
     );
+  }
+
+  getCurrentUser(): string | null {
+    const token = this.getAccessToken();
+    if (!token) return null;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.sub;
+    } catch (e) {
+      return null;
+    }
   }
 }

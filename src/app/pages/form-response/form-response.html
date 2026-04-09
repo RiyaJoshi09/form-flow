@@ -1,0 +1,127 @@
+<div class="response-container bg-surface">
+
+  <!-- Form Title -->
+  <div class="form-header font-bold text-2xl" [class.hidden]="isLoading">
+    <h1 class="form-title text-primary">{{ formTitle }}</h1>
+    <p class="text-muted opacity-70 text-sm">Response Analytics</p>
+  </div>
+
+  <!-- Loading state -->
+  <div class="state-message text-muted" [class.hidden]="!isLoading">
+    Loading responses...
+  </div>
+
+  <!-- Charts Row -->
+  <div class="charts-row" [class.hidden]="isLoading">
+
+    <div class="chart-card bg-container">
+      <p class="chart-title text-primary font-bold">Response Rate</p>
+      <p class="chart-subtitle text-muted">Unique respondents out of assigned users</p>
+      <div class="chart-canvas-wrap">
+        <canvas #completionCanvas></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card bg-container">
+      <p class="chart-title text-primary font-bold">Responses Over Time</p>
+      <p class="chart-subtitle text-muted">Submissions by day (or hour if same day)</p>
+      <div class="chart-canvas-wrap">
+        <canvas #timelineCanvas></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card bg-container">
+      <p class="chart-title text-primary font-bold">Busiest Days</p>
+      <p class="chart-subtitle text-muted">Responses received by day of week</p>
+      <div class="chart-canvas-wrap">
+        <canvas #weekdayCanvas></canvas>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Search bar -->
+  <div class="flex justify-between items-center mt-10" [class.hidden]="isLoading">
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Search</mat-label>
+      <input matInput (input)="applyFilter($event)" placeholder="Search responses..." />
+    </mat-form-field>
+    <div class="flex items-center justify-center gap-x-3 text-sm">
+        <button 
+        (click)="downloadAsCsv()"
+        class="btn-primary p-2 rounded flex justify-center items-center gap-x-2 opacity-90 hover:opacity-100 cursor-pointer">
+            <span>Download as CSV</span>
+            <mat-icon style="font-size: 24px;">download</mat-icon>
+        </button>
+        <button 
+        (click)="downloadAsExcel()"
+        class="btn-primary p-2 rounded flex justify-center items-center gap-x-2 opacity-90 hover:opacity-100 cursor-pointer">
+            <span>Download as .xlsx</span>
+            <mat-icon style="font-size: 24px;">download</mat-icon>
+        </button>
+    </div>
+  </div>
+
+  <!-- Table always in DOM -->
+  <div class="table-wrapper border-theme" [class.hidden]="isLoading">
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      matSort
+      cdkDropList
+      cdkDropListOrientation="horizontal"
+      (cdkDropListDropped)="drop($event)"
+      class="response-table mat-elevation-z2"
+    >
+      <ng-container matColumnDef="slNo" sticky>
+        <th mat-header-cell *matHeaderCellDef class="sl-header">
+          <span class="header-content">
+            <span class="header-label text-primary">#</span>
+          </span>
+        </th>
+        <td mat-cell *matCellDef="let element; index as i" class="sl-cell">
+          {{ getSerialNumber(i) }}
+        </td>
+      </ng-container>
+
+      @for (column of displayedColumns.slice(1); track column) {
+        <ng-container [matColumnDef]="column">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            cdkDrag
+            cdkDragLockAxis="x"
+            class="drag-header"
+          >
+            <span class="header-content">
+              <mat-icon cdkDragHandle class="drag-handle text-muted">drag_indicator</mat-icon>
+              <span class="header-label text-primary capitalize">{{ getColumnLabel(column) }}</span>
+            </span>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ formatValue(element[column]) }}
+          </td>
+        </ng-container>
+      }
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="no-data-cell text-muted" [attr.colspan]="displayedColumns.length">
+          No responses
+        </td>
+      </tr>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+
+  <mat-paginator
+    [class.hidden]="isLoading"
+    [pageSize]="10"
+    [pageSizeOptions]="[5, 10, 20, 50]"
+    showFirstLastButtons
+    aria-label="Select page of responses"
+  ></mat-paginator>
+
+</div>
