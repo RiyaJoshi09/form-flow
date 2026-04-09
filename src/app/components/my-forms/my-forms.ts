@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { FORMS_DATA } from '../../data/form-data';
 import { MatIcon } from '@angular/material/icon';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ShareDialog } from '../share-dialog/share-dialog';
 
@@ -17,7 +17,7 @@ import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-my-forms',
-  imports: [RouterLink, MatIcon, DatePipe, MatDialogModule, MatMenu, MatMenuTrigger],
+  imports: [RouterLink, MatIcon, DatePipe, MatDialogModule, MatMenu, MatMenuTrigger, CommonModule],
   templateUrl: './my-forms.html',
   styleUrl: './my-forms.css',
 })
@@ -28,6 +28,7 @@ export class MyForms {
   totalForms=0;
   totalActive=0;
   totalRes=0;
+  isprivate=false;
 
   constructor(private dialog:MatDialog, 
     private formService: FormService, 
@@ -45,6 +46,7 @@ export class MyForms {
   getFormData(){
      this.formService.getAllForms().subscribe((data:any[])=>{
       this.forms = data;
+      console.log("Forms Data:", this.forms);
       this.totalFormsarray=data;
       this.forms.forEach((form:any)=>{
       this.formService.getFormResponseById(form.id).subscribe((res:any)=>{

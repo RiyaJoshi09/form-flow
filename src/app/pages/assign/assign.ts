@@ -47,9 +47,9 @@ export class Assign {
       this.cd.detectChanges();
     });
 
-    // Load already assigned users
     this.formService.getSavedAccess(this.formId).subscribe({
       next: (access: any) => {
+        
         if (access) {
           const editorList: string[] = access.access?.editor || [];
           const responderList: string[] = access.access?.responder || [];
@@ -62,12 +62,13 @@ export class Assign {
           viewerList.forEach(name => preAssigned.push({ name, selected: true, role: 'Viewer', preAssigned: true }));
 
           this.recipients = preAssigned;
+          this.description= access.access?.message || 'Please fill this form.';
+          console.log(this.description);
           this.updateSummary();
           this.cd.detectChanges();
         }
       },
       error: () => {
-        // No previous assignments, recipients stays empty
         this.recipients = [];
       }
     });
@@ -116,9 +117,10 @@ export class Assign {
     access: {
       editor: editor,
       responder: responder,
-      viewer: viewer
+      viewer: viewer,
+      message: [this.description]
     },
-    description: this.description
+    
   };
 
   console.log("Payload:", payload);
