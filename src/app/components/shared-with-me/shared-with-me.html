@@ -14,11 +14,58 @@
     </div>
   </div>
 
+  <!-- SUMMARY CARDS -->
+  <div class="summary">
+
+    <div class="cards">
+      <div class="details">
+        <h3>Total Assigned Forms</h3>
+        <h1>{{ totalAssigned }}</h1>
+      </div>
+      <mat-icon>assignment</mat-icon>
+    </div>
+
+    <div class="cards">
+      <div class="details">
+        <h3>Recent Forms</h3>
+        <h1>{{ totalRecent }}</h1>
+      </div>
+      <mat-icon>history</mat-icon>
+    </div>
+
+    <div class="cards">
+      <div class="details">
+        <h3>Responder</h3>
+        <h1>{{ totalResponder }}</h1>
+      </div>
+      <mat-icon>fact_check</mat-icon>
+    </div>
+
+    <div class="cards">
+      <div class="details">
+        <h3>Viewer</h3>
+        <h1>{{ totalViewer }}</h1>
+      </div>
+      <mat-icon>visibility</mat-icon>
+    </div>
+
+    <div class="cards">
+      <div class="details">
+        <h3>Editor</h3>
+        <h1>{{ totalEditor }}</h1>
+      </div>
+      <mat-icon>edit</mat-icon>
+    </div>
+
+  </div>
+
   <!-- Recent Section -->
   <div class="recent-section">
     <h3>Recently Assigned</h3>
 
-    <div class="card-container">
+    <p class="empty-msg" *ngIf="recentForms.length === 0">There are no recent forms assigned to you currently.</p>
+
+    <div class="card-container" *ngIf="recentForms.length > 0">
       <div class="form-card" *ngFor="let form of recentForms"  (click)="openAssignment(form.role, form.formId)"
       style="cursor: pointer;">
         <div class="card-icon"  >

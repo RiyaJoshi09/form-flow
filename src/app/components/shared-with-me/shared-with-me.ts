@@ -30,6 +30,12 @@ export class SharedWithMe {
   itemsPerPage: number = 3;       // per page kitne items dikhane hai
   totalPages: number = 1;
 
+  totalAssigned: number = 0;
+  totalRecent: number = 0;
+  totalResponder: number = 0;
+  totalViewer: number = 0;
+  totalEditor: number = 0;
+
   constructor(private formService: FormService, 
     private cd:ChangeDetectorRef, 
     private router: Router, 
@@ -38,12 +44,19 @@ export class SharedWithMe {
     this.formService.getSharedForms().subscribe({
       next: (data: any) => {
         console.log("Shared Forms:", data);
-       this.recentForms = this.sortFormsByDate(data.newForms || []);
-      this.assignedForms = this.sortFormsByDate(data.otherForms || []);
-      this.filteredForms = [...this.assignedForms];
+        this.recentForms = this.sortFormsByDate(data.newForms || []);
+        this.assignedForms = this.sortFormsByDate(data.otherForms || []);
+        this.filteredForms = [...this.assignedForms];
+
+        const allForms = [...this.recentForms, ...this.assignedForms];
+        this.totalAssigned = allForms.length;
+        this.totalRecent = this.recentForms.length;
+        this.totalResponder = allForms.filter(f => f.role === 'RESPONDER').length;
+        this.totalViewer = allForms.filter(f => f.role === 'VIEWER').length;
+        this.totalEditor = allForms.filter(f => f.role === 'EDITOR').length;
+        
         this.loadPagination();
         this.cd.detectChanges();
-
       },
       error: (error) => {
         console.error("Error fetching shared forms:", error);

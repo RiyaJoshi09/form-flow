@@ -178,3 +178,58 @@
     background: var(--mat-sys-primary);
     color: white;
 }
+
+.empty-msg {
+    margin-top: 10px;
+    font-size: 14px;
+    color: var(--mat-sys-on-surface-variant);
+    background-color: var(--mat-sys-surface-container);
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.recent-section {
+    margin-bottom: 25px;
+}
+
+.summary {
+    display: flex;
+    gap: 20px;              /* space between cards */
+    margin: 30px 0;
+}
+
+/* Each card */
+.cards {
+    flex: 1;               /* equal width */
+    background-color: var(--mat-sys-surface-container);
+    padding: 20px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+/* Left text section */
+.details h3 {
+    font-size: 14px;
+    color: var(--mat-sys-primary); ;
+    margin: 0;
+    font-weight: 500;
+}
+
+.details h1 {
+    font-size: 26px;
+    margin: 5px 0 0;
+    color: var(--mat-sys-on-surface-variant);;
+    font-weight: 700;
+}
+
+/* Icon styling */
+.cards mat-icon {
+    font-size: 26px;   
+    height: 26px;
+    width: 26px;
+    line-height: 26px;
+    color: var(--mat-sys-on-surface-variant);
+}
