@@ -30,7 +30,10 @@ export class SharedWithMe {
   itemsPerPage: number = 3;       // per page kitne items dikhane hai
   totalPages: number = 1;
 
-  constructor(private formService: FormService, private cd:ChangeDetectorRef, private router: Router, private dialog: MatDialog){}
+  constructor(private formService: FormService, 
+    private cd:ChangeDetectorRef, 
+    private router: Router, 
+    private dialog: MatDialog){}
   ngOnInit() {
     this.formService.getSharedForms().subscribe({
       next: (data: any) => {
@@ -56,7 +59,7 @@ onSearch() {
     form.formName.toLowerCase().includes(value)
   );
 
-  this.currentPage = 1;  // 🔥 reset page
+  this.currentPage = 1;  
   this.loadPagination();
 }
 
@@ -66,16 +69,51 @@ openAssignment(role: string , formId: string){
         window.open('/form/' + formId, '_blank');
     }
     else if(role=='VIEWER'){
-        this.formService.getFormById(formId).subscribe(data =>{
-          const previewData = data;
-          this.dialog.open(FormSubmission, {
-             width: '90vw',
-             height: '90vh',
-             data: previewData,
-           });
-        })
-     
+        this.formService.getFormById(formId).subscribe(data => {
+        console.log("Form Data for Preview:", data);
+
+    const previewData = {
+      title: data.title,
+      description: data.description,
+      sections: data.sections.map((section: any, sIndex: number) => ({
+        sectionTitle: section.sectionTitle,
+        sectionOrder: section.sectionOrder || (sIndex + 1),
+
+        fields: section.fields.map((field: any, fIndex: number) => ({
+          fieldType: field.fieldType, // ⚠️ check this name
+          fieldOrder: field.fieldOrder || (fIndex + 1),
+          id: field.id || `temp_${fIndex}`,
+
+          fieldConfig: {
+            label: field.fieldConfig?.label,
+            placeholder: field.fieldConfig?.placeholder,
+            options: field.fieldConfig?.options || [],
+            validations: field.fieldConfig?.validations || {},
+          },
+
+          fieldStyle: {
+            color: field.fieldStyle?.color,
+            fontSize: field.fieldStyle?.fontSize,
+            bold: field.fieldStyle?.bold,
+            italics: field.fieldStyle?.italics,
+            underline: field.fieldStyle?.underline
+          }
+        }))
+      })),
+      isReadOnly: true
+    };
+    console.log("Prepared Preview Data:", previewData);
+
+    this.dialog.open(FormSubmission, {
+       width: '90vw',
+       height: '90vh',
+       data: previewData, 
+        });
+
+        this.cd.detectChanges();
+      })
     }
+
     else if(role=='EDITOR'){
         window.open('/edit-form/' + formId, '_blank');
     }

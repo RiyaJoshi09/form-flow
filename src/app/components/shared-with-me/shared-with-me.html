@@ -19,8 +19,9 @@
     <h3>Recently Assigned</h3>
 
     <div class="card-container">
-      <div class="form-card" *ngFor="let form of recentForms">
-        <div class="card-icon"  (click)="openAssignment(form.role, form.formId)" class="!cursor-pointer">
+      <div class="form-card" *ngFor="let form of recentForms"  (click)="openAssignment(form.role, form.formId)"
+      style="cursor: pointer;">
+        <div class="card-icon"  >
           <mat-icon>description</mat-icon>
         </div>
 

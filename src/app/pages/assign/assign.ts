@@ -62,7 +62,7 @@ export class Assign {
           viewerList.forEach(name => preAssigned.push({ name, selected: true, role: 'Viewer', preAssigned: true }));
 
           this.recipients = preAssigned;
-          this.description= access.access?.message || 'Please fill this form.';
+          this.description= access.access.message;
           console.log(this.description);
           this.updateSummary();
           this.cd.detectChanges();
@@ -119,7 +119,7 @@ export class Assign {
       responder: responder,
       viewer: viewer,
       responseViewer:[],
-      message: [this.description]
+      message: [this.description?this.description:'Please fill this form.']
     },
     
   };
