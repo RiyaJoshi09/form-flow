@@ -79,8 +79,8 @@ export class FormResponse implements OnInit, AfterViewInit, OnDestroy {
     forkJoin({
       form: this.formService.getFormById(id),
       responses: this.formService.getAllFormResponsesById(id),
-      respondents: this.formService.getUniqueUsersByFormId(id),
-      assignees: this.formService.getAssignedUsersByFormId(id),
+      respondents: this.formService.getUniqueRespondentsByFormId(id),
+      assignees: this.formService.getUniqueAssigneesByFormId(id),
     }).subscribe({
       next: ({ form, responses, respondents, assignees }) => {
         this.isLoading = false;
@@ -121,7 +121,7 @@ export class FormResponse implements OnInit, AfterViewInit, OnDestroy {
         }
 
         // Draw charts
-        this.initCompletionChart(respondents.count, assignees.count);
+        this.initCompletionChart( assignees.count, respondents.count);
         this.initTimelineChart(responses ?? []);
         this.initWeekdayChart(responses ?? []);
       },
