@@ -157,9 +157,9 @@ prevPage() {
 }
 
 
-resetSearch() {
-  this.searchText = '';
-  this.filteredForms = this.assignedForms;  
-}
+// resetSearch() {
+//   this.searchText = '';
+//   this.filteredForms = this.assignedForms;  
+// }
 
 }

@@ -20,7 +20,7 @@ export class Assign {
 
   formId! : string;
   form:any;
-  description: string = 'Please fill this form.';
+  description: string = '';
   constructor (private router : Router, 
     private route: ActivatedRoute, 
     private formService: FormService,
@@ -62,7 +62,7 @@ export class Assign {
           viewerList.forEach(name => preAssigned.push({ name, selected: true, role: 'Viewer', preAssigned: true }));
 
           this.recipients = preAssigned;
-          this.description= access.access.message;
+    
           console.log(this.description);
           this.updateSummary();
           this.cd.detectChanges();
@@ -75,7 +75,6 @@ export class Assign {
   }
 
   filteredRecipients() {
-    //return this.recipients.filter(r => r.name.toLowerCase().includes(this.searchText.toLowerCase()));
     return this.recipients;
   }
 
@@ -111,6 +110,8 @@ export class Assign {
     }
   });
 
+ 
+ console.log("description", this.description);
   const payload = {
     formId: this.formId,
     owner: this.form.createdBy, 
@@ -119,7 +120,7 @@ export class Assign {
       responder: responder,
       viewer: viewer,
       responseViewer:[],
-      message: [this.description?this.description:'Please fill this form.']
+      message: [this.description? this.description : 'Please fill the form']
     },
     
   };
@@ -140,11 +141,14 @@ export class Assign {
 
 
  searchUser() {
-  console.log("Searching for:", this.searchText);
   if (!this.searchText) return;
  console.log("Searching for:", this.searchText);
   this.formService.getUsernameByEmail(this.searchText).subscribe({
     next: (res: any) => {
+      if(res===this.form.createdBy){
+        this.toastr.warning('Form creator cannot be added ');
+        return;
+      }
       console.log(res);
       this.searchedUser = res;  // JSON case
     },
