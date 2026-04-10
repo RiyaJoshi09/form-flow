@@ -3,7 +3,7 @@
   <!-- Header -->
   <div class="header">
     <div>
-      <h2>Shared With Me</h2>
+      <h2>My Assignments</h2>
       <p>Forms assigned to you</p>
     </div>
 
@@ -53,6 +53,7 @@
 
       <div class="table-row header-row">
         <span>Form Name</span>
+        <span>Assigned By</span>
         <span>Role</span>
         <span>Date Assigned</span>
         <span>Action</span>
@@ -62,6 +63,10 @@
         <span class="form-name">
           <mat-icon>description</mat-icon>
           {{ form.formName }}
+        </span>
+
+        <span>
+          {{ form.assignedBy }}
         </span>
 
         <span>

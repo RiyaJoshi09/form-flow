@@ -157,7 +157,6 @@ export class Assign {
 
 addRecipient() {
 
-  // duplicate check 🔥
   const exists = this.recipients.some(r => r.name === this.searchedUser);
   if (exists) {
     this.toastr.warning('User already added');

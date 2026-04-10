@@ -28,7 +28,13 @@ export class MyForms {
   totalForms=0;
   totalActive=0;
   totalRes=0;
+  publicForms=0;
+  privateForms=0;
   isprivate=false;
+  paginatedForms: any[] = [];     
+  currentPage: number = 1;
+  itemsPerPage: number = 4;       
+  totalPages: number = 1;
 
   constructor(private dialog:MatDialog, 
     private formService: FormService, 
@@ -45,7 +51,8 @@ export class MyForms {
 
   getFormData(){
      this.formService.getAllForms().subscribe((data:any[])=>{
-      this.forms = data;
+      this.forms = this.sortFormsByDate(data);
+      this.loadPagination();
       console.log("Forms Data:", this.forms);
       this.totalFormsarray=data;
       this.forms.forEach((form:any)=>{
@@ -63,7 +70,8 @@ export class MyForms {
   getTrashFormData(){
     this.formService.getTrashForms().subscribe((data:any)=>{
       console.log(data);
-      this.forms = data;
+      this.forms = this.sortFormsByDate(data);
+      this.loadPagination();
       this.totalFormsarray=data;
       this.forms.forEach((form:any)=>{
       this.formService.getFormResponseById(form.id).subscribe((res:any)=>{
@@ -76,11 +84,24 @@ export class MyForms {
   }
 
 
+sortFormsByDate(forms: any[]) {
+  return forms.sort((a, b) => 
+    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+}
+
 
   loadSummary(){
     this.totalForms=this.forms.length;
     this.totalActive = this.forms.filter((f:any)=> f.published==true).length;
     this.totalRes = this.forms.reduce((sum, f:any)=> sum + (f.responses || 0), 0);
+     this.publicForms = this.forms.filter(
+    (f: any) => f.settings?.isPrivate == null
+  ).length;
+
+  this.privateForms = this.forms.filter(
+    (f: any) => f.settings?.isPrivate === true
+  ).length;
   }
 
   deleteForm(id : string){
@@ -145,21 +166,53 @@ this.dialog.open(DeleteDialog).afterClosed().subscribe(result => {
 
   filterStatus(status: String){
      if(status=="all"){
-       this.getFormData();
+      this.forms=this.totalFormsarray;
      }
      else if(status=="published"){
        this.forms=this.totalFormsarray.filter((f:any)=> f.published==true);
-       this.loadSummary();
      }
      else if(status=="draft"){
        this.forms=this.totalFormsarray.filter((f:any)=> f.published==false);
-       this.loadSummary();
      }
-
  
+     this.currentPage = 1;
+  this.loadPagination();
+  this.loadSummary();
   }
 
 
+  loadPagination() {
+  this.totalPages = Math.ceil(this.forms.length / this.itemsPerPage);
+  this.currentPage = 1;
+  this.updatePaginatedForms();
+}
 
+updatePaginatedForms() {
+  const start = (this.currentPage - 1) * this.itemsPerPage;
+  const end = start + this.itemsPerPage;
+
+  this.paginatedForms = this.forms.slice(start, end);
+}
+
+goToPage(page: number) {
+  this.currentPage = page;
+  this.updatePaginatedForms();
+}
+
+nextPage() {
+  if (this.currentPage < this.totalPages) {
+    this.currentPage++;
+    this.updatePaginatedForms();
+  }
+}
+
+prevPage() {
+  if (this.currentPage > 1) {
+    this.currentPage--;
+    this.updatePaginatedForms();
+  }
+}
+
+  
 
 }

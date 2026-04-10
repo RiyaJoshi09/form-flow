@@ -38,9 +38,9 @@ export class SharedWithMe {
     this.formService.getSharedForms().subscribe({
       next: (data: any) => {
         console.log("Shared Forms:", data);
-        this.recentForms = data.newForms || [];
-        this.assignedForms = data.otherForms || [];
-        this.filteredForms=this.assignedForms;
+       this.recentForms = this.sortFormsByDate(data.newForms || []);
+      this.assignedForms = this.sortFormsByDate(data.otherForms || []);
+      this.filteredForms = [...this.assignedForms];
         this.loadPagination();
         this.cd.detectChanges();
 
@@ -52,12 +52,18 @@ export class SharedWithMe {
     
 }
 
+sortFormsByDate(forms: any[]) {
+  return forms.sort((a, b) => 
+    new Date(b.assignedAt).getTime() - new Date(a.assignedAt).getTime()
+  );
+}
+
 onSearch() {
   const value = this.searchText.toLowerCase();
 
-  this.filteredForms = this.assignedForms.filter(form =>
+  this.filteredForms = this.sortFormsByDate(this.assignedForms.filter(form =>
     form.formName.toLowerCase().includes(value)
-  );
+  ));
 
   this.currentPage = 1;  
   this.loadPagination();
@@ -70,7 +76,6 @@ openAssignment(role: string , formId: string){
     }
     else if(role=='VIEWER'){
         this.formService.getFormById(formId).subscribe(data => {
-        console.log("Form Data for Preview:", data);
 
     const previewData = {
       title: data.title,
@@ -102,7 +107,7 @@ openAssignment(role: string , formId: string){
       })),
       isReadOnly: true
     };
-    console.log("Prepared Preview Data:", previewData);
+   
 
     this.dialog.open(FormSubmission, {
        width: '90vw',

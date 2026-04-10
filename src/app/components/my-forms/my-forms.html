@@ -7,6 +7,7 @@
     <h1>Trash</h1>
     <p>View and restore your deleted forms</p>
   }
+
 </div>
 
 <div class="summary">
@@ -31,8 +32,15 @@
   </div>
   <div class="cards">
     <div class="details">
-      <h3>Total Responses</h3>
-      <h1>{{ totalRes }}</h1>
+      <h3>Public Forms</h3>
+      <h1>{{ publicForms }}</h1>
+    </div>
+    <mat-icon>bar_chart</mat-icon>
+  </div>
+  <div class="cards">
+    <div class="details">
+      <h3>Private Forms</h3>
+      <h1>{{ privateForms }}</h1>
     </div>
     <mat-icon>bar_chart</mat-icon>
   </div>
@@ -60,7 +68,7 @@
       <th>Actions</th>
     </tr>
 
-    @for (form of forms; track form.id) {
+    @for (form of paginatedForms; track form.id) {
       <tr>
         <td>{{ form.title }}</td>
         <td>{{ form.responses || 0 }}</td>
@@ -121,3 +129,31 @@
     }
   </table>
 </div>
+
+
+  <div class="pagination-container">
+  
+  <!-- Prev Button -->
+  <button 
+    (click)="prevPage()" 
+    [disabled]="currentPage === 1">
+    &lt;
+  </button>
+
+  <!-- Page Numbers -->
+  @for (page of [].constructor(totalPages); let i = $index; track i) {
+    <button 
+      (click)="goToPage(i + 1)"
+      [class.active]="currentPage === i + 1">
+      {{ i + 1 }}
+    </button>
+  }
+
+  <!-- Next Button -->
+  <button 
+    (click)="nextPage()" 
+    [disabled]="currentPage === totalPages">
+    &gt;
+  </button>
+
+
