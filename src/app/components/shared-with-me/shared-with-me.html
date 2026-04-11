@@ -10,7 +10,7 @@
     <div class="header-actions">
       <input type="text" placeholder="Search forms..." 
       [(ngModel)]="searchText"
-      (input)="onSearch()" />
+      (input)="applyFilters()" />
     </div>
   </div>
 
@@ -88,11 +88,24 @@
   <div class="table-section">
 
     <div class="table-header">
-      <h3>All Assigned Forms</h3>
+      <div class="header-top">
+        <h3>All Assigned Forms</h3>
+      
+        <div class="tabs">
+          <button class="active">Active</button>
+          <button>Archived</button>
+        </div>
+      </div>
 
-      <div class="tabs">
-        <button class="active">Active</button>
-        <button>Archived</button>
+      <div class="header-bottom">
+        <div class="filters">
+          <input
+            type="text"
+            placeholder="Filter by role"
+            [(ngModel)]="roleFilter"
+            (input)="applyFilters()"
+          />
+        </div>
       </div>
     </div>
 

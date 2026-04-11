@@ -36,6 +36,8 @@ export class SharedWithMe {
   totalViewer: number = 0;
   totalEditor: number = 0;
 
+  roleFilter : string = '';
+
   constructor(private formService: FormService, 
     private cd:ChangeDetectorRef, 
     private router: Router, 
@@ -63,7 +65,7 @@ export class SharedWithMe {
       }
     });   
     
-}
+  }
 
 sortFormsByDate(forms: any[]) {
   return forms.sort((a, b) => 
@@ -71,14 +73,21 @@ sortFormsByDate(forms: any[]) {
   );
 }
 
-onSearch() {
-  const value = this.searchText.toLowerCase();
+applyFilters() {
+  const searchValue = this.searchText.toLowerCase();
+  const roleValue = this.roleFilter.toLowerCase();
 
-  this.filteredForms = this.sortFormsByDate(this.assignedForms.filter(form =>
-    form.formName.toLowerCase().includes(value)
-  ));
+  this.filteredForms = this.assignedForms.filter(form => {
+  const matchesSearch = form.formName.toLowerCase().includes(searchValue);
 
-  this.currentPage = 1;  
+  const matchesRole = roleValue ? form.role?.toLowerCase().includes(roleValue) : true;
+
+    return matchesSearch && matchesRole;
+  });
+
+  this.filteredForms = this.sortFormsByDate(this.filteredForms);
+
+  this.currentPage = 1;
   this.loadPagination();
 }
 
