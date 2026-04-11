@@ -12,9 +12,11 @@ import { Assign } from './pages/assign/assign';
 import { VerifyOtp } from './pages/verify-otp/verify-otp';
 import { ForgotPassword } from './pages/forgot-password/forgot-password';
 import { FormResponse } from './pages/form-response/form-response';
+import { OauthCallback } from './oauth-callback/oauth-callback';
 
 export const routes: Routes = [
     {path: "", redirectTo: "home", pathMatch: "full"},
+    {path: 'oauth-success',component: OauthCallback},
     {path: "login", component: Login, canActivate: [authInverseGuard]},
     {path: "signup", component: Signup, canActivate: [authInverseGuard]},
     {path: "verify", component: VerifyOtp, canActivate: [authInverseGuard]},
