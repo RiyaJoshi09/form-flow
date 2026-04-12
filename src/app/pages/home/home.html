@@ -34,14 +34,19 @@
           <mat-icon>dashboard</mat-icon>
           <span>Templates</span>
         </li>
-        <li (click)="activesection = 'SharedWithMe'" [class.active]="activesection == 'SharedWithMe'">
+        <li (click)="activesection = 'VersionControl'" [class.active]="activesection == 'VersionControl'">
           <mat-icon>history</mat-icon>
+          <span>Version Control</span>
+        </li>
+        <li (click)="activesection = 'SharedWithMe'" [class.active]="activesection == 'SharedWithMe'">
+          <mat-icon>inbox</mat-icon>
           <span>My Inbox</span>
         </li>
         <li (click)="activesection = 'Trash'" [class.active]="activesection == 'Trash'">
           <mat-icon>delete</mat-icon>
           <span>Trash</span>
         </li>
+        
       </ul>
     </div>
     <!--maincontent-->
@@ -56,6 +61,10 @@
 
       @if(activesection == 'SharedWithMe') {
         <app-shared-with-me></app-shared-with-me>
+      }
+
+      @if(activesection == 'VersionControl') {
+        <app-version-control></app-version-control>
       }
     </div>
   </div>

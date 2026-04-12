@@ -172,4 +172,11 @@ getUsernameByEmail(email: string) {
 getSharedForms(){
   return this.http.get(this.url + 'user/shared-forms');
 }
+
+
+// Version Cpntrol APIs
+ 
+getAllVersions(formId: string){
+  return this.http.get(this.url + 'user/version/' + formId);
+}
 }
