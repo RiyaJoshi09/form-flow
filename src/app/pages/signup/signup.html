@@ -5,7 +5,7 @@
       <p class="text-sm text-slate-500 mt-1">Sign up to your account</p>
     </div>
 
-    <form (ngSubmit)="onSignup()" class="flex flex-col">
+    <form (ngSubmit)="onSignup()" class="flex flex-col gap-y-3">
       <mat-form-field appearance="outline" class="w-full">
         <mat-label>Username</mat-label>
         <input
@@ -77,7 +77,7 @@
       </button>
     </form>
     <app-google-auth-button></app-google-auth-button>
-    <app-github-auth-button></app-github-auth-button>
+    <!-- <app-github-auth-button></app-github-auth-button> -->
     <div class="flex justify-center items-center gap-3 mt-10">
       <span>Already have an account? </span>
       <a

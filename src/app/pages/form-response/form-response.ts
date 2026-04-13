@@ -42,6 +42,7 @@ export class FormResponse implements OnInit, AfterViewInit, OnDestroy {
   hasData = false;
   formTitle = '';
   fieldLabelMap: Record<string, string> = {};
+  completionChartSubtitle = '';
 
   private completionChart: Chart | null = null;
   private timelineChart: Chart | null = null;
@@ -56,7 +57,7 @@ export class FormResponse implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private formService: FormService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
   ) {}
 
   ngOnInit(): void {
@@ -85,6 +86,14 @@ export class FormResponse implements OnInit, AfterViewInit, OnDestroy {
       next: ({ form, responses, respondents, assignees }) => {
         this.isLoading = false;
         this.formTitle = form.title;
+        const useResponseMode = assignees.count === 0;
+        this.completionChartSubtitle = useResponseMode
+          ? 'Unique responders out of total submissions'
+          : 'Unique respondents out of assigned users';
+
+          console.log("Assignees:" + assignees.count);
+          console.log("Unique Repondants:" + respondents.count);
+          
 
         // Build field label map
         this.fieldLabelMap = { submittedAt: 'Submit Timeline' };
@@ -121,7 +130,7 @@ export class FormResponse implements OnInit, AfterViewInit, OnDestroy {
         }
 
         // Draw charts
-        this.initCompletionChart( assignees.count, respondents.count);
+        this.initCompletionChart(respondents.count, assignees.count);
         this.initTimelineChart(responses ?? []);
         this.initWeekdayChart(responses ?? []);
       },
@@ -135,17 +144,33 @@ export class FormResponse implements OnInit, AfterViewInit, OnDestroy {
 
   // ── Chart 1: doughnut ────────────────────────────────────────────────────
   private initCompletionChart(responded: number, total: number): void {
-    const pending = Math.max(0, total - responded);
-    const pct = total > 0 ? Math.round((responded / total) * 100) : 0;
     const ctx = this.completionCanvas.nativeElement.getContext('2d')!;
+
+    // If total assigned users is 0 or unknown, fall back to
+    // total responses vs unique responders mode
+    const useResponseMode = total === 0;
+
+    const totalResponses = this.dataSource.data.length;
+    const chartFilled = useResponseMode ? responded : responded;
+    const chartTotal = useResponseMode ? totalResponses : total;
+    const chartPending = Math.max(0, chartTotal - chartFilled);
+    const pct = chartTotal > 0 ? Math.round((chartFilled / chartTotal) * 100) : 0;
+
+    const labels = useResponseMode
+      ? ['Unique Responders', 'Repeat Responses']
+      : ['Responded', 'Pending'];
+
+    const centerBottom = useResponseMode
+      ? `${chartFilled} unique / ${chartTotal} total`
+      : `${chartFilled} / ${chartTotal}`;
 
     this.completionChart = new Chart(ctx, {
       type: 'doughnut',
       data: {
-        labels: ['Responded', 'Pending'],
+        labels,
         datasets: [
           {
-            data: [responded, pending],
+            data: [chartFilled, chartPending],
             backgroundColor: [C_PRIMARY, C_PRIMARY_SOFT],
             borderWidth: 0,
             hoverOffset: 6,
@@ -162,7 +187,7 @@ export class FormResponse implements OnInit, AfterViewInit, OnDestroy {
             labels: { padding: 16, font: { size: 12 }, color: C_MUTED },
           },
           tooltip: {
-            callbacks: { label: (c) => ` ${c.parsed} people` },
+            callbacks: { label: (c) => ` ${c.parsed} responses` },
           },
         },
       },
@@ -184,7 +209,7 @@ export class FormResponse implements OnInit, AfterViewInit, OnDestroy {
             c.fillText(`${pct}%`, cx, cy - 10);
             c.font = '12px sans-serif';
             c.fillStyle = C_MUTED;
-            c.fillText(`${responded} / ${total}`, cx, cy + 12);
+            c.fillText(centerBottom, cx, cy + 12);
             c.restore();
           },
         },
@@ -385,7 +410,7 @@ export class FormResponse implements OnInit, AfterViewInit, OnDestroy {
     };
 
     XLSX.writeFile(workbook, `${this.formTitle || 'responses'}.xlsx`);
-    this.toastr.success('File downloaded successfully!!')
+    this.toastr.success('File downloaded successfully!!');
   }
 
   downloadAsCsv(): void {
@@ -416,6 +441,6 @@ export class FormResponse implements OnInit, AfterViewInit, OnDestroy {
     a.click();
 
     window.URL.revokeObjectURL(url);
-    this.toastr.success('File downloaded successfully!!')
+    this.toastr.success('File downloaded successfully!!');
   }
 }
