@@ -120,24 +120,24 @@ export class MyForms {
   }
 
 
- restoreForm(id: string){
-  this.formService.restoreForms(id).subscribe({
-    next: (data:any) => {
-      console.log(data);
-      this.forms = this.forms.filter((form) => form.id !== id);
-      this.totalFormsarray = this.forms;
-      this.loadSummary();
-      this.loadPagination();
-      this.cd.detectChanges();
-      this.toastr.success('Form restored successfully!');
-    },
-    error: (err:any) => {
-      console.error(err);
-      this.toastr.error('Restore failed!');
+//  restoreForm(id: string){
+//   this.formService.restoreForms(id).subscribe({
+//     next: (data:any) => {
+//       console.log(data);
+//       this.forms = this.forms.filter((form) => form.id !== id);
+//       this.totalFormsarray = this.forms;
+//       this.loadSummary();
+//       this.loadPagination();
+//       this.cd.detectChanges();
+//       this.toastr.success('Form restored successfully!');
+//     },
+//     error: (err:any) => {
+//       console.error(err);
+//       this.toastr.error('Restore failed!');
 
-    }
-  });
-}
+//     }
+//   });
+// }
 
   shareForm(id: number, published: boolean) {
     if (published == false) {

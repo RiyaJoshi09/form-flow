@@ -399,7 +399,7 @@ export class FormBuilder {
       title: this.formTitle,
       description: this.formDescription,
       sections: this.formSections,
-      pubilshed: isPublished,
+      pubilshed: true,
       settings: this.formSettings,
       mainParentId: this.editingFormId,
     };
