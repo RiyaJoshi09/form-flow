@@ -113,6 +113,7 @@ this.dialog.open(DeleteDialog).afterClosed().subscribe(result => {
           this.forms = this.forms.filter((form) => form.id !== id);
           this.totalFormsarray = this.forms;
           this.loadSummary();
+          this.loadPagination();
           this.cd.detectChanges();
           this.toastr.success('Form moved to trash!');
         },
@@ -153,6 +154,7 @@ this.dialog.open(DeleteDialog).afterClosed().subscribe(result => {
       this.forms = this.forms.filter((form) => form.id !== id);
       this.totalFormsarray = this.forms;
       this.loadSummary();
+      this.loadPagination();
       this.cd.detectChanges();
       this.toastr.success('Form restored successfully!');
     },

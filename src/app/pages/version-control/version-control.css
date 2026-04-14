@@ -1,0 +1,258 @@
+.version-container {
+  padding: 10px 20px;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.header h1 {
+  font-size: 40px;
+  font-weight: bold;
+  color: var(--mat-sys-primary);
+}
+
+.header p {
+  margin-top: 5px;
+  font-size: 16px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.highlight {
+  color: var(--mat-sys-primary);
+  font-weight: 600;
+}
+
+/* BUTTON */
+.create-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  background-color: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+  cursor: pointer;
+}
+
+/* LAYOUT */
+.content {
+  display: flex;
+  gap: 20px;
+  margin-top: 60px;
+}
+
+/* LEFT PANEL */
+.left-card {
+  width: 30%;
+  background-color: var(--mat-sys-surface-container);
+  padding: 20px;
+  border-radius: 16px;
+}
+
+.current-version {
+  margin-bottom: 15px;
+}
+
+.current-version h2 {
+  margin: 5px 0;
+  color: var(--mat-sys-on-surface);
+}
+
+/* STATUS BADGE */
+.badge {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background-color: var(--mat-sys-primary-container);
+  color: var(--mat-sys-primary);
+}
+
+/* INFO BOX */
+.info-box {
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 10px;
+  background-color: var(--mat-sys-surface);
+}
+
+.label {
+  font-size: 12px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.change-log {
+  margin-top: 15px;
+  font-size: 14px;
+  color: var(--mat-sys-on-surface);
+}
+
+/* EDIT BUTTON */
+.edit-btn {
+  margin-top: 20px;
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  background-color: var(--mat-sys-primary-container);
+  color: var(--mat-sys-primary);
+  cursor: pointer;
+}
+
+/* RIGHT PANEL */
+.right-card {
+  width: 70%;
+  background-color: var(--mat-sys-surface);
+  padding: 20px;
+  border-radius: 16px;
+}
+
+/* HEADER */
+.version-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.version-header h3 {
+  color: var(--mat-sys-on-surface);
+}
+
+/* FILTER CHIP */
+.filter {
+  padding: 6px 12px;
+  border-radius: 20px;
+  background-color: var(--mat-sys-surface-container);
+  font-size: 12px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+/* VERSION ITEM */
+.version-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  margin-top: 15px;
+  border-radius: 12px;
+  background-color: var(--mat-sys-surface-container);
+  transition: 0.2s ease;
+}
+
+.version-item:hover {
+  background-color: var(--mat-sys-primary-container);
+}
+
+/* ICON */
+.icon {
+  padding: 10px;
+  border-radius: 10px;
+  background-color: var(--mat-sys-primary-container);
+  color: var(--mat-sys-primary);
+}
+
+/* DETAILS */
+.details {
+  flex: 1;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.details h4 {
+  margin: 0;
+  color: var(--mat-sys-on-surface);
+}
+
+.desc {
+  font-size: 13px;
+  color: var(--mat-sys-on-surface-variant);
+  margin-top: 5px;
+}
+
+/* TAGS */
+.tag {
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 10px;
+  text-transform: uppercase;
+}
+
+/* STATUS TYPES (THEME SAFE) */
+.tag.stable {
+  background-color: var(--mat-sys-primary-container);
+  color: var(--mat-sys-primary);
+}
+
+.tag.legacy {
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.tag.initial {
+  background-color: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+}
+
+/* META INFO */
+.meta {
+  text-align: right;
+  font-size: 12px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+/* ACTIONS */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.actions button {
+  border-radius: 8px;
+}
+
+/* RESTORE BUTTON */
+.restore-btn {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: none;
+  background-color: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+  cursor: pointer;
+}
+
+/* PAGINATION */
+.pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.pagination button {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: none;
+  background-color: var(--mat-sys-surface-container);
+  color: var(--mat-sys-on-surface);
+  cursor: pointer;
+}
+
+.pagination button:hover {
+  background-color: var(--mat-sys-primary-container);
+}
+
+.pagination span {
+  font-size: 14px;
+  color: var(--mat-sys-on-surface-variant);
+}

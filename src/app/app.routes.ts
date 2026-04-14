@@ -13,6 +13,7 @@ import { VerifyOtp } from './pages/verify-otp/verify-otp';
 import { ForgotPassword } from './pages/forgot-password/forgot-password';
 import { FormResponse } from './pages/form-response/form-response';
 import { OauthCallback } from './oauth-callback/oauth-callback';
+import { VersionControl } from './pages/version-control/version-control';
 
 export const routes: Routes = [
     {path: "", redirectTo: "home", pathMatch: "full"},
@@ -28,5 +29,6 @@ export const routes: Routes = [
     { path: 'edit-form/:id', component: FormBuilder, canActivate: [authGuard]},
     {path: "response/:id", component: FormResponse, canActivate: [authGuard]},
     {path: "form/:id", component: FormSubmission},
+    {path: "versions/:id", component: VersionControl, canActivate: [authGuard]},
     {path: "**", component:NotFound}
 ];

@@ -8,7 +8,7 @@ import { ThemeService } from '../../services/theme-service';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { SharedWithMe } from '../../components/shared-with-me/shared-with-me';
-import { VersionControl } from '../../components/version-control/version-control';
+
 
 @Component({
   selector: 'app-home',
@@ -22,7 +22,6 @@ import { VersionControl } from '../../components/version-control/version-control
     MatMenuModule,
     MatButtonModule,
     SharedWithMe,
-    VersionControl,
   ],
   templateUrl: './home.html',
   styleUrl: './home.css',

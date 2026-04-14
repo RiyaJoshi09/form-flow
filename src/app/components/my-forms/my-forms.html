@@ -100,6 +100,10 @@
               <button mat-icon-button (click)="shareForm(form.id, form.published)" class="!cursor-pointer">
                 <mat-icon>share</mat-icon>
               </button>
+
+              <button mat-icon-button [routerLink]="['/versions', form.id]"  class="!cursor-pointer">
+                <mat-icon>history</mat-icon>
+              </button>
             
               <button mat-icon-button 
               [routerLink]="form.settings?.isPrivate ?['/assign', form.id] : null"
