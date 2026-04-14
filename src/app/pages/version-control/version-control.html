@@ -77,8 +77,13 @@
         <div class="details">
           <div class="top">
             <h4>v{{v.versionId}}</h4>
-            <span class="tag" [ngClass]="v.published ? 'inactive' : 'active'">
-              {{v.published ? 'inactive' : 'active'}}
+            <span class="tag" >
+              @if(v.published){
+                active
+              }
+              @else{
+                inactive
+              }
             </span>
           </div>
 
