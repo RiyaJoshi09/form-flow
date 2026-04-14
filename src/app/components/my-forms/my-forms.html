@@ -1,22 +1,19 @@
 <div class="heading-sec">
-  @if(type=='myForms'){
+  @if (type == 'myForms') {
     <h1>My Forms</h1>
     <p>Manage and track your data collection</p>
-  }
-  @else if(type=='trash'){
+  } @else if (type == 'trash') {
     <h1>Trash</h1>
     <p>View and restore your deleted forms</p>
   }
-
 </div>
 
 <div class="summary">
   <div class="cards">
     <div class="details">
-      @if(type=='myForms'){
+      @if (type == 'myForms') {
         <h3>Total Forms</h3>
-      }
-      @else if(type=='trash'){
+      } @else if (type == 'trash') {
         <h3>Total Deleted Forms</h3>
       }
       <h1>{{ totalForms }}</h1>
@@ -61,9 +58,19 @@
       </th>
 
       <mat-menu #statusMenu="matMenu">
-        <button mat-menu-item (click)="filterStatus('all')" class="text-muted hover:text-primary">All</button><br />
-        <button mat-menu-item (click)="filterStatus('published')" class="text-muted hover:text-primary">Published</button><br />
-        <button mat-menu-item (click)="filterStatus('draft')" class="text-muted hover:text-primary">Draft</button>
+        <button mat-menu-item (click)="filterStatus('all')" class="text-muted hover:text-primary">
+          All</button
+        ><br />
+        <button
+          mat-menu-item
+          (click)="filterStatus('published')"
+          class="text-muted hover:text-primary"
+        >
+          Published</button
+        ><br />
+        <button mat-menu-item (click)="filterStatus('draft')" class="text-muted hover:text-primary">
+          Draft
+        </button>
       </mat-menu>
       <th>Actions</th>
     </tr>
@@ -71,16 +78,28 @@
     @for (form of paginatedForms; track form.id) {
       <tr>
         <td>{{ form.title }}</td>
-        <td>{{ form.responses || 0 }}</td>
-        <td>{{ form.createdAt | date: 'dd/MM/yyyy hh:mm a' }}
-         <span class="status-badge private"
-         *ngIf="form.settings && form.settings.isPrivate; else publicBlock">
-        private
-        </span>
+        <td class="flex items-center justify-start gap-x-2">
+          <span>{{ form.responses || 0 }}</span>
+          <button
+            mat-icon-button
+            (click)="seeResponses(form.id)"
+            class="cursor-pointer!"
+          >
+            <mat-icon class="relative top-0.75">list_alt</mat-icon>
+          </button>
+        </td>
+        <td>
+          {{ form.createdAt | date: 'dd/MM/yyyy hh:mm a' }}
+          <span
+            class="status-badge private"
+            *ngIf="form.settings && form.settings.isPrivate; else publicBlock"
+          >
+            private
+          </span>
 
-        <ng-template #publicBlock>
-        <span class="status-badge public">public</span>
-        </ng-template>
+          <ng-template #publicBlock>
+            <span class="status-badge public">public</span>
+          </ng-template>
         </td>
         <td>
           <span [class.active]="form.status === 'active'" [class.draft]="form.status === 'draft'">
@@ -93,31 +112,41 @@
         </td>
         <td>
           <div class="actions">
-            @if(type=='myForms'){
+            @if (type == 'myForms') {
               <button mat-icon-button [routerLink]="['/edit-form', form.id]">
-              <mat-icon>edit</mat-icon>
-            </button>
-              <button mat-icon-button (click)="shareForm(form.id, form.published)" class="!cursor-pointer">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                (click)="shareForm(form.id, form.published)"
+                class="!cursor-pointer"
+              >
                 <mat-icon>share</mat-icon>
               </button>
+
 
               <button mat-icon-button [routerLink]="['/versions', form.id]"  class="!cursor-pointer">
                 <mat-icon>history</mat-icon>
               </button>
             
-              <button mat-icon-button 
-              [routerLink]="form.settings?.isPrivate ?['/assign', form.id] : null"
-              [disabled]="!form.settings || !form.settings?.isPrivate" style="cursor: pointer;">
+        
+
+              <button
+                mat-icon-button
+                [routerLink]="form.settings?.isPrivate ? ['/assign', form.id] : null"
+                [disabled]="!form.settings || !form.settings?.isPrivate"
+                style="cursor: pointer"
+              >
+
                 <mat-icon>assignment</mat-icon>
               </button>
-          
 
               <mat-icon
-              (click)="deleteForm(form.id)"
-              class="!text-red-500 hover:text-red-700 cursor-pointer"
-              >delete</mat-icon>
-            }
-            @else if(type=='trash'){
+                (click)="deleteForm(form.id)"
+                class="!text-red-500 hover:text-red-700 cursor-pointer"
+                >delete</mat-icon
+              >
+            } @else if (type == 'trash') {
               <button mat-icon-button (click)="restoreForm(form.id)" class="!cursor-pointer">
                 <mat-icon>restore</mat-icon>
               </button>
@@ -134,30 +163,17 @@
   </table>
 </div>
 
-
-  <div class="pagination-container">
-  
+<div class="pagination-container">
   <!-- Prev Button -->
-  <button 
-    (click)="prevPage()" 
-    [disabled]="currentPage === 1">
-    &lt;
-  </button>
+  <button (click)="prevPage()" [disabled]="currentPage === 1">&lt;</button>
 
   <!-- Page Numbers -->
   @for (page of [].constructor(totalPages); let i = $index; track i) {
-    <button 
-      (click)="goToPage(i + 1)"
-      [class.active]="currentPage === i + 1">
+    <button (click)="goToPage(i + 1)" [class.active]="currentPage === i + 1">
       {{ i + 1 }}
     </button>
   }
 
   <!-- Next Button -->
-  <button 
-    (click)="nextPage()" 
-    [disabled]="currentPage === totalPages">
-    &gt;
-  </button>
-
-
+  <button (click)="nextPage()" [disabled]="currentPage === totalPages">&gt;</button>
+</div>

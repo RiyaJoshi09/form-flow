@@ -16,7 +16,7 @@
 
     <div class="chart-card bg-container">
       <p class="chart-title text-primary font-bold">Response Rate</p>
-      <p class="chart-subtitle text-muted">Unique respondents out of assigned users</p>
+      <p class="chart-subtitle text-muted">{{ completionChartSubtitle }}</p>
       <div class="chart-canvas-wrap">
         <canvas #completionCanvas></canvas>
       </div>
@@ -32,7 +32,7 @@
 
     <div class="chart-card bg-container">
       <p class="chart-title text-primary font-bold">Busiest Days</p>
-      <p class="chart-subtitle text-muted">Responses received by day of week</p>
+      <p class="chart-subtitle text-muted">Days with most engagement throughout the week</p>
       <div class="chart-canvas-wrap">
         <canvas #weekdayCanvas></canvas>
       </div>
