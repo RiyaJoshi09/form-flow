@@ -27,6 +27,7 @@ export class VersionControl {
         this.formService.getFormById(this.formId).subscribe((form: any) => {
         console.log(form);
         this.selectedForm = form;
+        console.log("selected form parent id: ",this.selectedForm.mainParentId );
         this.cd.detectChanges();
       });
      this.formService.getAllVersions(this.formId).subscribe((versions: any) => {

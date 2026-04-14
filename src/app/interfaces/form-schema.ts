@@ -24,6 +24,7 @@ export interface Form {
   title: string;
   description: string;
   published: boolean;
+  mainParentId?: string;
   settings?: FormSettingsSchema;
   sections: Section[];
 }

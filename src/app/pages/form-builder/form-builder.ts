@@ -68,7 +68,7 @@ export class FormBuilder {
 
   predefinedColours: string[] = ['#000000', '#EF4444', '#10B981', '#3B82F6'];
   mode: string = '';
-  
+  parentid: string | null = null;
   constructor(
     private dialog: MatDialog,
     private router: Router,
@@ -91,7 +91,9 @@ export class FormBuilder {
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
     this.mode = params['mode'];
+    this.parentid = params['parentId'] || null;
     });
+    console.log("create button parent id:",this.parentid);
   
     this.editingFormId = this.route.snapshot.paramMap.get('id');
     console.log('Editing Form ID:', this.editingFormId);
@@ -401,7 +403,7 @@ export class FormBuilder {
       sections: this.formSections,
       pubilshed: true,
       settings: this.formSettings,
-      mainParentId: this.editingFormId,
+      mainParentId: this.parentid,
     };
     console.log(formToSave);
     console.log('Parent id:', formToSave.mainParentId);

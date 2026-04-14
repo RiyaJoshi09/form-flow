@@ -7,7 +7,8 @@
       <p>Manage and track different versions of your forms.</p>
     </div>
 
-    <button class="create-btn" [routerLink]="['/edit-form', formId]" [queryParams]="{ mode: 'version' }">
+    <button class="create-btn" [routerLink]="['/edit-form', formId]" [queryParams]="{ mode: 'version', parentId: selectedForm?.mainParentId }">
+   
       <mat-icon>add</mat-icon>
       Create New Version
     </button>

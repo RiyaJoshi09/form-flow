@@ -25,7 +25,7 @@ export class FormService {
       description: rawForm.description,
       published: rawForm.pubilshed,
       settings: rawForm.settings,
-
+      mainParentId: rawForm.mainParentId,
       sections: rawForm.sections.map((section: any, sectionIndex: number) => ({
         id: section.id,
         sectionTitle: section.title,
