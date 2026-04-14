@@ -8,10 +8,11 @@ import { ThemeService } from '../../services/theme-service';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatButtonModule} from '@angular/material/button';
 import { SharedWithMe } from '../../components/shared-with-me/shared-with-me';
+import { GenerateForm } from "../../components/generate-form/generate-form";
 
 @Component({
   selector: 'app-home',
-  imports: [MatIconModule, CommonModule, MyForms, RouterLink, RouterOutlet, ThemeSelector, MatMenuModule, MatButtonModule, SharedWithMe],
+  imports: [MatIconModule, CommonModule, MyForms, RouterLink, RouterOutlet, ThemeSelector, MatMenuModule, MatButtonModule, SharedWithMe, GenerateForm],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })

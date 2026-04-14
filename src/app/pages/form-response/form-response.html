@@ -44,7 +44,7 @@
   <div class="flex justify-between items-center mt-10" [class.hidden]="isLoading">
     <mat-form-field appearance="outline" class="filter-field">
       <mat-label>Search</mat-label>
-      <input matInput (input)="applyFilter($event)" placeholder="Search responses..." />
+      <input matInput [formControl]="searchControl" placeholder="Search responses..." />
     </mat-form-field>
     <div class="flex items-center justify-center gap-x-3 text-sm">
         <button 
@@ -99,7 +99,7 @@
               <span class="header-label text-primary capitalize">{{ getColumnLabel(column) }}</span>
             </span>
           </th>
-          <td mat-cell *matCellDef="let element">
+          <td mat-cell *matCellDef="let element" class="clickable-cell" (click)="openPreview(element)">
             {{ formatValue(element[column]) }}
           </td>
         </ng-container>
@@ -112,7 +112,7 @@
       </tr>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns" class="response-row" (click)="openPreview(row)"></tr>
     </table>
   </div>
 
@@ -124,4 +124,70 @@
     aria-label="Select page of responses"
   ></mat-paginator>
 
+  <!-- ── Field-level charts section ── -->
+  <div class="field-charts-section" [class.hidden]="isLoading || fieldCharts.length === 0">
+    <h2 class="field-charts-heading text-primary font-bold">Field Insights</h2>
+    <p class="text-muted text-sm mb-4">Analyze the response of each field</p>
+    <div class="field-charts-grid">
+      @for (fc of fieldCharts; track fc.fieldId) {
+        <div class="chart-card bg-container field-chart-card">
+          <p class="chart-title text-primary font-bold">{{ fc.label }}</p>
+          <p class="chart-subtitle text-muted capitalize">{{ fc.fieldType }}</p>
+
+          @if (fc.chartType === 'text-stats') {
+            <!-- Text input stats -->
+            <div class="text-stats-wrap">
+              <div class="stat-pill">
+                <span class="stat-value text-primary">{{ fc.stats!.total }}</span>
+                <span class="stat-label text-muted">Total</span>
+              </div>
+              <div class="stat-pill">
+                <span class="stat-value text-primary">{{ fc.stats!.filled }}</span>
+                <span class="stat-label text-muted">Filled</span>
+              </div>
+              <div class="stat-pill">
+                <span class="stat-value text-primary">{{ fc.stats!.empty }}</span>
+                <span class="stat-label text-muted">Empty</span>
+              </div>
+              <div class="stat-pill">
+                <span class="stat-value text-primary">{{ fc.stats!.avgLength }}</span>
+                <span class="stat-label text-muted">Avg. Length</span>
+              </div>
+            </div>
+          } @else {
+            <div class="chart-canvas-wrap">
+              <canvas [id]="fc.canvasId"></canvas>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+
 </div>
+
+<!-- ── Response Preview Drawer ── -->
+@if (previewResponse) {
+  <div class="preview-overlay" (click)="closePreview()">
+    <div class="preview-drawer" (click)="$event.stopPropagation()">
+      <div class="preview-header">
+        <div>
+          <h2 class="preview-title text-primary font-bold">Response Detail</h2>
+          <p class="text-muted text-sm">{{ formatValue(previewResponse['submittedAt']) }}</p>
+        </div>
+        <button class="preview-close-btn" (click)="closePreview()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <div class="preview-body">
+        @for (col of displayedColumns.slice(1); track col) {
+          <div class="preview-field">
+            <span class="preview-field-label text-muted">{{ getColumnLabel(col) }}</span>
+            <span class="preview-field-value text-primary">{{ formatValue(previewResponse[col]) }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}
