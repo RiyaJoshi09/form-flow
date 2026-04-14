@@ -19,22 +19,41 @@ import { ToastrService } from 'ngx-toastr';
 
 Chart.register(...registerables);
 
-const C_PRIMARY      = '#6750A4';
+const C_PRIMARY = '#6750A4';
 const C_PRIMARY_SOFT = '#E8DEF8';
-const C_MUTED        = '#79747E';
-const C_GRID         = 'rgba(0,0,0,0.06)';
+const C_MUTED = '#79747E';
+const C_GRID = 'rgba(0,0,0,0.06)';
 
 const C_PALETTE = [
-  '#6750A4', '#7B61FF', '#A78BFA', '#C4B5FD',
-  '#DDD6FE', '#EDE9FE', '#F5F3FF', '#4C1D95',
+  '#6750A4',
+  '#7B61FF',
+  '#A78BFA',
+  '#C4B5FD',
+  '#DDD6FE',
+  '#EDE9FE',
+  '#F5F3FF',
+  '#4C1D95',
 ];
 
 const CHOICE_TYPES = new Set([
-  'checkbox', 'radio', 'select', 'dropdown', 'multi-select', 'multiselect',
+  'checkbox',
+  'radio',
+  'select',
+  'dropdown',
+  'multi-select',
+  'multiselect',
 ]);
 
 const TEXT_TYPES = new Set([
-  'text', 'input', 'textarea', 'email', 'number', 'tel', 'url', 'date', 'time',
+  'text',
+  'input',
+  'textarea',
+  'email',
+  'number',
+  'tel',
+  'url',
+  'date',
+  'time',
 ]);
 
 export interface FieldChartConfig {
@@ -194,12 +213,14 @@ export class FormResponse implements OnInit, AfterViewInit, OnDestroy {
         type: 'doughnut',
         data: {
           labels: ['Responses'],
-          datasets: [{
-            data: [totalResponses, 1],
-            backgroundColor: [C_PRIMARY, 'transparent'],
-            borderWidth: 0,
-            hoverOffset: 0,
-          }],
+          datasets: [
+            {
+              data: [totalResponses, 1],
+              backgroundColor: [C_PRIMARY, 'transparent'],
+              borderWidth: 0,
+              hoverOffset: 0,
+            },
+          ],
         },
         options: {
           cutout: '74%',
@@ -210,75 +231,94 @@ export class FormResponse implements OnInit, AfterViewInit, OnDestroy {
             tooltip: { enabled: false },
           },
         },
-        plugins: [{
-          id: 'centerText',
-          afterDraw: (chart) => {
-            const { ctx: c, chartArea: { width, height, left, top } } = chart;
-            const cx = left + width / 2;
-            const cy = top + height / 2;
-            c.save();
-            c.font = 'bold 36px sans-serif';
-            c.fillStyle = C_PRIMARY;
-            c.textAlign = 'center';
-            c.textBaseline = 'middle';
-            c.fillText(`${totalResponses}`, cx, cy - 12);
-            c.font = '12px sans-serif';
-            c.fillStyle = C_MUTED;
-            c.fillText('responses received', cx, cy + 14);
-            c.restore();
+        plugins: [
+          {
+            id: 'centerText',
+            afterDraw: (chart) => {
+              const {
+                ctx: c,
+                chartArea: { width, height, left, top },
+              } = chart;
+              const cx = left + width / 2;
+              const cy = top + height / 2;
+              c.save();
+              c.font = 'bold 36px sans-serif';
+              c.fillStyle = C_PRIMARY;
+              c.textAlign = 'center';
+              c.textBaseline = 'middle';
+              c.fillText(`${totalResponses}`, cx, cy - 12);
+              c.font = '12px sans-serif';
+              c.fillStyle = C_MUTED;
+              c.fillText('responses received', cx, cy + 14);
+              c.restore();
+            },
           },
-        }],
+        ],
       });
       return;
     }
 
     const useResponseMode = total === 0;
-    const chartFilled  = responded;
-    const chartTotal   = useResponseMode ? totalResponses : total;
+    const chartFilled = responded;
+    const chartTotal = useResponseMode ? totalResponses : total;
     const chartPending = Math.max(0, chartTotal - chartFilled);
-    const pct          = chartTotal > 0 ? Math.round((chartFilled / chartTotal) * 100) : 0;
+    const pct = chartTotal > 0 ? Math.round((chartFilled / chartTotal) * 100) : 0;
 
-    const labels      = useResponseMode ? ['Unique Responders', 'Repeat Responses'] : ['Responded', 'Pending'];
-    const centerBottom = useResponseMode ? `${chartFilled} unique / ${chartTotal} total` : `${chartFilled} / ${chartTotal}`;
+    const labels = useResponseMode
+      ? ['Unique Responders', 'Repeat Responses']
+      : ['Responded', 'Pending'];
+    const centerBottom = useResponseMode
+      ? `${chartFilled} unique / ${chartTotal} total`
+      : `${chartFilled} / ${chartTotal}`;
 
     this.completionChart = new Chart(ctx, {
       type: 'doughnut',
       data: {
         labels,
-        datasets: [{
-          data: [chartFilled, chartPending],
-          backgroundColor: [C_PRIMARY, C_PRIMARY_SOFT],
-          borderWidth: 0,
-          hoverOffset: 6,
-        }],
+        datasets: [
+          {
+            data: [chartFilled, chartPending],
+            backgroundColor: [C_PRIMARY, C_PRIMARY_SOFT],
+            borderWidth: 0,
+            hoverOffset: 6,
+          },
+        ],
       },
       options: {
         cutout: '74%',
         responsive: true,
         maintainAspectRatio: true,
         plugins: {
-          legend: { position: 'bottom', labels: { padding: 16, font: { size: 12 }, color: C_MUTED } },
+          legend: {
+            position: 'bottom',
+            labels: { padding: 16, font: { size: 12 }, color: C_MUTED },
+          },
           tooltip: { callbacks: { label: (c) => ` ${c.parsed} responses` } },
         },
       },
-      plugins: [{
-        id: 'centerText',
-        afterDraw: (chart) => {
-          const { ctx: c, chartArea: { width, height, left, top } } = chart;
-          const cx = left + width / 2;
-          const cy = top + height / 2;
-          c.save();
-          c.font = 'bold 24px sans-serif';
-          c.fillStyle = C_PRIMARY;
-          c.textAlign = 'center';
-          c.textBaseline = 'middle';
-          c.fillText(`${pct}%`, cx, cy - 10);
-          c.font = '12px sans-serif';
-          c.fillStyle = C_MUTED;
-          c.fillText(centerBottom, cx, cy + 12);
-          c.restore();
+      plugins: [
+        {
+          id: 'centerText',
+          afterDraw: (chart) => {
+            const {
+              ctx: c,
+              chartArea: { width, height, left, top },
+            } = chart;
+            const cx = left + width / 2;
+            const cy = top + height / 2;
+            c.save();
+            c.font = 'bold 24px sans-serif';
+            c.fillStyle = C_PRIMARY;
+            c.textAlign = 'center';
+            c.textBaseline = 'middle';
+            c.fillText(`${pct}%`, cx, cy - 10);
+            c.font = '12px sans-serif';
+            c.fillStyle = C_MUTED;
+            c.fillText(centerBottom, cx, cy + 12);
+            c.restore();
+          },
         },
-      }],
+      ],
     });
   }
 
@@ -290,17 +330,19 @@ export class FormResponse implements OnInit, AfterViewInit, OnDestroy {
       type: 'line',
       data: {
         labels,
-        datasets: [{
-          label: 'Responses',
-          data: counts,
-          borderColor: C_PRIMARY,
-          backgroundColor: 'rgba(103,80,164,0.08)',
-          borderWidth: 2,
-          pointBackgroundColor: C_PRIMARY,
-          pointRadius: 4,
-          fill: true,
-          tension: 0.4,
-        }],
+        datasets: [
+          {
+            label: 'Responses',
+            data: counts,
+            borderColor: C_PRIMARY,
+            backgroundColor: 'rgba(103,80,164,0.08)',
+            borderWidth: 2,
+            pointBackgroundColor: C_PRIMARY,
+            pointRadius: 4,
+            fill: true,
+            tension: 0.4,
+          },
+        ],
       },
       options: {
         responsive: true,
@@ -311,7 +353,11 @@ export class FormResponse implements OnInit, AfterViewInit, OnDestroy {
         },
         scales: {
           x: { grid: { display: false }, ticks: { font: { size: 11 }, color: C_MUTED } },
-          y: { beginAtZero: true, ticks: { stepSize: 1, font: { size: 11 }, color: C_MUTED }, grid: { color: C_GRID } },
+          y: {
+            beginAtZero: true,
+            ticks: { stepSize: 1, font: { size: 11 }, color: C_MUTED },
+            grid: { color: C_GRID },
+          },
         },
       },
     });
@@ -333,13 +379,15 @@ export class FormResponse implements OnInit, AfterViewInit, OnDestroy {
       type: 'bar',
       data: {
         labels: days,
-        datasets: [{
-          label: 'Responses',
-          data: counts,
-          backgroundColor: counts.map((c) => (c === max && max > 0 ? C_PRIMARY : C_PRIMARY_SOFT)),
-          borderRadius: 6,
-          borderSkipped: false,
-        }],
+        datasets: [
+          {
+            label: 'Responses',
+            data: counts,
+            backgroundColor: counts.map((c) => (c === max && max > 0 ? C_PRIMARY : C_PRIMARY_SOFT)),
+            borderRadius: 6,
+            borderSkipped: false,
+          },
+        ],
       },
       options: {
         responsive: true,
@@ -350,7 +398,11 @@ export class FormResponse implements OnInit, AfterViewInit, OnDestroy {
         },
         scales: {
           x: { grid: { display: false }, ticks: { font: { size: 11 }, color: C_MUTED } },
-          y: { beginAtZero: true, ticks: { stepSize: 1, font: { size: 11 }, color: C_MUTED }, grid: { color: C_GRID } },
+          y: {
+            beginAtZero: true,
+            ticks: { stepSize: 1, font: { size: 11 }, color: C_MUTED },
+            grid: { color: C_GRID },
+          },
         },
       },
     });
@@ -359,58 +411,60 @@ export class FormResponse implements OnInit, AfterViewInit, OnDestroy {
   private buildFieldCharts(form: Form, responses: FormResponseData[]): void {
     const configs: FieldChartConfig[] = [];
 
-    form.sections.flatMap((s) => s.fields).forEach((field) => {
-      if (!field.id) return;
-      const fieldId   = field.id;
-      const fieldType = field.fieldType.toLowerCase();
-      const label     =
-        (field.fieldConfig as any)['label'] ||
-        (field.fieldConfig as any)['placeholder'] ||
-        field.fieldType;
+    form.sections
+      .flatMap((s) => s.fields)
+      .forEach((field) => {
+        if (!field.id) return;
+        const fieldId = field.id;
+        const fieldType = field.fieldType.toLowerCase();
+        const label =
+          (field.fieldConfig as any)['label'] ||
+          (field.fieldConfig as any)['placeholder'] ||
+          field.fieldType;
 
-      const rawValues: any[] = responses
-        .map((r) => (r.response as any)?.[fieldId])
-        .filter((v) => v !== undefined);
+        const rawValues: any[] = responses
+          .map((r) => (r.response as any)?.[fieldId])
+          .filter((v) => v !== undefined);
 
-      if (CHOICE_TYPES.has(fieldType)) {
-        const flatValues: string[] = rawValues
-          .flatMap((v) => (Array.isArray(v) ? v.map(String) : [String(v)]))
-          .filter((v) => v !== '' && v !== 'undefined' && v !== 'null');
+        if (CHOICE_TYPES.has(fieldType)) {
+          const flatValues: string[] = rawValues
+            .flatMap((v) => (Array.isArray(v) ? v.map(String) : [String(v)]))
+            .filter((v) => v !== '' && v !== 'undefined' && v !== 'null');
 
-        if (!flatValues.length) return;
+          if (!flatValues.length) return;
 
-        const countMap = new Map<string, number>();
-        flatValues.forEach((v) => countMap.set(v, (countMap.get(v) ?? 0) + 1));
+          const countMap = new Map<string, number>();
+          flatValues.forEach((v) => countMap.set(v, (countMap.get(v) ?? 0) + 1));
 
-        configs.push({
-          fieldId,
-          label,
-          fieldType,
-          chartType: countMap.size > 4 ? 'bar' : 'doughnut',
-          canvasId: `field-chart-${fieldId}`,
-        });
-      } else if (TEXT_TYPES.has(fieldType)) {
-        const total  = rawValues.length;
-        const filled = rawValues.filter((v) => v !== null && v !== undefined && v !== '').length;
-        const avgLength =
-          filled === 0
-            ? 0
-            : Math.round(
-                rawValues
-                  .filter((v) => v !== null && v !== undefined && v !== '')
-                  .reduce((sum, v) => sum + String(v).length, 0) / filled,
-              );
+          configs.push({
+            fieldId,
+            label,
+            fieldType,
+            chartType: countMap.size > 4 ? 'bar' : 'doughnut',
+            canvasId: `field-chart-${fieldId}`,
+          });
+        } else if (TEXT_TYPES.has(fieldType)) {
+          const total = rawValues.length;
+          const filled = rawValues.filter((v) => v !== null && v !== undefined && v !== '').length;
+          const avgLength =
+            filled === 0
+              ? 0
+              : Math.round(
+                  rawValues
+                    .filter((v) => v !== null && v !== undefined && v !== '')
+                    .reduce((sum, v) => sum + String(v).length, 0) / filled,
+                );
 
-        configs.push({
-          fieldId,
-          label,
-          fieldType,
-          chartType: 'text-stats',
-          canvasId: `field-chart-${fieldId}`,
-          stats: { total, filled, empty: total - filled, avgLength },
-        });
-      }
-    });
+          configs.push({
+            fieldId,
+            label,
+            fieldType,
+            chartType: 'text-stats',
+            canvasId: `field-chart-${fieldId}`,
+            stats: { total, filled, empty: total - filled, avgLength },
+          });
+        }
+      });
 
     this.fieldCharts = configs;
     setTimeout(() => this.renderFieldCharts(form, responses), 0);
@@ -445,82 +499,96 @@ export class FormResponse implements OnInit, AfterViewInit, OnDestroy {
       if (fc.chartType === 'doughnut') {
         const total = optionCounts.reduce((a, b) => a + b, 0);
 
-        this.fieldChartInstances.push(new Chart(ctx, {
-          type: 'doughnut',
-          data: {
-            labels: optionLabels,
-            datasets: [{
-              data: optionCounts,
-              backgroundColor: optionLabels.map((_, i) => C_PALETTE[i % C_PALETTE.length]),
-              borderWidth: 0,
-              hoverOffset: 6,
-            }],
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: {
-              legend: { position: 'bottom', labels: { padding: 12, font: { size: 11 }, color: C_MUTED } },
-              tooltip: {
-                callbacks: {
-                  label: (c) => {
-                    const pct = total > 0 ? Math.round((c.parsed / total) * 100) : 0;
-                    return ` ${c.parsed} responses (${pct}%)`;
+        this.fieldChartInstances.push(
+          new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+              labels: optionLabels,
+              datasets: [
+                {
+                  data: optionCounts,
+                  backgroundColor: optionLabels.map((_, i) => C_PALETTE[i % C_PALETTE.length]),
+                  borderWidth: 0,
+                  hoverOffset: 6,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: true,
+              plugins: {
+                legend: {
+                  position: 'bottom',
+                  labels: { padding: 12, font: { size: 11 }, color: C_MUTED },
+                },
+                tooltip: {
+                  callbacks: {
+                    label: (c) => {
+                      const pct = total > 0 ? Math.round((c.parsed / total) * 100) : 0;
+                      return ` ${c.parsed} responses (${pct}%)`;
+                    },
                   },
                 },
               },
             },
-          },
-        }));
+          }),
+        );
       } else {
         const totalBar = optionCounts.reduce((a, b) => a + b, 0);
-        const max      = Math.max(...optionCounts);
+        const max = Math.max(...optionCounts);
 
-        this.fieldChartInstances.push(new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: optionLabels,
-            datasets: [{
-              label: 'Responses',
-              data: optionCounts,
-              backgroundColor: optionCounts.map((c) => (c === max && max > 0 ? C_PRIMARY : C_PRIMARY_SOFT)),
-              borderRadius: 6,
-              borderSkipped: false,
-            }],
-          },
-          options: {
-            indexAxis: 'y',
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: {
-              legend: { display: false },
-              tooltip: {
-                callbacks: {
-                  label: (c) => {
-                    const pct = totalBar > 0 ? Math.round(((c.parsed as any).x / totalBar) * 100) : 0;
-                    return ` ${(c.parsed as any).x} responses (${pct}%)`;
+        this.fieldChartInstances.push(
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: optionLabels,
+              datasets: [
+                {
+                  label: 'Responses',
+                  data: optionCounts,
+                  backgroundColor: optionCounts.map((c) =>
+                    c === max && max > 0 ? C_PRIMARY : C_PRIMARY_SOFT,
+                  ),
+                  borderRadius: 6,
+                  borderSkipped: false,
+                },
+              ],
+            },
+            options: {
+              indexAxis: 'y',
+              responsive: true,
+              maintainAspectRatio: true,
+              plugins: {
+                legend: { display: false },
+                tooltip: {
+                  callbacks: {
+                    label: (c) => {
+                      const pct =
+                        totalBar > 0 ? Math.round(((c.parsed as any).x / totalBar) * 100) : 0;
+                      return ` ${(c.parsed as any).x} responses (${pct}%)`;
+                    },
                   },
                 },
               },
-            },
-            scales: {
-              x: {
-                beginAtZero: true,
-                ticks: {
-                  stepSize: 1,
-                  font: { size: 11 },
-                  color: C_MUTED,
-                  callback: (value) => {
-                    const pct = totalBar > 0 ? Math.round((Number(value) / totalBar) * 100) : 0;
-                    return `${value} (${pct}%)`;
+              scales: {
+                x: {
+                  beginAtZero: true,
+                  ticks: {
+                    stepSize: 1,
+                    font: { size: 11 },
+                    color: C_MUTED,
+                    callback: (value) => {
+                      const pct = totalBar > 0 ? Math.round((Number(value) / totalBar) * 100) : 0;
+                      return `${value} (${pct}%)`;
+                    },
                   },
+                  grid: { color: C_GRID },
                 },
-                grid: { color: C_GRID },
+                y: { grid: { display: false }, ticks: { font: { size: 11 }, color: C_MUTED } },
               },
-              y: { grid: { display: false }, ticks: { font: { size: 11 }, color: C_MUTED } },
             },
-          },
-        }));
+          }),
+        );
       }
     });
   }
@@ -560,6 +628,10 @@ export class FormResponse implements OnInit, AfterViewInit, OnDestroy {
     return this.fieldLabelMap[column] ?? column;
   }
 
+  formatLabelTruncated(label: string, maxLength: number = 21): string {
+    return label.length > maxLength ? label.slice(0, maxLength) + '…' : label;
+  }
+
   setupFilter(): void {
     this.dataSource.filterPredicate = (data, filter) =>
       Object.values(data).join(' ').toLowerCase().includes(filter);
@@ -573,7 +645,7 @@ export class FormResponse implements OnInit, AfterViewInit, OnDestroy {
 
   getSerialNumber(rowIndex: number): number {
     const pageIndex = this.paginator?.pageIndex ?? 0;
-    const pageSize  = this.paginator?.pageSize  ?? 10;
+    const pageSize = this.paginator?.pageSize ?? 10;
     return pageIndex * pageSize + rowIndex + 1;
   }
 
@@ -588,6 +660,12 @@ export class FormResponse implements OnInit, AfterViewInit, OnDestroy {
     return String(value);
   }
 
+  formatValueTruncated(value: any, maxLength: number = 21): string {
+    const full = this.formatValue(value);
+    if (full === '---') return full;
+    return full.length > maxLength ? full.slice(0, maxLength) + '…' : full;
+  }
+
   downloadAsExcel(): void {
     const data = this.dataSource.data;
     if (!data?.length) return;
@@ -595,13 +673,17 @@ export class FormResponse implements OnInit, AfterViewInit, OnDestroy {
     const formattedData = data.map((row, index) => {
       const newRow: any = {};
       this.displayedColumns.forEach((col) => {
-        newRow[this.getColumnLabel(col)] = col === 'slNo' ? this.getSerialNumber(index) : this.formatValue(row[col]);
+        newRow[this.getColumnLabel(col)] =
+          col === 'slNo' ? this.getSerialNumber(index) : this.formatValue(row[col]);
       });
       return newRow;
     });
 
     const worksheet = XLSX.utils.json_to_sheet(formattedData);
-    XLSX.writeFile({ Sheets: { Responses: worksheet }, SheetNames: ['Responses'] }, `${this.formTitle || 'responses'}.xlsx`);
+    XLSX.writeFile(
+      { Sheets: { Responses: worksheet }, SheetNames: ['Responses'] },
+      `${this.formTitle || 'responses'}.xlsx`,
+    );
     this.toastr.success('File downloaded successfully!!');
   }
 
@@ -610,16 +692,18 @@ export class FormResponse implements OnInit, AfterViewInit, OnDestroy {
     if (!data?.length) return;
 
     const headers = this.displayedColumns.map((col) => this.getColumnLabel(col));
-    const rows    = data.map((row, index) =>
-      this.displayedColumns.map((col) => (col === 'slNo' ? this.getSerialNumber(index) : this.formatValue(row[col]))),
+    const rows = data.map((row, index) =>
+      this.displayedColumns.map((col) =>
+        col === 'slNo' ? this.getSerialNumber(index) : this.formatValue(row[col]),
+      ),
     );
 
     const csvContent = [headers, ...rows]
       .map((row) => row.map((v) => `"${v}"`).join(','))
       .join('\n');
 
-    const a    = document.createElement('a');
-    a.href     = URL.createObjectURL(new Blob([csvContent], { type: 'text/csv;charset=utf-8;' }));
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csvContent], { type: 'text/csv;charset=utf-8;' }));
     a.download = `${this.formTitle || 'responses'}.csv`;
     a.click();
     URL.revokeObjectURL(a.href);
