@@ -1,3 +1,4 @@
+import { CondLogicSchema } from "./cond-logic-schema";
 import { FieldStyleSchema } from "./field-style-schema";
 import { FormSettingsSchema } from "./form-settings-schema";
 
@@ -7,6 +8,7 @@ export interface Field {
   fieldOrder: number;
   fieldConfig: {};
   fieldStyle: FieldStyleSchema;
+  fieldLogic?: CondLogicSchema;
 }
 
 export interface Section {
@@ -14,6 +16,7 @@ export interface Section {
   sectionTitle: string;
   sectionOrder: number;
   fields: Field[];
+  sectionLogic?: CondLogicSchema;
 }
 
 export interface Form {

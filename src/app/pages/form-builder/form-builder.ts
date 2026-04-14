@@ -25,6 +25,8 @@ import { ThemeService } from '../../services/theme-service';
 import { BuilderCheckBox } from '../../components/builder-cards/builder-check-box/builder-check-box';
 import { ToastrService } from 'ngx-toastr';
 import { FormSettingsDialog } from '../../components/form-settings-dialog/form-settings-dialog';
+import { ConditionalLogicService } from '../../services/conditional-logic-service';
+import { ConditionalLogic } from '../../components/conditional-logic/conditional-logic';
 
 @Component({
   selector: 'app-form-builder',
@@ -76,7 +78,8 @@ export class FormBuilder {
     private themeService: ThemeService,
     private cd: ChangeDetectorRef,
     private toastr: ToastrService,
-  ) {}
+    private conditionalLogicService: ConditionalLogicService,
+  ) { }
 
   elements = [
     { type: 'TEXT', label: 'Text Input' },
@@ -113,6 +116,7 @@ export class FormBuilder {
         this.formSections = form.sections.map((section: any) => ({
           id: section.id ? section.id.toString() : Date.now().toString(),
           title: section.sectionTitle,
+          sectionLogic: section.sectionLogic,
           fields: section.fields
             .sort((a: any, b: any) => a.fieldOrder - b.fieldOrder)
             .map((field: any, index: number) => ({
@@ -122,6 +126,13 @@ export class FormBuilder {
               validations: field.fieldConfig.validations || {},
               options: field.fieldConfig.options || [],
               placeholder: field.fieldConfig.placeholder || '',
+              fieldLogic: field.fieldLogic || {
+                enabled: false,
+                sourceFieldId: '',
+                operator: 'EQUAL',
+                value: '',
+                action: 'SHOW'
+              },
               color: field.fieldStyle.color ||'#000000',
               fontSize: field.fieldStyle.fontSize ||'12px',
               bold: field.fieldStyle.bold || false,
@@ -248,6 +259,40 @@ export class FormBuilder {
     return this.formSections.map((s) => s.id);
   }
 
+  // sectionSettings(sectionIndex: number){
+  //   const section = this.formSections[sectionIndex]
+  //   if (!section.sectionLogic) {
+  //     section.sectionLogic = {
+  //       enabled: false,
+  //       sourceFieldId: '',
+  //       operator: 'EQUAL',
+  //       value: '',
+  //       action: 'SHOW'
+  //     };
+  //   }
+
+  //   const sectionToEdit = JSON.parse(
+  //     JSON.stringify(section),
+  //   );
+
+  //   this.conditionalLogicService.updateFormState({ sections: this.formSections });
+
+  //   const dialogRef = this.dialog.open(ConditionalLogic, {
+  //     width: '400px',
+  //     data: sectionToEdit,
+  //     panelClass: 'custom-dialog-container',
+  //   });
+
+  //   dialogRef.afterClosed().subscribe((result) => {
+  //     if (result) {
+  //       this.formSections[sectionIndex].sectionLogic = result;
+  //       this.formSections = [...this.formSections];
+
+  //       this.cd.detectChanges();
+  //     }
+  //   });
+  // }
+
   onDrop(event: CdkDragDrop<any[]>, sectionIndex: number) {
     if (event.previousContainer === event.container) {
       // Rearrange
@@ -263,7 +308,13 @@ export class FormBuilder {
         validations: {},
         options: ['CHECKBOX', 'RADIO', 'DROPDOWN'].includes(field.type) ? ['Option 1'] : [],
         placeholder: field.placeholder || '',
-
+        fieldLogic: {
+          enabled: false,
+          sourceFieldId: '',
+          operator: 'EQUAL',
+          value: '',
+          action: 'SHOW'
+        },
         color: '#000000',
         fontSize: '12px',
         bold: false,
@@ -293,10 +344,23 @@ export class FormBuilder {
   }
 
   editField(sectionIndex: number, fieldIndex: number) {
-    // open edit dialog box and edit the copy of it until saved
+    const field = this.formSections[sectionIndex].fields[fieldIndex];
+
+    if (!field.fieldLogic) {
+      field.fieldLogic = {
+        enabled: false,
+        sourceFieldId: '',
+        operator: 'EQUAL',
+        value: '',
+        action: 'SHOW'
+      };
+    }
+
     const fieldToEdit = JSON.parse(
-      JSON.stringify(this.formSections[sectionIndex].fields[fieldIndex]),
+      JSON.stringify(field),
     );
+
+    this.conditionalLogicService.updateFormState({ sections: this.formSections });
 
     const dialogRef = this.dialog.open(EditField, {
       width: '400px',

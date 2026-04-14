@@ -1,4 +1,5 @@
 import { FieldType } from "../enums/field-type.enum";
+import { CondLogicSchema } from "./cond-logic-schema";
 
 interface ValidationRules {
   required?: boolean;
@@ -16,5 +17,6 @@ export interface BuilderFieldSchema {
     type?: FieldType,
     placeholder?: string,
     options?: string[],
-    validations?:ValidationRules
+    validations?:ValidationRules,
+    //logic?: CondLogicSchema
 }

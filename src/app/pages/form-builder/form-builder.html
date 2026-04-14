@@ -65,6 +65,10 @@
             <input [(ngModel)]="section.title"
               class="bg-transparent font-bold text-lg border-none text-primary opacity-90 focus:ring-1 focus:ring-(--mat-sys-primary) rounded px-2">
             <div class="flex gap-1">
+              <!-- <button mat-icon-button color="primary" (click)="sectionSettings(sectionIndex)"
+                title="Section Settings">
+                <mat-icon>settings</mat-icon>
+              </button> -->
               <button mat-icon-button color="primary" (click)="duplicateSection(sectionIndex)"
                 title="Duplicate Section">
                 <mat-icon>content_copy</mat-icon>
@@ -80,7 +84,11 @@
             [cdkDropListConnectedTo]="[sidebarList, ...sectionsIds]"
             (cdkDropListDropped)="onDrop($event, sectionIndex)">
             <div *ngFor="let field of section.fields; let fieldIndex = index" cdkDrag
-              class="group relative p-6 mb-6 bg-surface border border-theme rounded-2xl hover:shadow-md hover:scale-[1.01] transition-all">
+              class="group relative p-6 mb-6 bg-surface border border-theme rounded-2xl hover:shadow-md hover:scale-[1.01] transition-all"
+              [ngClass]="{
+                  'border-theme border-dashed bg-container': field.fieldLogic?.enabled,
+                  'border-theme': !field.fieldLogic?.enabled
+             }">
 
               <div class="mb-4">
                 <mat-icon cdkDragHandle class="text-muted cursor-move text-base">drag_handle</mat-icon>

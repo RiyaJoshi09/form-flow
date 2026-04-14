@@ -162,14 +162,14 @@ export class FormResponse implements OnInit, AfterViewInit, OnDestroy {
             labels: { padding: 16, font: { size: 12 }, color: C_MUTED },
           },
           tooltip: {
-            callbacks: { label: (c) => ` ${c.parsed} people` },
+            callbacks: { label: (c: any) => ` ${c.parsed} people` },
           },
         },
       },
       plugins: [
         {
           id: 'centerText',
-          afterDraw: (chart) => {
+          afterDraw: (chart: any) => {
             const {
               ctx: c,
               chartArea: { width, height, left, top },
@@ -271,7 +271,7 @@ export class FormResponse implements OnInit, AfterViewInit, OnDestroy {
         plugins: {
           legend: { display: false },
           tooltip: {
-            callbacks: { label: (c) => ` ${c.parsed.y} responses` },
+            callbacks: { label: (c: any) => ` ${c.parsed.y} responses` },
           },
         },
         scales: {

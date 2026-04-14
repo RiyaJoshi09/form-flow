@@ -8,10 +8,11 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatTabsModule } from '@angular/material/tabs';
+import { ConditionalLogic } from '../../components/conditional-logic/conditional-logic';
 
 @Component({
   selector: 'app-edit-field',
-  imports: [CommonModule, FormsModule, MatDialogContent, MatDialogActions, MatTabsModule],
+  imports: [CommonModule, FormsModule, MatDialogContent, MatDialogActions, MatTabsModule, ConditionalLogic],
   templateUrl: './edit-field.html',
   styleUrl: './edit-field.css',
 })
@@ -101,6 +102,15 @@ export class EditField {
       option.value = option.value.filter((t: string) => t !== type);
     }
   }
+
+  get isLogicInvalid(): boolean {
+    const logic = this.field.fieldLogic;
+    if (!logic || !logic.enabled) return false;
+
+    // Return true (invalid) if enabled but missing fields
+    return !logic.sourceFieldId || !logic.operator || !logic.value;
+  }
+
   save() {
     const validations: any = {};
 

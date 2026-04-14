@@ -15,7 +15,7 @@ export class FormService {
   constructor(
     private http: HttpClient,
     private themeService: ThemeService,
-  ) {}
+  ) { }
 
   mapToFormSchema(rawForm: any): Form {
     return {
@@ -49,6 +49,13 @@ export class FormService {
             italic: field.italic,
             underline: field.underline,
           },
+          fieldLogic: {
+            enabled: field.fieldLogic.enabled,
+            sourceFieldId: field.fieldLogic.sourceFieldId,
+            operator: field.fieldLogic.operator,
+            value: field.fieldLogic.value,
+            action: field.fieldLogic.action
+          }
         })),
       })),
     };
@@ -119,7 +126,7 @@ export class FormService {
   getAllForms(): Observable<Form[]> {
     return this.http.get<Form[]>(this.url + 'user/allForm');
   }
-  getFormByStatus() {}
+  getFormByStatus() { }
 
   submitResponse(formId: string, rawValue: any) {
     const formData = this.mapToFormData(formId, rawValue);
@@ -164,14 +171,14 @@ export class FormService {
     return this.http.get(this.url + 'user/access/' + form_id);
   }
 
-getUsernameByEmail(email: string) {
-  return this.http.get(`${this.url}user/username-by-email`, {
-    params: { email: email },
-    responseType: 'text'   // 🔥 important
-  });
-}
+  getUsernameByEmail(email: string) {
+    return this.http.get(`${this.url}user/username-by-email`, {
+      params: { email: email },
+      responseType: 'text'   // 🔥 important
+    });
+  }
 
-getSharedForms(){
-  return this.http.get(this.url + 'user/shared-forms');
-}
+  getSharedForms() {
+    return this.http.get(this.url + 'user/shared-forms');
+  }
 }
