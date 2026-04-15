@@ -8,6 +8,7 @@ import { ThemeService } from '../../services/theme-service';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { SharedWithMe } from '../../components/shared-with-me/shared-with-me';
+import { Groups } from "../../components/groups/groups";
 
 
 @Component({
@@ -22,7 +23,8 @@ import { SharedWithMe } from '../../components/shared-with-me/shared-with-me';
     MatMenuModule,
     MatButtonModule,
     SharedWithMe,
-  ],
+    Groups
+],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
