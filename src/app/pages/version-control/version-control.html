@@ -22,7 +22,7 @@
 
       <div class="current-version">
         <span class="badge">ACTIVE NOW</span>
-        <h2>V{{version_Id}}</h2>
+        <h2>Version Id: V{{version_Id}}</h2>
       </div>
 
       <div class="info-box">
@@ -52,7 +52,7 @@
         </p>
       </div> -->
 
-      <button class="edit-btn" >
+      <button class="edit-btn" [routerLink]="['/edit-form', formId]">
         <mat-icon>edit</mat-icon>
             edit
       </button>
@@ -68,7 +68,7 @@
       </div>
 
       <!-- Version Item -->
-      <div class="version-item" *ngFor="let v of versions">
+      <div class="version-item" *ngFor="let v of paginatedVersions">
 
         <div class="icon">
           <mat-icon>history</mat-icon>
@@ -76,15 +76,10 @@
 
         <div class="details">
           <div class="top">
-            <h4>v{{v.versionId}}</h4>
-            <span class="tag" >
-              @if(v.published){
-                active
-              }
-              @else{
-                inactive
-              }
-            </span>
+            <h4>V{{v.versionId}}</h4>
+            <span class="tag" [ngClass]="v.published ? 'active' : 'inactive'">
+  {{ v.published ? 'active' : 'inactive' }}
+</span>
           </div>
 
           <p class="desc">{{v.formName}}</p>
@@ -100,7 +95,7 @@
             <mat-icon>visibility</mat-icon>
           </button>
 
-          <button class="restore-btn" (click)="restoreVersion(v.FormId, v.versionId)">
+          <button class="restore-btn" (click)="restoreVersion(v.FormId, v.versionId, v.published)">
             Restore
           </button>
         </div>
@@ -109,10 +104,18 @@
 
       <!-- Pagination -->
       <div class="pagination">
-        <button>&lt;</button>
-        <span>Page 1 of 4</span>
-        <button>&gt;</button>
-      </div>
+  <button (click)="prevPage()" [disabled]="currentPage === 1">&lt;</button>
+
+  <span>
+  Page {{ currentPage }} of {{ totalPages }}
+</span>
+
+  <button 
+  (click)="nextPage()" 
+  [disabled]="currentPage * itemsPerPage >= versions.length">
+  &gt;
+</button>
+</div>
 
     </div>
 
