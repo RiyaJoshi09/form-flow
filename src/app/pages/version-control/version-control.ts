@@ -20,6 +20,10 @@ export class VersionControl {
   selectedForm: any ; // default to first form
    versions: any[] = [];
    version_Id: number =0;
+   currentPage: number = 1;
+   itemsPerPage: number = 4;
+   totalPages: number = 0;
+   paginatedVersions: any[] = [];
 
   constructor(private formService: FormService, private cd:ChangeDetectorRef, private route: ActivatedRoute, private toastr: ToastrService, private dialog: MatDialog ) {}
 
@@ -34,10 +38,6 @@ export class VersionControl {
         console.log(form);
         this.selectedForm = form;
         this.getallVersions();
-        const version = this.versions.find(v => v.FormId === formid);
-        if (version) {
-           this.version_Id = version.versionId;
-       }
         console.log("selected form parent id: ",this.selectedForm.mainParentId );
         this.cd.detectChanges();
       });
@@ -47,6 +47,12 @@ export class VersionControl {
      this.formService.getAllVersions(this.selectedForm.mainParentId).subscribe((versions: any) => {
       console.log(versions);
       this.versions = versions;
+      const version = this.versions.find(v => v.FormId === this.selectedForm.id);
+         console.log(version)
+        if (version) {
+           this.version_Id = version.versionId;
+       }
+      this.updatePagination(); 
         this.cd.detectChanges();
 
      });
@@ -101,7 +107,11 @@ export class VersionControl {
   }
  
 
-  restoreVersion(formId: string, versionId: number){
+  restoreVersion(formId: string, versionId: number, status: boolean){
+    if(status==true){
+      this.toastr.warning('Already active versions cannot be restored.');
+      return;
+    }
     this.formService.switchVersion(formId, versionId).subscribe({
   next: (res) => {
     console.log(res);
@@ -114,4 +124,27 @@ export class VersionControl {
   }
 });
   }
+
+
+
+  updatePagination() {
+  const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+  const endIndex = startIndex + this.itemsPerPage;
+  this.paginatedVersions = this.versions.slice(startIndex, endIndex);
+   this.totalPages = Math.ceil(this.versions.length / this.itemsPerPage); 
+}
+
+nextPage() {
+  if (this.currentPage * this.itemsPerPage < this.versions.length) {
+    this.currentPage++;
+    this.updatePagination();
+  }
+}
+
+prevPage() {
+  if (this.currentPage > 1) {
+    this.currentPage--;
+    this.updatePagination();
+  }
+}
 }

@@ -256,3 +256,23 @@
   font-size: 14px;
   color: var(--mat-sys-on-surface-variant);
 }
+
+.tag {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Active */
+.tag.active {
+  background-color: #d4edda;
+  color: #28a745;
+}
+
+/* Inactive */
+.tag.inactive {
+  background-color: #f8d7da;
+  color: #dc3545;
+}

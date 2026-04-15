@@ -68,20 +68,24 @@ export class MyForms {
   }
 
   getTrashFormData() {
-    this.formService.getTrashForms().subscribe((data: any) => {
-      console.log(data);
-      this.forms = this.sortFormsByDate(data);
-      this.loadPagination();
-      this.totalFormsarray = data;
-      this.forms.forEach((form: any) => {
-        this.formService.getFormResponseById(form.id).subscribe((res: any) => {
-          form.responses = res.length;
-          this.loadSummary();
-          this.cd.detectChanges();
-        });
+  this.formService.getTrashForms().subscribe((data: any) => {
+    this.forms = this.sortFormsByDate(data);
+    this.totalFormsarray = data;
+
+    this.loadPagination(); // already handles pagination
+
+    this.forms.forEach((form: any) => {
+      this.formService.getFormResponseById(form.id).subscribe((res: any) => {
+        form.responses = res.length;
+
+        this.loadSummary();
+        this.updatePaginatedForms(); 
+
+        this.cd.detectChanges();
       });
     });
-  }
+  });
+}
 
   sortFormsByDate(forms: any[]) {
     return forms.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
@@ -107,6 +111,7 @@ export class MyForms {
               this.forms = this.forms.filter((form) => form.id !== id);
               this.totalFormsarray = this.forms;
               this.loadSummary();
+              this.adjustPageAfterDelete();
               this.cd.detectChanges();
               this.toastr.success('Form moved to trash!');
             },
@@ -119,25 +124,6 @@ export class MyForms {
       });
   }
 
-
-//  restoreForm(id: string){
-//   this.formService.restoreForms(id).subscribe({
-//     next: (data:any) => {
-//       console.log(data);
-//       this.forms = this.forms.filter((form) => form.id !== id);
-//       this.totalFormsarray = this.forms;
-//       this.loadSummary();
-//       this.loadPagination();
-//       this.cd.detectChanges();
-//       this.toastr.success('Form restored successfully!');
-//     },
-//     error: (err:any) => {
-//       console.error(err);
-//       this.toastr.error('Restore failed!');
-
-//     }
-//   });
-// }
 
   shareForm(id: number, published: boolean) {
     if (published == false) {
@@ -167,6 +153,7 @@ export class MyForms {
         this.forms = this.forms.filter((form) => form.id !== id);
         this.totalFormsarray = this.forms;
         this.loadSummary();
+       this.adjustPageAfterDelete();
         this.cd.detectChanges();
         this.toastr.success('Form restored successfully!');
       },
@@ -222,4 +209,14 @@ export class MyForms {
       this.updatePaginatedForms();
     }
   }
+
+  adjustPageAfterDelete() {
+  this.totalPages = Math.ceil(this.forms.length / this.itemsPerPage);
+
+  if (this.currentPage > this.totalPages) {
+    this.currentPage = this.totalPages || 1;
+  }
+
+  this.updatePaginatedForms();
+}
 }
