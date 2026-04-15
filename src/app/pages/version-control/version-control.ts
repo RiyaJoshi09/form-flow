@@ -5,6 +5,7 @@ import { CommonModule, DatePipe, NgClass } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormSubmission } from '../form-submission/form-submission';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -18,31 +19,41 @@ export class VersionControl {
   formId : any;
   selectedForm: any ; // default to first form
    versions: any[] = [];
+   version_Id: number =0;
 
-  constructor(private formService: FormService, private cd:ChangeDetectorRef, private route: ActivatedRoute, private dialog: MatDialog) {}
+  constructor(private formService: FormService, private cd:ChangeDetectorRef, private route: ActivatedRoute, private toastr: ToastrService, private dialog: MatDialog ) {}
 
   ngOnInit(){
      this.formId= this.route.snapshot.paramMap.get('id')!;
      console.log(this.formId);
-        this.formService.getFormById(this.formId).subscribe((form: any) => {
+      this.getformDetails(this.formId);
+  }
+
+  getformDetails(formid: string){
+    this.formService.getFormById(formid).subscribe((form: any) => {
         console.log(form);
         this.selectedForm = form;
-        this.formService.getAllVersions(this.selectedForm.mainParentId).subscribe((versions: any) => {
-      console.log(versions);
-      this.versions = versions;
-        this.cd.detectChanges();
-    });
+        this.getallVersions();
+        const version = this.versions.find(v => v.FormId === formid);
+        if (version) {
+           this.version_Id = version.versionId;
+       }
         console.log("selected form parent id: ",this.selectedForm.mainParentId );
         this.cd.detectChanges();
       });
-     
-     
   }
 
+  getallVersions(){
+     this.formService.getAllVersions(this.selectedForm.mainParentId).subscribe((versions: any) => {
+      console.log(versions);
+      this.versions = versions;
+        this.cd.detectChanges();
 
-  getFormById(formId: string){
+     });
     
   }
+
+
 
   viewVersion(versionId: string){
     this.formService.getFormById(versionId).subscribe(data => {
@@ -89,4 +100,18 @@ export class VersionControl {
           })
   }
  
+
+  restoreVersion(formId: string, versionId: number){
+    this.formService.switchVersion(formId, versionId).subscribe({
+  next: (res) => {
+    console.log(res);
+    this.toastr.success('Version switched successfully!');
+    this.getformDetails(formId);
+  },
+  error: (err) => {
+    console.error(err);
+    this.toastr.error('Failed to switch version. Please try again.');
+  }
+});
+  }
 }

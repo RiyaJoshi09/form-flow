@@ -22,7 +22,7 @@
 
       <div class="current-version">
         <span class="badge">ACTIVE NOW</span>
-        <h2>v2.1.0</h2>
+        <h2>V{{version_Id}}</h2>
       </div>
 
       <div class="info-box">
@@ -91,7 +91,7 @@
         </div>
 
         <div class="meta">
-          <!-- <p>{{v.date}}</p> -->
+          <p>{{v.createdAt | date: 'dd/MM/yyyy hh:mm a' }}</p>
           <small>ID: {{v.FormId | slice:31:40}}</small>
         </div>
 
@@ -100,7 +100,7 @@
             <mat-icon>visibility</mat-icon>
           </button>
 
-          <button class="restore-btn">
+          <button class="restore-btn" (click)="restoreVersion(v.FormId, v.versionId)">
             Restore
           </button>
         </div>

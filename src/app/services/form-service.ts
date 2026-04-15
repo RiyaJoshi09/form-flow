@@ -180,4 +180,14 @@ getSharedForms(){
 getAllVersions(formId: string){
   return this.http.get(this.url + 'user/version/' + formId);
 }
+
+switchVersion(formId: string, versionId: number) {
+  const url = `${this.url}user/version/switch/${formId}`;
+
+  const body = {
+    versionId: versionId
+  };
+
+  return this.http.patch(url, body, { responseType: 'text' });
+}
 }
