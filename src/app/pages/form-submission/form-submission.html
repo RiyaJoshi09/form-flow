@@ -46,11 +46,13 @@
 
     <form [formGroup]="formGroup" (ngSubmit)="submitResponse()" class="p-10">
       <div *ngFor="let section of formStructure?.sections" class="mb-12">
+        @if (isSectionVisible(section)) {
         <h2 class="text-xl font-bold text-primary mb-6 border-b pb-2 border-theme">
           {{ section.sectionTitle }}
         </h2>
 
         <div *ngFor="let field of section.fields" class="mb-8">
+          @if (isFieldVisible(field)) {
           <label class="block text-sm font-bold text-muted uppercase tracking-wider mb-2"
             [ngStyle]="getFieldStyle(field.fieldStyle)">
             {{ field.fieldConfig?.label}}
@@ -77,9 +79,10 @@
             <mat-icon class="text-sm scale-75">error_outline</mat-icon>
             This field is required or formatted incorrectly.
           </div> -->
+          }
         </div>
+        }
       </div>
-
       <button type="submit" [disabled]="formGroup.invalid"
         class="w-full btn-primary font-bold py-4 rounded-2xl transition-all shadow-lg opacity-90 hover:opacity-100 cursor-pointer disabled:opacity-50 disabled:grayscale">
         SUBMIT RESPONSE

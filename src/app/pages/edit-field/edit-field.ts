@@ -27,7 +27,7 @@ export class EditField {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<EditField>,
   ) {
-    this.field = data;
+    this.field = { ...data };
     this.setValidationOptions();
   }
 
@@ -111,6 +111,14 @@ export class EditField {
     return !logic.sourceFieldId || !logic.operator || !logic.value;
   }
 
+  onLogicChange(logicData: any) {
+    if (logicData) {
+      this.field.fieldLogic = { ...logicData };
+    } else {
+      delete this.field.fieldLogic;
+    }
+  }
+
   save() {
     const validations: any = {};
 
@@ -124,9 +132,13 @@ export class EditField {
       }
     });
 
-    this.field.validations = validations;
+    const finalPayload = {
+      ...this.field,
+      validations: validations
+    };
 
-    this.dialogRef.close({ ...this.field });
+    this.dialogRef.close(finalPayload);
+    console.log(finalPayload);
   }
 
   cancel() {

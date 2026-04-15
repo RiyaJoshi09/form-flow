@@ -1,7 +1,7 @@
 export interface CondLogicSchema {
     enabled: boolean;
     sourceFieldId: string;
-    operator: 'EQUAL' | 'NOT EQUAL' | 'CONTAINS';
+    operator: 'EQUALS' | 'NOT_EQUALS';
     value: any;
     action: 'SHOW' | 'HIDE';
 }

@@ -41,7 +41,7 @@
 
     <mat-tab label="Logic">
       <app-conditional-logic [logicData]="field.fieldLogic" [currentItemId]="field.id"
-        (logicUpdated)="field.fieldLogic = $event">
+        (logicUpdated)="onLogicChange($event)">
       </app-conditional-logic>
     </mat-tab>
   </mat-tab-group>

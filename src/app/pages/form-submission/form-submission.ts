@@ -72,6 +72,7 @@ export class FormSubmission {
       this.formStructure = this.dialogData;
       this.isReadOnly = this.dialogData.isReadOnly;
       this.buildReactiveForm();
+      this.setupConditionalLogic();
     }
     //Response Mode
     else {
@@ -91,6 +92,7 @@ export class FormSubmission {
               if (this.checkAvailability(form)) {
                 this.handleTheme(form);
                 this.buildReactiveForm();
+                this.setupConditionalLogic();
                 this.isFormReady = true;
                 this.loadDraft(formId);
                 this.setupDraftTimer(formId);
@@ -98,7 +100,7 @@ export class FormSubmission {
                 this.isClosed = true;
                 this.isFormReady = true;
               }
-               this.cd.detectChanges();
+              this.cd.detectChanges();
             });
           },
           error: (err) => {
@@ -199,6 +201,56 @@ export class FormSubmission {
     this.cd.detectChanges();
   }
 
+  setupConditionalLogic() {
+    this.evaluateAllVisibility();
+
+    this.formGroup.valueChanges.subscribe(() => {
+      this.evaluateAllVisibility();
+    });
+  }
+
+  evaluateAllVisibility() {
+    this.formStructure.sections.forEach((section: any) => {
+      section.fields.forEach((field: any) => {
+        const control = this.formGroup.get(field.id);
+        if (control) {
+          if (this.isFieldVisible(field)) {
+            control.enable({ emitEvent: false });
+          } else {
+            control.disable({ emitEvent: false });
+          }
+        }
+      });
+    });
+    this.cd.detectChanges();
+  }
+
+  isFieldVisible(field: any): boolean {
+    const logic = field.fieldLogic;
+    if (!logic || !logic.enabled) return true;
+
+    const sourceValue = this.formGroup.get(logic.sourceFieldId)?.value;
+    
+    let isMatch = false;
+    if (Array.isArray(sourceValue)) {
+      // For Checkbox
+      isMatch = sourceValue.includes(logic.value);
+    } else {
+      // For Radio/Dropdown
+      isMatch = String(sourceValue ?? '') === String(logic.value ?? '');
+    }
+    if (logic.operator === 'NOT_EQUALS') {
+      isMatch = !isMatch;
+    }
+    
+    return logic.action === 'SHOW' ? isMatch : !isMatch;
+  }
+
+  isSectionVisible(section: any): boolean {
+    if (!section.fields || section.fields.length === 0) return false;
+    return section.fields.some((field: any) => this.isFieldVisible(field));
+  }
+
   setupDraftTimer(formId: string) {
     this.formGroup.valueChanges.subscribe(values => {
       localStorage.setItem(`form_draft_${formId}`, JSON.stringify(values));
@@ -252,15 +304,14 @@ export class FormSubmission {
   }
 
   get isLoggedIn(): boolean {
-  return this.authService.isLoggedIn();
-}
+    return this.authService.isLoggedIn();
+  }
 
   resetForm() {
     this.isSubmitted = false;
     this.isSubmitting = false;
     this.ngOnInit();
   }
-
 
   logoutAndSwitch() {
     this.authService.logout();

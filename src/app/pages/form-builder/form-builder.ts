@@ -127,14 +127,10 @@ export class FormBuilder {
               options: field.fieldConfig.options || [],
               placeholder: field.fieldConfig.placeholder || '',
               fieldLogic: field.fieldLogic || {
-                enabled: false,
-                sourceFieldId: '',
-                operator: 'EQUAL',
-                value: '',
-                action: 'SHOW'
+                enabled: false
               },
-              color: field.fieldStyle.color ||'#000000',
-              fontSize: field.fieldStyle.fontSize ||'12px',
+              color: field.fieldStyle.color || '#000000',
+              fontSize: field.fieldStyle.fontSize || '12px',
               bold: field.fieldStyle.bold || false,
               italic: field.fieldStyle.italics || false,
               underline: field.fieldStyle.underline || false,
@@ -309,11 +305,7 @@ export class FormBuilder {
         options: ['CHECKBOX', 'RADIO', 'DROPDOWN'].includes(field.type) ? ['Option 1'] : [],
         placeholder: field.placeholder || '',
         fieldLogic: {
-          enabled: false,
-          sourceFieldId: '',
-          operator: 'EQUAL',
-          value: '',
-          action: 'SHOW'
+          enabled: false
         },
         color: '#000000',
         fontSize: '12px',
@@ -348,11 +340,7 @@ export class FormBuilder {
 
     if (!field.fieldLogic) {
       field.fieldLogic = {
-        enabled: false,
-        sourceFieldId: '',
-        operator: 'EQUAL',
-        value: '',
-        action: 'SHOW'
+        enabled: false
       };
     }
 
@@ -423,6 +411,13 @@ export class FormBuilder {
             bold: field.bold,
             italics: field.italics,
             underline: field.underline
+          },
+          fieldLogic: {
+            enabled: field.fieldLogic.enabled,
+            sourceFieldId: field.fieldLogic.sourceFieldId,
+            operator: field.fieldLogic.operator,
+            value: field.fieldLogic.value,
+            action: field.fieldLogic.action
           }
         })),
       })),

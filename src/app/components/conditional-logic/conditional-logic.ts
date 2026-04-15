@@ -61,11 +61,23 @@ export class ConditionalLogic {
   }
 
   emitChange() {
-    const isValid = !this.logicData.enabled || 
-                 (this.logicData.sourceFieldId && this.logicData.operator && this.logicData.value);
+    if (!this.logicData.enabled) {
+      this.logicChange.emit(undefined);
+      return;
+    }
 
-  if (isValid) {
-    this.logicChange.emit(this.logicData);
-  }
+    const isComplete =
+      this.logicData.action &&
+      this.logicData.sourceFieldId &&
+      this.logicData.operator &&
+      this.logicData.value;
+
+    if (isComplete) {
+      this.logicChange.emit(this.logicData);
+    } else {
+      this.logicChange.emit(undefined);
+    }
+
+    //console.log(this.logicChange)
   }
 }
