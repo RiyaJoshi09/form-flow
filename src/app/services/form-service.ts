@@ -190,4 +190,14 @@ switchVersion(formId: string, versionId: number) {
 
   return this.http.patch(url, body, { responseType: 'text' });
 }
+
+  createGroup(data : any) {
+    return this.http.post(this.url + 'group/createGroup', data);
+  }
+
+  getMyGroups() {
+    return this.http.get(this. url + 'group/myGroups');
+  }
 }
+
+

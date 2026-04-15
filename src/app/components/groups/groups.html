@@ -1,1 +1,172 @@
-<p>groups works!</p>
+<div class="groups-container">
+
+  <!-- Header -->
+  <div class="header">
+    <h2>Manage Groups</h2>
+
+    <button class="btn-primary" (click)="openCreateGroupDialog()">+ New Group</button>
+  </div>
+
+  <!-- Active Groups -->
+  <div class="section">
+    <div class="section-header">
+      <h3>Active Groups</h3>
+    </div>
+
+    <div class="group-cards">
+
+      <!-- Card 1 (Selected) -->
+      <div class="group-card" (click)="selectGroup(group)" [class.selected]="selectedGroup === group" *ngFor="let group of recentGroups">
+        <div class="group-icon">
+          <mat-icon>groups</mat-icon>
+        </div>
+
+        <h4>{{ group.groupName }}</h4>
+        <p>{{ group.description }}</p>
+
+        <div class="members">
+          👥 Max : {{ group.maxMembers }} members
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Groups List Table -->
+  <div class="table-section" id="allGroups">
+
+    <div class="table-header">
+      <h3>All Groups</h3>
+
+      <input type="text" placeholder="Search groups..." />
+    </div>
+
+    <div class="table">
+
+      <div class="table-row header-row">
+        <span>Group Name</span>
+        <span>Max Members</span>
+        <span>Created</span>
+        <span>Actions</span>
+      </div>
+
+      <!-- Group 1 -->
+      <div class="table-row"  *ngFor="let group of groups" (click)="selectGroup(group)" [class.selected]="selectedGroup === group" style="cursor: pointer;">
+        <span>{{ group.groupName }}</span>
+        <span>{{ group.maxMembers }}</span>
+        <span>{{ group.created_at | date:'dd MMM yyyy' }}</span>
+        <span>
+          <button class="icon-btn">
+            <mat-icon>visibility</mat-icon>
+          </button>
+        </span>
+      </div>
+
+    </div>
+
+    <div class="pagination">
+
+      <!-- Previous -->
+      <button disabled>&lt;</button>
+
+      <!-- Page numbers -->
+      <button class="active">1</button>
+      <button>2</button>
+      <button>3</button>
+
+      <!-- Next -->
+      <button>&gt;</button>
+
+    </div>
+
+  </div>
+
+  
+  <!-- Member Management Table -->
+  <div class="table-section" *ngIf="selectedGroup">
+
+    <!-- Header with buttons -->
+    <div class="member-header">
+        <h3>Member Management ({{ selectedGroup?.groupName }})</h3>
+
+
+      <div class="member-actions">
+        <button class="btn-outline">Add Admin</button>
+        <button class="btn-primary">+ Add Member</button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table">
+
+      <div class="table-row header-row">
+        <span>User</span>
+        <span>Role</span>
+        <span>Joined</span>
+        <span>Actions</span>
+      </div>
+
+      <!-- Member 1 -->
+      <div class="table-row">
+        <span class="user">
+          <mat-icon>person</mat-icon>
+          Het Naik
+        </span>
+
+        <span>
+          <span class="role admin">ADMIN</span>
+        </span>
+
+        <span>2 months ago</span>
+
+        <span>
+          <button class="icon-btn">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </span>
+      </div>
+
+      <!-- Member 2 -->
+      <div class="table-row">
+        <span class="user">
+          <mat-icon>person</mat-icon>
+          Rohit
+        </span>
+
+        <span>
+          <span class="role member">MEMBER</span>
+        </span>
+
+        <span>1 month ago</span>
+
+        <span>
+          <button class="icon-btn">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </span>
+      </div>
+
+      <!-- Member 3 -->
+      <div class="table-row">
+        <span class="user">
+          <mat-icon>person</mat-icon>
+          Hardik
+        </span>
+
+        <span>
+          <span class="role member">MEMBER</span>
+        </span>
+
+        <span>3 weeks ago</span>
+
+        <span>
+          <button class="icon-btn">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </span>
+      </div>
+
+    </div>
+  </div>
+
+</div>
