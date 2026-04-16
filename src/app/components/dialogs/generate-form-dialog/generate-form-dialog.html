@@ -1,0 +1,110 @@
+<div class="dialog-wrapper">
+  <!-- Header -->
+  <div class="dialog-header">
+    <h2 mat-dialog-title class="dialog-title">
+      <span>
+        <mat-icon>auto_awesome</mat-icon>
+      </span>
+      Generate Form with AI
+    </h2>
+    <p class="dialog-subtitle">Describe the form you want and AI will build it instantly</p>
+  </div>
+
+  <!-- Content -->
+  <mat-dialog-content class="dialog-content">
+    <!-- Example chips -->
+    <p class="chips-label">Try an example</p>
+    <div class="chips-row flex flex-wrap gap-2 mb-5">
+      <span
+        class="chip chip--indigo"
+        (click)="
+          prompt.set(
+            'Create a job application form with name, email, resume upload, and years of experience'
+          )
+        "
+      >
+        💼 Job Application
+      </span>
+      <span
+        class="chip chip--purple"
+        (click)="
+          prompt.set('Create a customer feedback form with rating, comments, and contact info')
+        "
+      >
+        ⭐ Feedback Form
+      </span>
+      <span
+        class="chip chip--pink"
+        (click)="
+          prompt.set(
+            'Create an event registration form with name, email, ticket type, and dietary requirements'
+          )
+        "
+      >
+        🎟️ Event Registration
+      </span>
+    </div>
+
+    <!-- Textarea -->
+    <div>
+      <textarea
+        class="prompt-textarea"
+        [ngModel]="prompt()"
+        (ngModelChange)="prompt.set($event)"
+        [disabled]="loading()"
+        rows="5"
+        placeholder="e.g. Create a contact form with name, email, phone number, subject and a message field..."
+      ></textarea>
+
+      <div class="textarea-meta flex items-center justify-between">
+        <span class="hint flex items-center gap-x-1">
+          <mat-icon class="hint-icon relative top-1 opacity-80 left-1">info</mat-icon>
+          <span>Be as descriptive as possible for better results</span>
+        </span>
+        <span class="char-count">{{ prompt().length }} chars</span>
+      </div>
+    </div>
+
+    <!-- Loading banner -->
+    @if (loading()) {
+      <div class="loading-banner flex items-center gap-3">
+        <div class="dot dot--indigo"></div>
+        <div class="dot dot--purple"></div>
+        <div class="dot dot--pink"></div>
+        <span class="loading-text">AI is crafting your form...</span>
+      </div>
+    }
+  </mat-dialog-content>
+
+  <!-- Actions -->
+  <mat-dialog-actions class="dialog-actions flex justify-between items-center">
+    <button
+      mat-button
+      class="cancel-btn flex items-center"
+      (click)="onCancel()"
+      [disabled]="loading()"
+    >
+      <mat-icon>close</mat-icon>
+      Cancel
+    </button>
+
+    <button
+      mat-raised-button
+      class="generate-btn flex items-center justify-center gap-2"
+      (click)="onGenerate()"
+      [disabled]="loading() || !prompt().trim()"
+    >
+      @if (loading()) {
+        <div class="flex justify-center items-center gap-x-1">
+          <mat-progress-spinner diameter="16" mode="indeterminate"></mat-progress-spinner>
+          <span>Generating...</span>
+        </div>
+      } @else {
+        <div class="flex justify-center items-center gap-x-1">
+          <mat-icon class="text-lg!">auto_awesome</mat-icon>
+          <span>Generate</span>
+        </div>
+      }
+    </button>
+  </mat-dialog-actions>
+</div>
