@@ -212,6 +212,14 @@ deleteAllVersions(formId: string) {
     return this.http.get(this. url + 'group/myGroups');
   }
 
+  addMembersToGroup(groupId : string, members : string[]) {
+    return this.http.post(`${this.url}group/${groupId}/addMembers`, members, {responseType: 'text'});
+  }
+
+  getGroupMembers(groupId : string) {
+    return this.http.get(`${this.url}group/${groupId}/members`);
+  }
+
 }
 
 

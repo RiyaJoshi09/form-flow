@@ -35,8 +35,21 @@ export class Groups implements OnInit {
   itemsPerPage: number = 5;
   totalPages: number = 1;
 
+  members : any[] = [];
+
   selectGroup(group : any) {
     this.selectedGroup = group;
+
+    this.formService.getGroupMembers(group.groupId).subscribe({
+      next: (res: any) => {
+        this.members = res.members || [];
+        console.log('Members:', this.members);
+      },
+      error: (err) => {
+        console.error(err);
+        this.members = [];
+      }
+    });
   }
 
   openCreateGroupDialog() {
@@ -118,6 +131,27 @@ export class Groups implements OnInit {
       this.currentPage--;
       this.updatePaginatedGroups();
     }
+  }
+
+  addMembers() {
+    if (!this.selectedGroup) return;
+
+    const usernames = prompt('Enter usernames (comma separated):');
+
+    if (!usernames) return;
+
+    const memberList = usernames.split(',').map(u => u.trim());
+
+    this.formService.addMembersToGroup(this.selectedGroup.groupId, memberList)
+      .subscribe({
+        next: () => {
+          alert('Members added successfully');
+        },
+        error: (err) => {
+          console.error(err);
+          alert('Error adding members');
+        }
+      });
   }
   
 }

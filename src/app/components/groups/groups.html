@@ -109,7 +109,7 @@
 
       <div class="member-actions">
         <button class="btn-outline">Add Admin</button>
-        <button class="btn-primary">+ Add Member</button>
+        <button class="btn-primary" (click)="addMembers()">+ Add Member</button>
       </div>
     </div>
 
@@ -123,18 +123,25 @@
         <span>Actions</span>
       </div>
 
-      <!-- Member 1 -->
-      <div class="table-row">
+      <div *ngIf="members.length === 0" class="no-data">
+        No members in this group
+      </div>
+
+      <div class="table-row" *ngFor="let member of members">
         <span class="user">
           <mat-icon>person</mat-icon>
-          Het Naik
+          {{ member.username }}
         </span>
 
         <span>
-          <span class="role admin">ADMIN</span>
+          <span class="role" [ngClass]="member.role?.toLowerCase()">
+            {{ member.role }}
+          </span>
         </span>
 
-        <span>2 months ago</span>
+        <span>
+          {{ member.joinedAt | date:'dd MMM yyyy' }}
+        </span>
 
         <span>
           <button class="icon-btn">
@@ -142,46 +149,7 @@
           </button>
         </span>
       </div>
-
-      <!-- Member 2 -->
-      <div class="table-row">
-        <span class="user">
-          <mat-icon>person</mat-icon>
-          Rohit
-        </span>
-
-        <span>
-          <span class="role member">MEMBER</span>
-        </span>
-
-        <span>1 month ago</span>
-
-        <span>
-          <button class="icon-btn">
-            <mat-icon>edit</mat-icon>
-          </button>
-        </span>
-      </div>
-
-      <!-- Member 3 -->
-      <div class="table-row">
-        <span class="user">
-          <mat-icon>person</mat-icon>
-          Hardik
-        </span>
-
-        <span>
-          <span class="role member">MEMBER</span>
-        </span>
-
-        <span>3 weeks ago</span>
-
-        <span>
-          <button class="icon-btn">
-            <mat-icon>edit</mat-icon>
-          </button>
-        </span>
-      </div>
+      
 
     </div>
   </div>
