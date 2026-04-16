@@ -16,7 +16,6 @@ export interface Section {
   sectionTitle: string;
   sectionOrder: number;
   fields: Field[];
-  sectionLogic?: CondLogicSchema;
 }
 
 export interface Form {
