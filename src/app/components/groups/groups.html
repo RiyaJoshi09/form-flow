@@ -38,7 +38,7 @@
     <div class="table-header">
       <h3>All Groups</h3>
 
-      <input type="text" placeholder="Search groups..." />
+      <input type="text" placeholder="Search groups..." [(ngModel)]="searchText" (input)="onSearch()" />
     </div>
 
     <div class="table">
@@ -51,7 +51,7 @@
       </div>
 
       <!-- Group 1 -->
-      <div class="table-row"  *ngFor="let group of groups" (click)="selectGroup(group)" [class.selected]="selectedGroup === group" style="cursor: pointer;">
+      <div class="table-row"  *ngFor="let group of paginatedGroups" (click)="selectGroup(group)" [class.selected]="selectedGroup === group" style="cursor: pointer;">
         <span>{{ group.groupName }}</span>
         <span>{{ group.maxMembers }}</span>
         <span>{{ group.created_at | date:'dd MMM yyyy' }}</span>
@@ -66,16 +66,21 @@
 
     <div class="pagination">
 
-      <!-- Previous -->
-      <button disabled>&lt;</button>
+      <button (click)="prevPage()" [disabled]="currentPage === 1">
+        &lt;
+      </button>
 
-      <!-- Page numbers -->
-      <button class="active">1</button>
-      <button>2</button>
-      <button>3</button>
+      <button 
+        *ngFor="let page of [].constructor(totalPages); let i = index"
+        (click)="goToPage(i + 1)"
+        [class.active]="currentPage === i + 1"
+      >
+        {{ i + 1 }}
+      </button>
 
-      <!-- Next -->
-      <button>&gt;</button>
+      <button (click)="nextPage()" [disabled]="currentPage === totalPages">
+        &gt;
+      </button>
 
     </div>
 

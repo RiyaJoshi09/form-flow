@@ -27,6 +27,14 @@ export class Groups implements OnInit {
 
   recentGroups : any[] = [];
 
+  searchText: string = '';
+  filteredGroups: any[] = [];
+
+  paginatedGroups: any[] = [];
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+  totalPages: number = 1;
+
   selectGroup(group : any) {
     this.selectedGroup = group;
   }
@@ -58,11 +66,58 @@ export class Groups implements OnInit {
 
         // Top 3 recent
         this.recentGroups = this.groups.slice(0, 3);
+
+        this.filteredGroups = [...this.groups];
+
+        this.currentPage = 1;
+        this.loadPagination();
       },
       error: (err) => {
         console.error(err);
       }
     });
+  }
+
+  onSearch() {
+    const value = this.searchText.toLowerCase();
+
+    this.filteredGroups = this.groups.filter(group =>
+      group.groupName.toLowerCase().includes(value)
+    );
+
+    this.currentPage = 1;
+    this.loadPagination();
+  }
+
+  loadPagination() {
+    this.totalPages = Math.ceil(this.filteredGroups.length / this.itemsPerPage);
+    this.updatePaginatedGroups();
+  }
+
+  updatePaginatedGroups() {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+
+    this.paginatedGroups = this.filteredGroups.slice(start, end);
+  }
+
+  goToPage(page: number) {
+    this.currentPage = page;
+    this.updatePaginatedGroups();
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePaginatedGroups();
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePaginatedGroups();
+    }
   }
   
 }
