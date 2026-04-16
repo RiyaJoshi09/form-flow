@@ -18,5 +18,5 @@ export interface BuilderFieldSchema {
     placeholder?: string,
     options?: string[],
     validations?:ValidationRules,
-    //logic?: CondLogicSchema
+    fieldLogic?: CondLogicSchema
 }

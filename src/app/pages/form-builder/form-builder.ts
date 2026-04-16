@@ -223,7 +223,7 @@ export class FormBuilder {
 
   addSection() {
     this.formSections.push({
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       title: `Add Section Title`,
       fields: [],
     });
@@ -242,10 +242,10 @@ export class FormBuilder {
 
     const clonedSection = JSON.parse(JSON.stringify(originalSection));
 
-    clonedSection.id = Date.now().toString();
+    clonedSection.id = crypto.randomUUID();
     clonedSection.title = 'Copy of ' + clonedSection.title;
     clonedSection.fields.forEach((field: any, index: number) => {
-      field.id = Date.now().toString() + index;
+      field.id = crypto.randomUUID();
     });
 
     this.formSections.splice(sectionIndex + 1, 0, clonedSection);
@@ -254,40 +254,6 @@ export class FormBuilder {
   get sectionsIds(): string[] {
     return this.formSections.map((s) => s.id);
   }
-
-  // sectionSettings(sectionIndex: number){
-  //   const section = this.formSections[sectionIndex]
-  //   if (!section.sectionLogic) {
-  //     section.sectionLogic = {
-  //       enabled: false,
-  //       sourceFieldId: '',
-  //       operator: 'EQUAL',
-  //       value: '',
-  //       action: 'SHOW'
-  //     };
-  //   }
-
-  //   const sectionToEdit = JSON.parse(
-  //     JSON.stringify(section),
-  //   );
-
-  //   this.conditionalLogicService.updateFormState({ sections: this.formSections });
-
-  //   const dialogRef = this.dialog.open(ConditionalLogic, {
-  //     width: '400px',
-  //     data: sectionToEdit,
-  //     panelClass: 'custom-dialog-container',
-  //   });
-
-  //   dialogRef.afterClosed().subscribe((result) => {
-  //     if (result) {
-  //       this.formSections[sectionIndex].sectionLogic = result;
-  //       this.formSections = [...this.formSections];
-
-  //       this.cd.detectChanges();
-  //     }
-  //   });
-  // }
 
   onDrop(event: CdkDragDrop<any[]>, sectionIndex: number) {
     if (event.previousContainer === event.container) {
@@ -298,7 +264,7 @@ export class FormBuilder {
       const field = event.previousContainer.data[event.previousIndex];
 
       const newField = {
-        id: Date.now().toString(),
+        id: crypto.randomUUID(),
         type: field.type,
         label: field.label,
         validations: {},
@@ -365,6 +331,7 @@ export class FormBuilder {
         this.cd.detectChanges();
       }
     });
+    this.cd.detectChanges();
   }
 
   duplicateField(sectionIndex: number, fieldIndex: number) {
@@ -372,7 +339,7 @@ export class FormBuilder {
 
     const clonedField = JSON.parse(JSON.stringify(originalField));
 
-    clonedField.id = Date.now().toString();
+    clonedField.id = crypto.randomUUID();
 
     this.formSections[sectionIndex].fields.splice(fieldIndex + 1, 0, clonedField);
   }

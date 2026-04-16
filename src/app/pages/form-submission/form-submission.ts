@@ -81,6 +81,7 @@ export class FormSubmission {
         this.formService.getResponseFormById(formId).subscribe({
           next: (form: Form) => {
             this.formStructure = form;
+            console.log(this.formStructure);
             // if (localStorage.getItem('prevTheme') === null) {
             //   localStorage.setItem('prevTheme', localStorage.getItem('theme') || 'theme-pink');
             // }

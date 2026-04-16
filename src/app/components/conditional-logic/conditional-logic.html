@@ -8,22 +8,11 @@
 
     @if (logicData?.enabled) {
     <div class="grid grid-cols-1 gap-4 mt-4 animate-in fade-in duration-300">
-        <div class="flex items-center gap-2 p-3 bg-primary/5 rounded-lg border border-primary/20">
-            <mat-icon class="text-primary">play_arrow</mat-icon>
-            <span class="font-medium">Action:</span>
-            <mat-form-field appearance="fill" class="flex-grow dense-form-field">
-                <mat-select [(ngModel)]="logicData.action" (selectionChange)="emitChange()">
-                    <mat-option value="SHOW">Show this element</mat-option>
-                    <mat-option value="HIDE">Hide this element</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
-
         <div class="text-center text-xs text-muted uppercase font-bold tracking-widest my-1">
-            When the following is true
+            When
         </div>
 
-        <div class="p-4 bg-container border border-theme rounded-xl shadow-sm space-y-4">
+        <div class="p-4 bg-container flex flex-col shadow-sm space-y-4">
 
             <mat-form-field appearance="outline" class="w-full">
                 <mat-label>Select Question</mat-label>
@@ -36,27 +25,40 @@
                     }
                 </mat-select>
             </mat-form-field>
+            <mat-form-field appearance="outline" class="w-1/2">
+                <mat-label>Condition</mat-label>
+                <mat-select [(ngModel)]="logicData.operator" (selectionChange)="emitChange()" required>
+                    <mat-option value="EQUALS">Is equal to</mat-option>
+                    <mat-option value="NOT_EQUALS">Is not equal to</mat-option>
+                </mat-select>
+            </mat-form-field>
 
-            <div class="flex gap-4">
-                <mat-form-field appearance="outline" class="w-1/2">
-                    <mat-label>Condition</mat-label>
-                    <mat-select [(ngModel)]="logicData.operator" (selectionChange)="emitChange()" required>
-                        <mat-option value="EQUALS">Is equal to</mat-option>
-                        <mat-option value="NOT_EQUALS">Is not equal to</mat-option>
-                    </mat-select>
-                </mat-form-field>
+            <mat-form-field appearance="outline" class="w-1/2">
+                <mat-label>Value</mat-label>
+                <mat-select [(ngModel)]="logicData.value" (selectionChange)="emitChange()"
+                    [disabled]="!logicData.sourceFieldId" required>
+                    @for (opt of availableOptions; track $index) {
+                    <mat-option [value]="opt">{{ opt }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
 
-                <mat-form-field appearance="outline" class="w-1/2">
-                    <mat-label>Value</mat-label>
-                    <mat-select [(ngModel)]="logicData.value" (selectionChange)="emitChange()"
-                        [disabled]="!logicData.sourceFieldId" required>
-                        @for (opt of availableOptions; track $index) {
-                        <mat-option [value]="opt">{{ opt }}</mat-option>
-                        }
-                    </mat-select>
-                </mat-form-field>
-            </div>
         </div>
+
+        <div class="text-center text-xs text-muted uppercase font-bold tracking-widest my-1">
+            Then
+        </div>
+
+        <div class="flex items-center gap-2 p-3 bg-primary/5 rounded-lg">
+            <span class="font-medium">Action:</span>
+            <mat-form-field appearance="fill" class="flex-grow dense-form-field">
+                <mat-select [(ngModel)]="logicData.action" (selectionChange)="emitChange()">
+                    <mat-option value="SHOW">Show this element</mat-option>
+                    <mat-option value="HIDE">Hide this element</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
     </div>
     } @else {
     <p class="text-sm text-gray-500 italic">This item will always be visible to users.</p>
