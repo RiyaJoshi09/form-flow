@@ -46,6 +46,13 @@ export class FormSettingsDialog {
   //   this.data.closeMessage = ''; 
   // }
 
+  onQuizToggle() {
+  if (!this.data.isQuiz) {
+    this.data.showScore = false;
+    this.data.positiveMarks = 0;
+    this.data.negativeMarks = 0;
+  }
+}
   onSave() {
     if (this.data.deadline) {
     const finalDate = new Date(this.data.deadline);

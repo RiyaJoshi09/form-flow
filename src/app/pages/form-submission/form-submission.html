@@ -54,7 +54,7 @@
           <label class="block text-sm font-bold text-muted uppercase tracking-wider mb-2"
             [ngStyle]="getFieldStyle(field.fieldStyle)">
             {{ field.fieldConfig?.label}}
-            <span *ngIf="field.fieldConfig.validations.required" class="text-red-500">*</span>
+            <span *ngIf="field.fieldConfig?.validations?.required" class="text-red-500">*</span>
           </label>
 
           <div [ngSwitch]="field.fieldType">

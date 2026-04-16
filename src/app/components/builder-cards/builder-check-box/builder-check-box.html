@@ -4,10 +4,19 @@
       <mat-checkbox disabled></mat-checkbox>
 
       <input
-        [(ngModel)]="fieldData.options![i]"
+        [(ngModel)]="fieldData.options![i].label"
         class="border-b border-transparent focus:border-theme outline-none text-sm w-full bg-transparent"
         placeholder="Option label"
       />
+       @if (isQuiz) {
+    <button
+      (click)="setCorrect(i)"
+      class="px-2 py-1 text-xs rounded border"
+      [class.bg-green-500]="fieldData.options![i].isCorrect"
+      [class.text-white]="fieldData.options![i].isCorrect">
+      Answer
+    </button>
+  }
 
       @if (fieldData.options!.length > 1) {
         <button

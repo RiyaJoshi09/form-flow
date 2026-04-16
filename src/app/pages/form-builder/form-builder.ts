@@ -25,6 +25,7 @@ import { ThemeService } from '../../services/theme-service';
 import { BuilderCheckBox } from '../../components/builder-cards/builder-check-box/builder-check-box';
 import { ToastrService } from 'ngx-toastr';
 import { FormSettingsDialog } from '../../components/form-settings-dialog/form-settings-dialog';
+import { FormSettingsMarks } from '../../components/form-settings-marks/form-settings-marks';
 
 @Component({
   selector: 'app-form-builder',
@@ -78,7 +79,6 @@ export class FormBuilder {
     private cd: ChangeDetectorRef,
     private toastr: ToastrService,
   ) {}
-
   elements = [
     { type: 'TEXT', label: 'Text Input' },
     { type: 'CHECKBOX', label: 'Checkbox' },
@@ -129,7 +129,11 @@ export class FormBuilder {
               type: field.fieldType,
               label: field.fieldConfig.label,
               validations: field.fieldConfig.validations || {},
-              options: field.fieldConfig.options || [],
+              options: (field.fieldConfig.options || []).map((opt: any) => ({
+                label: opt.label || opt,
+                isCorrect: opt.isCorrect || false
+              })),
+              correctAnswer: field.fieldConfig.correctAnswer || '',
               placeholder: field.fieldConfig.placeholder || '',
               color: field.fieldStyle.color ||'#000000',
               fontSize: field.fieldStyle.fontSize ||'12px',
@@ -157,8 +161,13 @@ export class FormBuilder {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.formSettings = result;
+
+        // Force immediate UI refresh
+        setTimeout(() => {
+          this.cd.detectChanges();
+        }, 0);
       }
-    });
+  });
   }
 
   saveForm(isPublished: boolean) {
@@ -257,40 +266,78 @@ export class FormBuilder {
     return this.formSections.map((s) => s.id);
   }
 
-  onDrop(event: CdkDragDrop<any[]>, sectionIndex: number) {
-    if (event.previousContainer === event.container) {
-      // Rearrange
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else if (event.previousContainer.id === 'sidebar') {
-      //Sidebar to Canvas
-      const field = event.previousContainer.data[event.previousIndex];
+onDrop(event: CdkDragDrop<any[]>, sectionIndex: number) {
 
-      const newField = {
-        id: Date.now().toString(),
-        type: field.type,
-        label: field.label,
-        validations: {},
-        options: ['CHECKBOX', 'RADIO', 'DROPDOWN'].includes(field.type) ? ['Option 1'] : [],
-        placeholder: field.placeholder || '',
-
-        color: '#000000',
-        fontSize: '12px',
-        bold: false,
-        italic: false,
-        underline: false,
-      };
-
-      this.formSections[sectionIndex].fields.splice(event.currentIndex, 0, newField);
-    } else {
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex,
-      );
-    }
+  // Reorder inside same section
+  if (event.previousContainer === event.container) {
+    moveItemInArray(
+      event.container.data,
+      event.previousIndex,
+      event.currentIndex
+    );
+    return;
   }
 
+  // Sidebar → Canvas
+  if (event.previousContainer.id === 'sidebar') {
+
+    // IMPORTANT: Deep clone dragged item
+    const draggedItem = JSON.parse(
+      JSON.stringify(event.item.data)
+    );
+
+    const isQuiz = this.formSettings?.isQuiz;
+
+    const newField: any = {
+      id: Date.now().toString(),
+      type: draggedItem.type,
+      label: draggedItem.label,
+      validations: {},
+      placeholder: '',
+      options: [],
+      color: '#000000',
+      fontSize: '12px',
+      bold: false,
+      italic: false,
+      underline: false,
+    };
+
+    // Assign options ONLY for correct types
+    if (['CHECKBOX', 'RADIO', 'DROPDOWN'].includes(newField.type)) {
+      newField.options = [
+        { label: 'Option 1', isCorrect: false },
+        { label: 'Option 2', isCorrect: false }
+      ];
+    }
+
+    if (isQuiz) {
+      if (newField.type === 'TEXT') {
+        newField.correctAnswer = '';
+      }
+    }
+    // Insert into section
+    this.formSections[sectionIndex].fields.splice(
+      event.currentIndex,
+      0,
+      newField
+    );
+
+    //Force UI refresh (important)
+    this.formSections = [...this.formSections];
+    return;
+  }
+
+  // Between sections
+  transferArrayItem(
+    event.previousContainer.data,
+    event.container.data,
+    event.previousIndex,
+    event.currentIndex
+  );
+
+  // Refresh
+  this.formSections = [...this.formSections];
+}
   onSectionDrop(event: CdkDragDrop<any[]>) {
     moveItemInArray(this.formSections, event.previousIndex, event.currentIndex);
   }
@@ -428,4 +475,46 @@ export class FormBuilder {
     localStorage.removeItem('prevTheme');
     this.themeService.loadTheme();
   }
+
+
+  openSectionSettings(sectionIndex: number) {
+    if (!this.formSettings?.isQuiz) {
+      this.toastr.warning('Enable Quiz mode to use marks settings');
+      return;
+    }
+
+    const dialogRef = this.dialog.open(FormSettingsMarks, {
+      width: '350px',
+      maxWidth: '90vw',
+      data: {
+        positiveMarks: this.formSections[sectionIndex]?.positiveMarks || 0,
+        negativeMarks: this.formSections[sectionIndex]?.negativeMarks || 0
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.formSections[sectionIndex] = {
+          ...this.formSections[sectionIndex],
+          positiveMarks: result.positiveMarks,
+          negativeMarks: result.negativeMarks
+        };
+      }
+    });
+  }
+
+  get filteredElements() {
+    if (this.formSettings?.isQuiz) {
+      return this.elements.filter(el =>
+        ['TEXT', 'CHECKBOX', 'DROPDOWN', 'RADIO'].includes(el.type)
+      );
+    }
+    return this.elements;
+  }
+
+  setCorrectOption(field: any, index: number) {
+  field.options.forEach((opt: any, i: number) => {
+    opt.isCorrect = i === index;
+  });
+}
 }
