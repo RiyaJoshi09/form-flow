@@ -2,7 +2,7 @@
 
   <!-- Header -->
   <div class="header">
-    <h2>Manage Groups</h2>
+    <h1>Manage Groups</h1>
 
     <button class="btn-primary" (click)="openCreateGroupDialog()">+ New Group</button>
   </div>
@@ -10,7 +10,7 @@
   <!-- Active Groups -->
   <div class="section">
     <div class="section-header">
-      <h3>Active Groups</h3>
+      <h3>Recent Groups</h3>
     </div>
 
     <div class="group-cards">
@@ -18,7 +18,19 @@
       <!-- Card 1 (Selected) -->
       <div class="group-card" (click)="selectGroup(group)" [class.selected]="selectedGroup === group" *ngFor="let group of recentGroups">
         <div class="group-icon">
-          <mat-icon>groups</mat-icon>
+           <!-- Image -->
+          <img 
+            *ngIf="group.imageUrl; else defaultIcon" 
+            [src]="group.imageUrl" 
+            (error)="group.imageUrl = null"
+            alt="group image" />
+
+          <!-- Icon fallback -->
+          <ng-template #defaultIcon>
+            <div class="icon-bg">
+              <mat-icon>groups</mat-icon>
+            </div>
+          </ng-template>
         </div>
 
         <h4>{{ group.groupName }}</h4>
@@ -54,7 +66,7 @@
       <div class="table-row"  *ngFor="let group of paginatedGroups" (click)="selectGroup(group)" [class.selected]="selectedGroup === group" style="cursor: pointer;">
         <span>{{ group.groupName }}</span>
         <span>{{ group.maxMembers }}</span>
-        <span>{{ group.created_at | date:'dd MMM yyyy' }}</span>
+        <span>{{ group.createdAt | date:'dd MMM yyyy' }}</span>
         <span>
           <button class="icon-btn">
             <mat-icon>visibility</mat-icon>
