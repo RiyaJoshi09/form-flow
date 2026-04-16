@@ -32,14 +32,14 @@
       <h3>Public Forms</h3>
       <h1>{{ publicForms }}</h1>
     </div>
-    <mat-icon>bar_chart</mat-icon>
+    <mat-icon>public</mat-icon>
   </div>
   <div class="cards">
     <div class="details">
       <h3>Private Forms</h3>
       <h1>{{ privateForms }}</h1>
     </div>
-    <mat-icon>bar_chart</mat-icon>
+    <mat-icon>lock</mat-icon>
   </div>
 </div>
 
@@ -47,6 +47,7 @@
   <table>
     <tr>
       <th>Form-Title</th>
+      <th *ngIf="type == 'myForms'">Active-Version</th>
       <th>Responses</th>
       <th>Created_At</th>
 
@@ -78,6 +79,7 @@
     @for (form of paginatedForms; track form.id) {
       <tr>
         <td>{{ form.title }}</td>
+        <td *ngIf="type == 'myForms'">V{{form.versionId}}</td>
         <td class="flex items-center justify-start gap-x-2">
           <span>{{ form.responses || 0 }}</span>
           <button
@@ -113,7 +115,7 @@
         <td>
           <div class="actions">
             @if (type == 'myForms') {
-              <button mat-icon-button [routerLink]="['/edit-form', form.id]">
+              <button mat-icon-button [routerLink]="['/edit-form', form.id]" class="!cursor-pointer">
                 <mat-icon>edit</mat-icon>
               </button>
               <button

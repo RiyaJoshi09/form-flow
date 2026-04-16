@@ -189,12 +189,20 @@ export class FormBuilder {
     if (this.editingFormId) {
       this.formService.updateForm(formToSave).subscribe({
         next: (response) => {
-          if (!isPublished) {
+          
+          if(this.mode === 'version') {
+            this.toastr.success('Version Updated Successfully to Database!');
+            this.router.navigate(['/versions', this.editingFormId]);
+          }
+          else {   
+            if (!isPublished) {
             this.toastr.success('Form Updated Successfully to Database!');
           } else {
             this.toastr.success('Form is Published!');
+          }          
+            this.router.navigate(['/']);
           }
-          this.router.navigate(['/']);
+          
         },
         error: (err) => {
           console.error(err);

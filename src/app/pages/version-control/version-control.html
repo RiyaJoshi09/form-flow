@@ -52,11 +52,20 @@
         </p>
       </div> -->
 
-      <button class="edit-btn" [routerLink]="['/edit-form', formId]">
+      <button class="edit-btn" [routerLink]="['/edit-form', formId]" [queryParams]="{ mode: 'version'}">
         <mat-icon>edit</mat-icon>
             edit
       </button>
 
+      <!-- DELETE ALL BUTTON -->
+<button 
+  class="delete-all-btn"
+  [disabled]="versions.length === 0"
+  (click)="deleteAllVersions(selectedForm?.mainParentId)">
+  
+  <mat-icon>delete_forever</mat-icon>
+  Delete All Versions
+</button>
     </div>
 
     <!-- RIGHT PANEL -->
@@ -121,3 +130,4 @@
 
   </div>
 </div>
+
