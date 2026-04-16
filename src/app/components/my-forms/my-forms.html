@@ -124,12 +124,20 @@
                 <mat-icon>share</mat-icon>
               </button>
 
+
+              <button mat-icon-button [routerLink]="['/versions', form.id]"  class="!cursor-pointer">
+                <mat-icon>history</mat-icon>
+              </button>
+            
+        
+
               <button
                 mat-icon-button
                 [routerLink]="form.settings?.isPrivate ? ['/assign', form.id] : null"
                 [disabled]="!form.settings || !form.settings?.isPrivate"
                 style="cursor: pointer"
               >
+
                 <mat-icon>assignment</mat-icon>
               </button>
 

@@ -67,7 +67,8 @@ export class FormBuilder {
   selectedSectionIndex: number | null = null;
 
   predefinedColours: string[] = ['#000000', '#EF4444', '#10B981', '#3B82F6'];
-
+  mode: string = '';
+  parentid: string | null = null;
   constructor(
     private dialog: MatDialog,
     private router: Router,
@@ -88,11 +89,19 @@ export class FormBuilder {
   ];
 
   ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+    this.mode = params['mode'];
+    this.parentid = params['parentId'] || null;
+    });
+    console.log("create button parent id:",this.parentid);
+  
     this.editingFormId = this.route.snapshot.paramMap.get('id');
-
+    console.log('Editing Form ID:', this.editingFormId);
     if (this.editingFormId) {
       this.loadFromForEditing(this.editingFormId);
     }
+
+  
 
     if (localStorage.getItem('prevTheme') === null) {
       localStorage.setItem('prevTheme', localStorage.getItem('theme') || 'theme-pink');
@@ -369,5 +378,54 @@ export class FormBuilder {
       height: '90vh',
       data: previewData,
     });
+  }
+
+
+
+  saveVersion(isPublished: boolean) {
+    const hasFields = this.formSections.some(
+      (section) => section.fields && section.fields.length > 0,
+    );
+
+    if (!this.formTitle?.trim()) {
+      this.toastr.error('Please provide a title for your form.');
+      return;
+    }
+
+    if (!hasFields) {
+      this.toastr.error('Cannot save an empty form.');
+      return;
+    }
+
+    const formToSave = {
+      title: this.formTitle,
+      description: this.formDescription,
+      sections: this.formSections,
+      pubilshed: true,
+      settings: this.formSettings,
+      mainParentId: this.parentid,
+    };
+    console.log(formToSave);
+    console.log('Parent id:', formToSave.mainParentId);
+      
+    this.formService.createForm(formToSave).subscribe({
+        next: (response) => {
+          if (!isPublished) {
+            this.toastr.success('Form Saved Successfully to Database!');
+          } else {
+            this.toastr.success('Form is Published!');
+          }
+
+          this.router.navigate(['/']);
+        },
+        error: (err) => {
+          console.error(err);
+          this.toastr.error('Error saving form.');
+        },
+      });
+    
+    localStorage.setItem('theme', localStorage.getItem('prevTheme') || 'theme-pink');
+    localStorage.removeItem('prevTheme');
+    this.themeService.loadTheme();
   }
 }

@@ -5,14 +5,15 @@ import { MyForms } from '../../components/my-forms/my-forms';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { ThemeSelector } from '../../components/theme-selector/theme-selector';
 import { ThemeService } from '../../services/theme-service';
-import {MatMenuModule} from '@angular/material/menu';
-import {MatButtonModule} from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
 import { SharedWithMe } from '../../components/shared-with-me/shared-with-me';
 import { GenerateForm } from "../../components/generate-form/generate-form";
+import { Groups } from "../../components/groups/groups";
 
 @Component({
   selector: 'app-home',
-  imports: [MatIconModule, CommonModule, MyForms, RouterLink, RouterOutlet, ThemeSelector, MatMenuModule, MatButtonModule, SharedWithMe, GenerateForm],
+  imports: [MatIconModule, CommonModule, MyForms, RouterLink, RouterOutlet, ThemeSelector, MatMenuModule, MatButtonModule, SharedWithMe, GenerateForm, Groups],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })

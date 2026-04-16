@@ -25,7 +25,7 @@ export class FormService {
       description: rawForm.description,
       published: rawForm.pubilshed,
       settings: rawForm.settings,
-
+      mainParentId: rawForm.mainParentId,
       sections: rawForm.sections.map((section: any, sectionIndex: number) => ({
         id: section.id,
         sectionTitle: section.title,
@@ -179,4 +179,31 @@ getUsernameByEmail(email: string) {
 getSharedForms(){
   return this.http.get(this.url + 'user/shared-forms');
 }
+
+
+// Version Cpntrol APIs
+ 
+getAllVersions(formId: string){
+  return this.http.get(this.url + 'user/version/' + formId);
 }
+
+switchVersion(formId: string, versionId: number) {
+  const url = `${this.url}user/version/switch/${formId}`;
+
+  const body = {
+    versionId: versionId
+  };
+
+  return this.http.patch(url, body, { responseType: 'text' });
+}
+
+  createGroup(data : any) {
+    return this.http.post(this.url + 'group/createGroup', data);
+  }
+
+  getMyGroups() {
+    return this.http.get(this. url + 'group/myGroups');
+  }
+}
+
+
