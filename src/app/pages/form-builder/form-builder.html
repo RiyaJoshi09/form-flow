@@ -10,6 +10,13 @@
       <button mat-icon-button (click)="openPreview()" matTooltip="Preview form">
         <mat-icon class="text-sm">visibility</mat-icon>
       </button>
+      @if(mode === 'version'&& parentid) {
+         <button mat-button color="primary" class="btn-primary action-button" (click)="saveVersion(false)">
+        <mat-icon>save</mat-icon>
+        <span>Publish Version</span>
+      </button>
+      }
+      @else{
       <button mat-button color="primary" class="btn-primary action-button" (click)="saveForm(false)">
         <mat-icon>save</mat-icon>
         <span>Save As Draft</span>
@@ -18,6 +25,7 @@
         <mat-icon>rocket</mat-icon>
         <span>Publish</span>
       </button>
+    }
     </div>
   </div>
 

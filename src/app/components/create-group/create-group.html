@@ -1,0 +1,55 @@
+<div class="dialog-container">
+
+  <h2>Create New Group</h2>
+
+  <!-- Group Name -->
+  <div class="form-field">
+    <label>Group Name</label>
+    <input 
+      type="text"
+      placeholder="Enter group name"
+      [(ngModel)]="groupName" />
+  </div>
+
+  <!-- Description -->
+  <div class="form-field">
+    <label>Description</label>
+    <textarea 
+      placeholder="Enter description"
+      [(ngModel)]="description">
+    </textarea>
+  </div>
+
+  <!-- Image URL -->
+  <div class="form-field">
+    <label>Image URL</label>
+    <input 
+      type="text"
+      placeholder="Enter image URL"
+      [(ngModel)]="imageUrl" />
+  </div>
+
+  <!-- Max Members -->
+  <div class="form-field">
+    <label>Max Members</label>
+    <input 
+      type="number"
+      placeholder="Enter max members"
+      [(ngModel)]="maxMembers" />
+  </div>
+
+  <!-- Toggle Private -->
+  <div class="form-field toggle-field">
+    <label>Private Group</label>
+    <mat-slide-toggle [(ngModel)]="isPrivate">
+      {{ isPrivate ? 'Private' : 'Public' }}
+    </mat-slide-toggle>
+  </div>
+
+  <!-- Actions -->
+  <div class="actions">
+    <button class="btn-outline" (click)="close()">Cancel</button>
+    <button class="btn-primary create-btn" (click)="createGroup()">Create</button>
+  </div>
+
+</div>

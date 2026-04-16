@@ -130,3 +130,54 @@ button[disabled] {
   pointer-events: auto !important; /* VERY IMPORTANT */
   opacity: 0.5;
 }
+
+
+/* 🔹 Pagination Container */
+.pagination-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+/* 🔹 Buttons */
+.pagination-container button {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--mat-sys-surface-container);
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* 🔹 Hover effect */
+.pagination-container button:hover:not(:disabled) {
+  background-color: var(--mat-sys-primary-container);
+  color: var(--mat-sys-primary);
+}
+
+/* 🔹 Active Page */
+.pagination-container button.active {
+  background-color: var(--mat-sys-primary);
+  color: white;
+  font-weight: 600;
+}
+
+/* 🔹 Disabled buttons */
+.pagination-container button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 🔹 Optional: Prev/Next thoda highlight */
+.pagination-container button:first-child,
+.pagination-container button:last-child {
+  font-weight: 600;
+  padding: 0 14px;
+}

@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
   private baseUrl = 'http://localhost:8082/formflow/auth';
+  private oAuthurl = 'http://localhost:8082/formflow/oauth2/authorization'
 
   isLoggedIn = signal(false);
 
@@ -111,6 +112,32 @@ export class AuthService {
         });
       }),
     );
+  }
+
+  googleLogin() {
+    window.location.assign(`${this.oAuthurl}/google`);
+  }
+
+  handleOAuthCallback(): void {
+    const params = new URLSearchParams(window.location.search);
+
+    const accessToken = params.get('accessToken');
+    const refreshToken = params.get('refreshToken');
+
+    if (accessToken) {
+      this.setTokens(accessToken, refreshToken || undefined);
+      this.isLoggedIn.set(true);
+
+      // ✅ Clean URL (important)
+      window.history.replaceState({}, document.title, '/home');
+
+      // ✅ Redirect
+      this.router.navigate(['/home']);
+    }
+  }
+
+  githubLogin() {
+    window.location.assign(`${this.oAuthurl}/github`);
   }
 
   login(payload: any): Observable<any> {

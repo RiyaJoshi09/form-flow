@@ -25,7 +25,7 @@ export class FormService {
       description: rawForm.description,
       published: rawForm.pubilshed,
       settings: rawForm.settings,
-
+      mainParentId: rawForm.mainParentId,
       sections: rawForm.sections.map((section: any, sectionIndex: number) => ({
         id: section.id,
         sectionTitle: section.title,
@@ -105,28 +105,33 @@ export class FormService {
     return data;
   }
 
-  getFormById(id: string): Observable<Form> {
-    return this.http.get<Form>(this.url + 'user/form/' + id);
+  getFormById(id: string): Observable<Form>{
+    return this.http.get<Form>(this.url + 'user/form/' + id); 
   }
 
   getResponseFormById(id: string): Observable<Form> {
     return this.http.get<Form>(this.url + 'public/form/' + id);
   }
 
-  getUniqueUsersByFormId(id: string): Observable<ChartData> {
-    // return this.http.get<ChartData>(this.url + 'api/responses/assignees' + id);
-    return of({ count: 3 });
+  generateForm(promptText : string): Observable<any> {
+    return this.http.post(this.url + 'user/form/generate', {
+      prompt : promptText
+    });
   }
 
-  getAssignedUsersByFormId(id: string): Observable<ChartData> {
-    // return this.http.get<ChartData>(this.url + 'api/responses/respondents' + id);
-    return of({ count: 7 });
+  getUniqueAssigneesByFormId(id: string): Observable<ChartData> {
+    return this.http.get<ChartData>(this.url + 'api/responses/assignees/' + id);
+  }
+
+  getUniqueRespondentsByFormId(id: string): Observable<ChartData> {
+    return this.http.get<ChartData>(this.url + 'api/responses/respondents/' + id);
   }
 
   getAllForms(): Observable<Form[]> {
     return this.http.get<Form[]>(this.url + 'user/allForm');
   }
-  getFormByStatus() { }
+  
+  getFormByStatus() {}
 
   submitResponse(formId: string, rawValue: any) {
     const formData = this.mapToFormData(formId, rawValue);
@@ -178,7 +183,42 @@ export class FormService {
     });
   }
 
-  getSharedForms() {
-    return this.http.get(this.url + 'user/shared-forms');
-  }
+getSharedForms(){
+  return this.http.get(this.url + 'user/shared-forms');
 }
+
+
+// Version Cpntrol APIs
+ 
+getAllVersions(formId: string){
+  return this.http.get(this.url + 'user/version/' + formId);
+}
+
+switchVersion(formId: string, versionId: number) {
+  const url = `${this.url}user/version/switch/${formId}`;
+
+  const body = {
+    versionId: versionId
+  };
+
+  return this.http.patch(url, body, { responseType: 'text' });
+}
+
+
+deleteAllVersions(formId: string) {
+  return this.http.patch(
+    `${this.url}user/version/delete/${formId}`,
+    {} , {responseType: 'text'}
+  );
+}
+  createGroup(data : any) {
+    return this.http.post(this.url + 'group/createGroup', data);
+  }
+
+  getMyGroups() {
+    return this.http.get(this. url + 'group/myGroups');
+  }
+
+}
+
+

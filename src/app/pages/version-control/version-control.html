@@ -1,0 +1,133 @@
+<div class="version-container">
+
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <h1>Form Version Control</h1>
+      <p>Manage and track different versions of your forms.</p>
+    </div>
+
+    <button class="create-btn" [routerLink]="['/edit-form', formId]" [queryParams]="{ mode: 'version', parentId: selectedForm?.mainParentId }">
+   
+      <mat-icon>add</mat-icon>
+      Create New Version
+    </button>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content">
+
+    <!-- LEFT PANEL -->
+    <div class="left-card">
+
+      <div class="current-version">
+        <span class="badge">ACTIVE NOW</span>
+        <h2>Version Id: V{{version_Id}}</h2>
+      </div>
+
+      <div class="info-box">
+        <p class="label">Created At</p>
+        <p>{{ selectedForm?.createdAt | date: 'dd/MM/yyyy hh:mm a' }}</p>
+      </div>
+
+      <div class="info-box">
+        <p class="label">Owner</p>
+        <p>{{ selectedForm?.createdBy }}</p>
+      </div>
+
+      <div class="info-box">
+        <p class="label">Title</p>
+        <p>{{ selectedForm?.title }}</p>
+      </div>
+
+      <div class="info-box">
+        <p class="label">Total Versions</p>
+        <p>{{ versions.length }}</p>
+      </div>
+
+      <!-- <div class="change-log">
+        <p class="label">Change Log</p>
+        <p>
+          Integrated conditional logic for the payment section and updated the branding colors.
+        </p>
+      </div> -->
+
+      <button class="edit-btn" [routerLink]="['/edit-form', formId]" [queryParams]="{ mode: 'version'}">
+        <mat-icon>edit</mat-icon>
+            edit
+      </button>
+
+      <!-- DELETE ALL BUTTON -->
+<button 
+  class="delete-all-btn"
+  [disabled]="versions.length === 0"
+  (click)="deleteAllVersions(selectedForm?.mainParentId)">
+  
+  <mat-icon>delete_forever</mat-icon>
+  Delete All Versions
+</button>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-card">
+
+      <div class="version-header">
+        <h3>Version History</h3>
+        <span class="filter">Recent First</span>
+      </div>
+
+      <!-- Version Item -->
+      <div class="version-item" *ngFor="let v of paginatedVersions">
+
+        <div class="icon">
+          <mat-icon>history</mat-icon>
+        </div>
+
+        <div class="details">
+          <div class="top">
+            <h4>V{{v.versionId}}</h4>
+            <span class="tag" [ngClass]="v.published ? 'active' : 'inactive'">
+  {{ v.published ? 'active' : 'inactive' }}
+</span>
+          </div>
+
+          <p class="desc">{{v.formName}}</p>
+        </div>
+
+        <div class="meta">
+          <p>{{v.createdAt | date: 'dd/MM/yyyy hh:mm a' }}</p>
+          <small>ID: {{v.FormId | slice:31:40}}</small>
+        </div>
+
+        <div class="actions">
+          <button mat-icon-button (click)="viewVersion(v.FormId)">
+            <mat-icon>visibility</mat-icon>
+          </button>
+
+          <button class="restore-btn" (click)="restoreVersion(v.FormId, v.versionId, v.published)">
+            Restore
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination">
+  <button (click)="prevPage()" [disabled]="currentPage === 1">&lt;</button>
+
+  <span>
+  Page {{ currentPage }} of {{ totalPages }}
+</span>
+
+  <button 
+  (click)="nextPage()" 
+  [disabled]="currentPage * itemsPerPage >= versions.length">
+  &gt;
+</button>
+</div>
+
+    </div>
+
+  </div>
+</div>
+

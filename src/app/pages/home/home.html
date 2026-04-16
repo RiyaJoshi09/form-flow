@@ -35,13 +35,20 @@
           <span>Templates</span>
         </li>
         <li (click)="activesection = 'SharedWithMe'" [class.active]="activesection == 'SharedWithMe'">
-          <mat-icon>history</mat-icon>
-          <span>Shared With Me</span>
+          <mat-icon>inbox</mat-icon>
+          <span>My Inbox</span>
         </li>
+
+        <li (click)="activesection = 'ManageGroups'" [class.active]="activesection == 'ManageGroups'">
+          <mat-icon>people</mat-icon>
+          <span>Manage Groups</span>
+        </li>
+
         <li (click)="activesection = 'Trash'" [class.active]="activesection == 'Trash'">
           <mat-icon>delete</mat-icon>
           <span>Trash</span>
         </li>
+        
       </ul>
     </div>
     <!--maincontent-->
@@ -57,6 +64,13 @@
       @if(activesection == 'SharedWithMe') {
         <app-shared-with-me></app-shared-with-me>
       }
+
+      @if(activesection == 'ManageGroups') {
+        <app-groups></app-groups>
+      }
+
+     
     </div>
   </div>
+  <app-generate-form></app-generate-form>
 </div>

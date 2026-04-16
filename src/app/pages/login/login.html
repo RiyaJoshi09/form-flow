@@ -5,7 +5,7 @@
       <p class="text-sm text-slate-500 mt-1">Login to your account</p>
     </div>
 
-    <form (ngSubmit)="onLogin()" class="flex flex-col gap-5">
+    <form (ngSubmit)="onLogin()" class="flex flex-col">
       <mat-form-field appearance="outline" class="w-full">
         <mat-label>Username</mat-label>
         <input matInput type="text" [(ngModel)]="username" name="username" required />
@@ -30,6 +30,8 @@
         Login
       </button>
     </form>
+    <app-google-auth-button></app-google-auth-button>
+    <!-- <app-github-auth-button></app-github-auth-button> -->
     <div class="flex justify-center items-start mt-6">
       <a
         routerLink="/forgot-password"

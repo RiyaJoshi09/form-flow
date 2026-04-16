@@ -1,0 +1,248 @@
+.groups-container {
+    padding: 20px;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header input {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--mat-sys-outline);
+    background: var(--mat-sys-surface);
+    color: var(--mat-sys-on-surface);
+}
+
+/* Section */
+.section {
+    margin-bottom: 25px;
+}
+
+/* Cards */
+.group-cards {
+    margin-top: 25px;
+    display: flex;
+    gap: 15px;
+}
+
+.group-card {
+    flex: 1;
+    background: var(--mat-sys-surface-container);
+    padding: 15px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.group-card:hover {
+    transform: translateY(-2px);
+}
+
+.group-card.selected {
+    border: 2px solid var(--mat-sys-primary);
+}
+
+/* Card Content */
+
+
+.group-card h4 {
+    margin: 5px 0;
+}
+
+.group-card p {
+    font-size: 13px;
+    color: var(--mat-sys-on-surface-variant);
+}
+
+.members {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--mat-sys-on-surface-variant);
+}
+
+/* Details */
+.group-details {
+    display: flex;
+    justify-content: space-between;
+    background: var(--mat-sys-surface-container);
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.meta {
+    margin-top: 10px;
+    display: flex;
+    gap: 15px;
+    font-size: 13px;
+}
+
+/* Buttons */
+.btn-primary {
+    background: var(--mat-sys-primary);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-outline {
+    border: 1px solid var(--mat-sys-outline);
+    background: transparent;
+    padding: 8px 16px;
+    border-radius: 8px;
+    margin-right: 10px;
+}
+
+/* Table */
+.table-section {
+    background: var(--mat-sys-surface-container);
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.table {
+    width: 100%;
+}
+
+.table-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    padding: 12px;
+    border-bottom: 1px solid var(--mat-sys-outline);
+}
+
+.header-row {
+    font-weight: 600;
+    color: var(--mat-sys-on-surface-variant);
+}
+
+.user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Roles */
+.role {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.role.admin {
+    background: #e0d4ff;
+}
+
+.role.member {
+    background: #d4f5e9;
+}
+
+/* Icon button */
+.icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* Member header */
+.member-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.member-header p {
+    margin: 5px 0 0;
+    font-size: 13px;
+    color: var(--mat-sys-on-surface-variant);
+}
+
+/* Buttons container */
+.member-actions {
+    display: flex;
+    gap: 10px;
+}
+
+#allGroups {
+    margin-bottom: 25px;
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.table-header input {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--mat-sys-outline);
+    background: var(--mat-sys-surface);
+    color: var(--mat-sys-on-surface);
+}
+
+.pagination {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 15px;
+    gap: 5px;
+}
+
+.pagination button {
+    padding: 5px 10px;
+    border-radius: 6px;
+    border: none;
+    background: var(--mat-sys-surface);
+    cursor: pointer;
+}
+
+.pagination .active {
+    background: var(--mat-sys-primary);
+    color: white;
+}
+
+.pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Container */
+.group-icon {
+    width: 50px;
+    height: 50px;
+}
+
+/* Image (NO background, NO circle) */
+.group-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;   /* ✅ slight rounded rectangle (optional) */
+    background: none;
+    background-color: none;
+}
+
+/* Icon background ONLY when no image */
+.icon-bg {
+    width: 100%;
+    height: 100%;
+    background-color: var(--mat-sys-primary);   /* pink */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;   /* rectangle look */
+}
+
+/* Icon */
+.icon-bg mat-icon {
+    color: var(--mat-sys-surface);   /* white */
+    font-size: 24px;
+}
