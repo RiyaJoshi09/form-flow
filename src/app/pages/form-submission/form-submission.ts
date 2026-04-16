@@ -275,9 +275,9 @@ export class FormSubmission {
     if (this.formGroup.valid) {
       this.isSubmitting = true;
 
-      // const submissionData = {
-      //   submittedBy: this.authService.getCurrentUser()
-      // }
+      const submissionData = {
+        submittedBy: this.authService.getCurrentUser()
+      }
 
       this.formService.submitResponse(this.formStructure.id, this.formGroup.value).subscribe({
         next: (res) => {

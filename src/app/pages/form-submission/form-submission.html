@@ -40,7 +40,7 @@
     @if (formStructure?.settings?.isPrivate) {
     <div class=" p-4 flex justify-between items-center border-b">
       <span class="text-sm">Logged in as: <strong>{{ currentUser }}</strong></span>
-      <button mat-button color="warn" (click)="logoutAndSwitch()">Switch Account</button>
+      <button mat-button color="primary" class="cursor-pointer" (click)="logoutAndSwitch()">Switch Account</button>
     </div>
     }
 

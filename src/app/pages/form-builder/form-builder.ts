@@ -27,6 +27,7 @@ import { ToastrService } from 'ngx-toastr';
 import { FormSettingsDialog } from '../../components/form-settings-dialog/form-settings-dialog';
 import { ConditionalLogicService } from '../../services/conditional-logic-service';
 import { ConditionalLogic } from '../../components/conditional-logic/conditional-logic';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-form-builder',
@@ -48,6 +49,7 @@ import { ConditionalLogic } from '../../components/conditional-logic/conditional
     DragDropModule,
     MatMenuModule,
     ThemeSelector,
+    MatTooltipModule,
   ],
   templateUrl: './form-builder.html',
   styleUrl: './form-builder.css',
@@ -148,7 +150,7 @@ export class FormBuilder {
 
   openSettings() {
     const dialogRef = this.dialog.open(FormSettingsDialog, {
-      width: '800px',
+      width: '400px',
       data: { ...this.formSettings }
     });
 
