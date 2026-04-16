@@ -45,6 +45,9 @@ import { Loader } from '../../components/loader/loader';
   styleUrl: './form-submission.css',
 })
 export class FormSubmission {
+  score = 0;
+totalMarks = 0;
+showScore = false;
   formGroup: FormGroup = new FormGroup({});
   formStructure: any;
   isReadOnly: boolean = false;
@@ -213,40 +216,52 @@ export class FormSubmission {
     }
   }
 
-  submitResponse() {
-    if (this.isReadOnly) {
-      this.toastr.warning('This is a preview. Data is not saved to the database.');
-      return;
-    }
-
-    if (this.formGroup.valid) {
-      this.isSubmitting = true;
-
-      // const submissionData = {
-      //   submittedBy: this.authService.getCurrentUser()
-      // }
-
-      this.formService.submitResponse(this.formStructure.id, this.formGroup.value).subscribe({
-        next: (res) => {
-          console.log(res);
-          this.toastr.success('Response saved successfully!');
-          this.formGroup.reset();
-          this.isSubmitting = false;
-          this.isSubmitted = true;
-          localStorage.removeItem(`form_draft_${this.formStructure.id}`);
-        },
-        error: (err) => {
-          console.error('Submission failed', err);
-          this.toastr.error('Could not save response. Please try again.');
-          this.isSubmitting = false;
-        },
-      });
-    } else {
-      this.formGroup.markAllAsTouched();
-      this.toastr.error('Please fix the errors before submitting.');
-    }
+submitResponse() {
+  if (this.isReadOnly) {
+    this.toastr.warning('This is a preview. Data is not saved to the database.');
+    return;
   }
+  if (this.formGroup.valid) {
+    this.isSubmitting = true;
 
+    this.formService.submitResponse(
+      this.formStructure.id,
+      this.formGroup.value
+    ).subscribe({
+
+      next: (res: any) => {
+        console.log(res);
+
+        this.toastr.success('Response saved successfully!');
+
+        // backend score
+        this.score = res.score || 0;
+
+        // show only if quiz + enabled
+        this.showScore =
+          this.formStructure?.settings?.isQuiz &&
+          this.formStructure?.settings?.scoreShow;
+
+        this.formGroup.reset();
+        this.isSubmitting = false;
+        this.isSubmitted = true;
+
+        localStorage.removeItem(`form_draft_${this.formStructure.id}`);
+      },
+
+      error: (err) => {
+        console.error(err);
+        this.toastr.error('Could not save response.');
+        this.isSubmitting = false;
+      }
+
+    });
+
+  } else {
+    this.formGroup.markAllAsTouched();
+    this.toastr.error('Please fix the errors before submitting.');
+  }
+}
   get currentUser(): string | null {
     return this.authService.getCurrentUser();
   }
