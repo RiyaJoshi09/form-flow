@@ -1,0 +1,48 @@
+.dialog-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    width: 100%;
+    max-width: 500px;
+}
+
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.actions button {
+    padding: 8px 16px;
+    border-radius: 6px;
+    background: var(--mat-sys-primary);
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--mat-sys-outline);
+    background: var(--mat-sys-surface);
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.toggle-field {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    align-items: center;
+    width: 100%;
+}

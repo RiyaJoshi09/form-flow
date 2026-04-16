@@ -18,7 +18,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const toastr = inject(ToastrService);
 
   const skipUrls = ['/login', '/refresh', '/signup', '/forgotPassword'];
-  const skipLoadingUrls = ['/usernameCheck'];
+  const skipLoadingUrls = ['/usernameCheck', '/generate'];
 
   if (skipLoadingUrls.some((url) => req.url.includes(url))) {
     return next(req);

@@ -106,6 +106,12 @@ export class FormService {
     return this.http.get<Form>(this.url + 'public/form/' + id);
   }
 
+  generateForm(promptText : string): Observable<any> {
+    return this.http.post(this.url + 'user/form/generate', {
+      prompt : promptText
+    });
+  }
+
   getUniqueAssigneesByFormId(id: string): Observable<ChartData> {
     return this.http.get<ChartData>(this.url + 'api/responses/assignees/' + id);
   }
@@ -191,10 +197,21 @@ switchVersion(formId: string, versionId: number) {
   return this.http.patch(url, body, { responseType: 'text' });
 }
 
+
 deleteAllVersions(formId: string) {
   return this.http.patch(
     `${this.url}user/version/delete/${formId}`,
     {} , {responseType: 'text'}
   );
 }
+  createGroup(data : any) {
+    return this.http.post(this.url + 'group/createGroup', data);
+  }
+
+  getMyGroups() {
+    return this.http.get(this. url + 'group/myGroups');
+  }
+
 }
+
+
