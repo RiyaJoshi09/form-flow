@@ -104,6 +104,11 @@
   cursor: pointer;
 }
 
+.edit-btn:hover {
+  background-color: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}
+
 /* RIGHT PANEL */
 .right-card {
   width: 70%;
@@ -275,4 +280,39 @@
 .tag.inactive {
   background-color: #f8d7da;
   color: #dc3545;
+}
+
+/* DELETE ALL BUTTON (LEFT PANEL STYLE) */
+.delete-all-btn {
+  margin-top: 12px;
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+
+  background-color: var(--mat-sys-error-container);
+  color: var(--mat-sys-error);
+
+  cursor: pointer;
+  font-weight: 600;
+
+  transition: 0.2s ease;
+}
+
+/* HOVER */
+.delete-all-btn:hover {
+  background-color: var(--mat-sys-error);
+  color: var(--mat-sys-on-error);
+}
+
+/* DISABLED */
+.delete-all-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }

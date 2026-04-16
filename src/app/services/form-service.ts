@@ -190,4 +190,11 @@ switchVersion(formId: string, versionId: number) {
 
   return this.http.patch(url, body, { responseType: 'text' });
 }
+
+deleteAllVersions(formId: string) {
+  return this.http.patch(
+    `${this.url}user/version/delete/${formId}`,
+    {} , {responseType: 'text'}
+  );
+}
 }

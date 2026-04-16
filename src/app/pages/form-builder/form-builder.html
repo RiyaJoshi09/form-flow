@@ -10,10 +10,10 @@
       <button mat-icon-button (click)="openPreview()">
         <mat-icon class="text-sm">visibility</mat-icon>
       </button>
-      @if(mode === 'version'){
+      @if(mode === 'version'&& parentid) {
          <button mat-button color="primary" class="btn-primary action-button" (click)="saveVersion(false)">
         <mat-icon>save</mat-icon>
-        <span>Save Version</span>
+        <span>Publish Version</span>
       </button>
       }
       @else{
