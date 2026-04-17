@@ -59,7 +59,7 @@ export class FormBuilder {
   formDescription: string = '';
   formSections: any[] = [
     {
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       title: 'Add Section Title',
       fields: [],
     },
@@ -125,7 +125,7 @@ export class FormBuilder {
         this.formDescription = form.description;
         this.formSettings = form.settings;
         this.formSections = form.sections.map((section: any) => ({
-          id: section.id ? section.id.toString() : Date.now().toString(),
+          id: section.id ? section.id.toString() : crypto.randomUUID(),
           title: section.sectionTitle,
           sectionLogic: section.sectionLogic,
           fields: section.fields
