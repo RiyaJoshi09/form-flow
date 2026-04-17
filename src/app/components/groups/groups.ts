@@ -216,7 +216,7 @@ export class Groups implements OnInit {
     this.dialogRef.afterClosed().subscribe((result: boolean) => {
       if (!result) return;
 
-      const payload = [member.username];
+      const payload = [member.email];
 
       this.formService.removeUsersFromGroup(this.selectedGroup.groupId, payload)
         .subscribe({
