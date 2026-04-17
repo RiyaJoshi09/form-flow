@@ -275,6 +275,7 @@ export class Groups implements OnInit {
     } else {
       this.selectedGroupDetails = group;
       this.isSidebarOpen = true;
+      this.selectGroup(group);
     }
   }
   
