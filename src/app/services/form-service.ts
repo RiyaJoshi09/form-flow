@@ -5,7 +5,7 @@ import { Observable, of } from 'rxjs';
 import { ThemeService } from './theme-service';
 import { ChartData } from '../interfaces/chart-data-response-schema';
 import { FormResponseData } from '../interfaces/form-response-schema';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
