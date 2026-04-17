@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormSubmission } from '../form-submission/form-submission';
 import { ToastrService } from 'ngx-toastr';
+import { DeleteDialog } from '../../components/delete-dialog/delete-dialog';
 
 
 @Component({
@@ -25,7 +26,7 @@ export class VersionControl {
    totalPages: number = 0;
    paginatedVersions: any[] = [];
 
-  constructor(private formService: FormService, private cd:ChangeDetectorRef, private route: ActivatedRoute, private toastr: ToastrService, private dialog: MatDialog ) {}
+  constructor(private formService: FormService, private cd:ChangeDetectorRef, private route: ActivatedRoute, private toastr: ToastrService, private dialog: MatDialog, private router: Router ) {}
 
   ngOnInit(){
      this.formId= this.route.snapshot.paramMap.get('id')!;
@@ -147,4 +148,28 @@ prevPage() {
     this.updatePagination();
   }
 }
+
+deleteAllVersions(parentId: string){
+  if (!parentId) return;
+
+  const dialogRef = this.dialog.open(DeleteDialog, {
+    width: '350px'
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      this.formService.deleteAllVersions(parentId).subscribe({
+        next: () => {
+          // success
+          this.router.navigate(['/home']);
+        },
+        error: (err) => {
+          console.error(err);
+          alert('Failed to delete versions');
+        }
+      });
+    }
+  });
+}
+
 }

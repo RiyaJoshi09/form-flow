@@ -47,14 +47,7 @@
 }
 
 /* Card Content */
-.group-icon {
-    background: var(--mat-sys-primary);
-    color: white;
-    padding: 10px;
-    border-radius: 8px;
-    width: fit-content;
-    margin-bottom: 10px;
-}
+
 
 .group-card h4 {
     margin: 5px 0;
@@ -219,4 +212,37 @@
 .pagination button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+/* Container */
+.group-icon {
+    width: 50px;
+    height: 50px;
+}
+
+/* Image (NO background, NO circle) */
+.group-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;   /* ✅ slight rounded rectangle (optional) */
+    background: none;
+    background-color: none;
+}
+
+/* Icon background ONLY when no image */
+.icon-bg {
+    width: 100%;
+    height: 100%;
+    background-color: var(--mat-sys-primary);   /* pink */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;   /* rectangle look */
+}
+
+/* Icon */
+.icon-bg mat-icon {
+    color: var(--mat-sys-surface);   /* white */
+    font-size: 24px;
 }

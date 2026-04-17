@@ -1,0 +1,188 @@
+/* ── Wrapper ─────────────────────────────────────────── */
+.dialog-wrapper {
+  background: var(--mat-sys-surface);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+/* ── Header ──────────────────────────────────────────── */
+.dialog-header {
+  padding: 20px 24px;
+  background: var(--mat-sys-primary);
+}
+
+.dialog-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--mat-sys-on-primary);
+}
+
+.title-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--mat-sys-on-primary);
+  flex-shrink: 0;
+}
+
+.dialog-subtitle {
+  margin: 6px 0 0;
+  font-size: 0.85rem;
+  color: var(--mat-sys-on-primary);
+  opacity: 0.75;
+}
+
+/* ── Content ─────────────────────────────────────────── */
+.dialog-content {
+  padding: 20px 24px 8px !important;
+}
+
+/* ── Chips ───────────────────────────────────────────── */
+.chips-label {
+  margin: 0 0 8px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.chip {
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s ease;
+  background: var(--mat-sys-surface-container);
+  color: var(--mat-sys-primary);
+}
+
+.chip:hover {
+  background: var(--mat-sys-surface-container-high);
+}
+
+/* ── Textarea ────────────────────────────────────────── */
+.prompt-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--mat-sys-outline);
+  background: var(--mat-sys-surface-container);
+  color: var(--mat-sys-on-surface);
+  font-size: 0.875rem;
+  resize: none;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+  font-family: inherit;
+  outline: none;
+}
+
+.prompt-textarea::placeholder {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.prompt-textarea:focus {
+  border-color: var(--mat-sys-primary);
+  background: var(--mat-sys-surface);
+  box-shadow: 0 0 0 1px var(--mat-sys-primary);
+}
+
+.prompt-textarea:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Textarea meta row ───────────────────────────────── */
+.textarea-meta {
+  margin-top: 6px;
+  padding: 0 4px;
+}
+
+.hint,
+.char-count {
+  font-size: 0.75rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.hint-icon {
+    font-size: 1rem;
+}
+
+/* ── Loading banner ──────────────────────────────────── */
+.loading-banner {
+  margin-top: 16px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--mat-sys-surface-container);
+  /* border: 1px solid var(--mat-sys-outline); */
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  animation: pulse 1.2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.dot--indigo { background: var(--mat-sys-primary);           animation-delay: 0ms; }
+.dot--purple { background: var(--mat-sys-on-surface-variant); animation-delay: 150ms; }
+.dot--pink   { background: var(--mat-sys-primary);           animation-delay: 300ms; opacity: 0.6; }
+
+.loading-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--mat-sys-on-surface);
+}
+
+/* ── Actions ─────────────────────────────────────────── */
+.dialog-actions {
+  padding: 12px 24px !important;
+  margin: 0 !important;
+}
+
+.cancel-btn {
+  color: var(--mat-sys-on-surface-variant) !important;
+  font-size: 0.875rem !important;
+  border-radius: 8px !important;
+}
+
+.cancel-btn:hover:not(:disabled) {
+  background: var(--mat-sys-surface-container-high) !important;
+}
+
+.cancel-btn:disabled {
+  opacity: 0.4;
+}
+
+/* ── Generate button ─────────────────────────────────── */
+.generate-btn {
+  min-width: 130px;
+  padding: 8px 20px !important;
+  border-radius: 10px !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  color: var(--mat-sys-on-primary) !important;
+  background: var(--mat-sys-primary) !important;
+  transition: opacity 0.2s !important;
+}
+
+.generate-btn:hover:not(:disabled) {
+  opacity: 0.9 !important;
+}
+
+.generate-btn:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}

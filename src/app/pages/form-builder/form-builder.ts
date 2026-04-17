@@ -26,6 +26,9 @@ import { BuilderCheckBox } from '../../components/builder-cards/builder-check-bo
 import { ToastrService } from 'ngx-toastr';
 import { FormSettingsDialog } from '../../components/form-settings-dialog/form-settings-dialog';
 import { FormSettingsMarks } from '../../components/form-settings-marks/form-settings-marks';
+import { ConditionalLogicService } from '../../services/conditional-logic-service';
+import { ConditionalLogic } from '../../components/conditional-logic/conditional-logic';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-form-builder',
@@ -47,6 +50,7 @@ import { FormSettingsMarks } from '../../components/form-settings-marks/form-set
     DragDropModule,
     MatMenuModule,
     ThemeSelector,
+    MatTooltipModule,
   ],
   templateUrl: './form-builder.html',
   styleUrl: './form-builder.css',
@@ -78,7 +82,9 @@ export class FormBuilder {
     private themeService: ThemeService,
     private cd: ChangeDetectorRef,
     private toastr: ToastrService,
-  ) {}
+    private conditionalLogicService: ConditionalLogicService,
+  ) { }
+
   elements = [
     { type: 'TEXT', label: 'Text Input' },
     { type: 'CHECKBOX', label: 'Checkbox' },
@@ -122,6 +128,7 @@ export class FormBuilder {
         this.formSections = form.sections.map((section: any) => ({
           id: section.id ? section.id.toString() : Date.now().toString(),
           title: section.sectionTitle,
+          sectionLogic: section.sectionLogic,
           fields: section.fields
             .sort((a: any, b: any) => a.fieldOrder - b.fieldOrder)
             .map((field: any, index: number) => ({
@@ -135,8 +142,11 @@ export class FormBuilder {
               })),
               correctAnswer: field.fieldConfig.correctAnswer || '',
               placeholder: field.fieldConfig.placeholder || '',
-              color: field.fieldStyle.color ||'#000000',
-              fontSize: field.fieldStyle.fontSize ||'12px',
+              fieldLogic: field.fieldLogic || {
+                enabled: false
+              },
+              color: field.fieldStyle.color || '#000000',
+              fontSize: field.fieldStyle.fontSize || '12px',
               bold: field.fieldStyle.bold || false,
               italic: field.fieldStyle.italics || false,
               underline: field.fieldStyle.underline || false,
@@ -154,7 +164,7 @@ export class FormBuilder {
 
   openSettings() {
     const dialogRef = this.dialog.open(FormSettingsDialog, {
-      width: '800px',
+      width: '400px',
       data: { ...this.formSettings }
     });
 
@@ -198,12 +208,20 @@ export class FormBuilder {
     if (this.editingFormId) {
       this.formService.updateForm(formToSave).subscribe({
         next: (response) => {
-          if (!isPublished) {
+          
+          if(this.mode === 'version') {
+            this.toastr.success('Version Updated Successfully to Database!');
+            this.router.navigate(['/versions', this.editingFormId]);
+          }
+          else {   
+            if (!isPublished) {
             this.toastr.success('Form Updated Successfully to Database!');
           } else {
             this.toastr.success('Form is Published!');
+          }          
+            this.router.navigate(['/']);
           }
-          this.router.navigate(['/']);
+          
         },
         error: (err) => {
           console.error(err);
@@ -234,7 +252,7 @@ export class FormBuilder {
 
   addSection() {
     this.formSections.push({
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       title: `Add Section Title`,
       fields: [],
     });
@@ -253,10 +271,10 @@ export class FormBuilder {
 
     const clonedSection = JSON.parse(JSON.stringify(originalSection));
 
-    clonedSection.id = Date.now().toString();
+    clonedSection.id = crypto.randomUUID();
     clonedSection.title = 'Copy of ' + clonedSection.title;
     clonedSection.fields.forEach((field: any, index: number) => {
-      field.id = Date.now().toString() + index;
+      field.id = crypto.randomUUID();
     });
 
     this.formSections.splice(sectionIndex + 1, 0, clonedSection);
@@ -266,48 +284,82 @@ export class FormBuilder {
     return this.formSections.map((s) => s.id);
   }
 
-onDrop(event: CdkDragDrop<any[]>, sectionIndex: number) {
+// onDrop(event: CdkDragDrop<any[]>, sectionIndex: number) {
 
-  // Reorder inside same section
-  if (event.previousContainer === event.container) {
-    moveItemInArray(
-      event.container.data,
-      event.previousIndex,
-      event.currentIndex
-    );
-    return;
-  }
+//   // Reorder inside same section
+//   if (event.previousContainer === event.container) {
+//     moveItemInArray(
+//       event.container.data,
+//       event.previousIndex,
+//       event.currentIndex
+//     );
+//     return;
+//   }
 
-  // Sidebar → Canvas
-  if (event.previousContainer.id === 'sidebar') {
+//   // Sidebar → Canvas
+//   if (event.previousContainer.id === 'sidebar') {
 
-    // IMPORTANT: Deep clone dragged item
-    const draggedItem = JSON.parse(
-      JSON.stringify(event.item.data)
-    );
+//     // IMPORTANT: Deep clone dragged item
+//     const draggedItem = JSON.parse(
+//       JSON.stringify(event.item.data)
+//     );
 
-    const isQuiz = this.formSettings?.isQuiz;
+//     const isQuiz = this.formSettings?.isQuiz;
 
-    const newField: any = {
-      id: Date.now().toString(),
-      type: draggedItem.type,
-      label: draggedItem.label,
-      validations: {},
-      placeholder: '',
-      options: [],
-      color: '#000000',
-      fontSize: '12px',
-      bold: false,
-      italic: false,
-      underline: false,
-    };
+//     const newField: any = {
+//       id: Date.now().toString(),
+//       type: draggedItem.type,
+//       label: draggedItem.label,
+//       validations: {},
+//       placeholder: '',
+//       options: [],
+//       color: '#000000',
+//       fontSize: '12px',
+//       bold: false,
+//       italic: false,
+//       underline: false,
+//     };
 
-    // Assign options ONLY for correct types
-    if (['CHECKBOX', 'RADIO', 'DROPDOWN'].includes(newField.type)) {
-      newField.options = [
-        { label: 'Option 1', isCorrect: false },
-        { label: 'Option 2', isCorrect: false }
-      ];
+//     // Assign options ONLY for correct types
+//     if (['CHECKBOX', 'RADIO', 'DROPDOWN'].includes(newField.type)) {
+//       newField.options = [
+//         { label: 'Option 1', isCorrect: false },
+//         { label: 'Option 2', isCorrect: false }
+//       ];
+      
+  onDrop(event: CdkDragDrop<any[]>, sectionIndex: number) {
+    if (event.previousContainer === event.container) {
+      // Rearrange
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else if (event.previousContainer.id === 'sidebar') {
+      //Sidebar to Canvas
+      const field = event.previousContainer.data[event.previousIndex];
+
+      const newField = {
+        id: crypto.randomUUID(),
+        type: field.type,
+        label: field.label,
+        validations: {},
+        options: ['CHECKBOX', 'RADIO', 'DROPDOWN'].includes(field.type) ? ['Option 1'] : [],
+        placeholder: field.placeholder || '',
+        fieldLogic: {
+          enabled: false
+        },
+        color: '#000000',
+        fontSize: '12px',
+        bold: false,
+        italic: false,
+        underline: false,
+      };
+
+      this.formSections[sectionIndex].fields.splice(event.currentIndex, 0, newField);
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
     }
 
     if (isQuiz) {
@@ -349,10 +401,19 @@ onDrop(event: CdkDragDrop<any[]>, sectionIndex: number) {
   }
 
   editField(sectionIndex: number, fieldIndex: number) {
-    // open edit dialog box and edit the copy of it until saved
+    const field = this.formSections[sectionIndex].fields[fieldIndex];
+
+    if (!field.fieldLogic) {
+      field.fieldLogic = {
+        enabled: false
+      };
+    }
+
     const fieldToEdit = JSON.parse(
-      JSON.stringify(this.formSections[sectionIndex].fields[fieldIndex]),
+      JSON.stringify(field),
     );
+
+    this.conditionalLogicService.updateFormState({ sections: this.formSections });
 
     const dialogRef = this.dialog.open(EditField, {
       width: '400px',
@@ -369,6 +430,7 @@ onDrop(event: CdkDragDrop<any[]>, sectionIndex: number) {
         this.cd.detectChanges();
       }
     });
+    this.cd.detectChanges();
   }
 
   duplicateField(sectionIndex: number, fieldIndex: number) {
@@ -376,7 +438,7 @@ onDrop(event: CdkDragDrop<any[]>, sectionIndex: number) {
 
     const clonedField = JSON.parse(JSON.stringify(originalField));
 
-    clonedField.id = Date.now().toString();
+    clonedField.id = crypto.randomUUID();
 
     this.formSections[sectionIndex].fields.splice(fieldIndex + 1, 0, clonedField);
   }
@@ -415,6 +477,13 @@ onDrop(event: CdkDragDrop<any[]>, sectionIndex: number) {
             bold: field.bold,
             italics: field.italics,
             underline: field.underline
+          },
+          fieldLogic: {
+            enabled: field.fieldLogic.enabled,
+            sourceFieldId: field.fieldLogic.sourceFieldId,
+            operator: field.fieldLogic.operator,
+            value: field.fieldLogic.value,
+            action: field.fieldLogic.action
           }
         })),
       })),

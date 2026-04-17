@@ -15,7 +15,7 @@ export class FormService {
   constructor(
     private http: HttpClient,
     private themeService: ThemeService,
-  ) {}
+  ) { }
 
 mapToFormSchema(rawForm: any): Form {
   return {
@@ -76,11 +76,18 @@ mapToFormSchema(rawForm: any): Form {
             italic: field.italic,
             underline: field.underline,
           },
-        };
-      }),
-    })),
-  };
-}
+          fieldLogic: {
+            enabled: field.fieldLogic.enabled,
+            sourceFieldId: field.fieldLogic.sourceFieldId,
+            operator: field.fieldLogic.operator,
+            value: field.fieldLogic.value,
+            action: field.fieldLogic.action
+          }
+        })),
+      })),
+    };
+  }
+
   private mapToFormData(formId: string, rawValue: any): FormData {
     const formData = new FormData();
     const cleanedResponse: any = {};
@@ -131,6 +138,12 @@ mapToFormSchema(rawForm: any): Form {
 
   getResponseFormById(id: string): Observable<Form> {
     return this.http.get<Form>(this.url + 'public/form/' + id);
+  }
+
+  generateForm(promptText : string): Observable<any> {
+    return this.http.post(this.url + 'user/form/generate', {
+      prompt : promptText
+    });
   }
 
   getUniqueAssigneesByFormId(id: string): Observable<ChartData> {
@@ -190,12 +203,12 @@ mapToFormSchema(rawForm: any): Form {
     return this.http.get(this.url + 'user/access/' + form_id);
   }
 
-getUsernameByEmail(email: string) {
-  return this.http.get(`${this.url}user/username-by-email`, {
-    params: { email: email },
-    responseType: 'text'   // 🔥 important
-  });
-}
+  getUsernameByEmail(email: string) {
+    return this.http.get(`${this.url}user/username-by-email`, {
+      params: { email: email },
+      responseType: 'text'   // 🔥 important
+    });
+  }
 
 getSharedForms(){
   return this.http.get(this.url + 'user/shared-forms');
@@ -218,6 +231,13 @@ switchVersion(formId: string, versionId: number) {
   return this.http.patch(url, body, { responseType: 'text' });
 }
 
+
+deleteAllVersions(formId: string) {
+  return this.http.patch(
+    `${this.url}user/version/delete/${formId}`,
+    {} , {responseType: 'text'}
+  );
+}
   createGroup(data : any) {
     return this.http.post(this.url + 'group/createGroup', data);
   }
@@ -225,6 +245,7 @@ switchVersion(formId: string, versionId: number) {
   getMyGroups() {
     return this.http.get(this. url + 'group/myGroups');
   }
+
 }
 
 

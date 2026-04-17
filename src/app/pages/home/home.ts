@@ -8,23 +8,14 @@ import { ThemeService } from '../../services/theme-service';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { SharedWithMe } from '../../components/shared-with-me/shared-with-me';
+import { GenerateForm } from "../../components/generate-form/generate-form";
 import { Groups } from "../../components/groups/groups";
-
+import { MatDialog } from '@angular/material/dialog';
+import { LogoutDialog } from '../../components/dialogs/logout-dialog/logout-dialog';
 
 @Component({
   selector: 'app-home',
-  imports: [
-    MatIconModule,
-    CommonModule,
-    MyForms,
-    RouterLink,
-    RouterOutlet,
-    ThemeSelector,
-    MatMenuModule,
-    MatButtonModule,
-    SharedWithMe,
-    Groups
-],
+  imports: [MatIconModule, CommonModule, MyForms, RouterLink, RouterOutlet, ThemeSelector, MatMenuModule, MatButtonModule, SharedWithMe, GenerateForm, Groups],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -34,6 +25,7 @@ export class Home {
   constructor(
     private themeService: ThemeService,
     private router: Router,
+    private dialog: MatDialog, 
   ) {}
 
   ngOnInit() {
@@ -45,8 +37,10 @@ export class Home {
     this.themeService.loadTheme();
   }
   logout() {
-    if (confirm('Are you sure you want to logout?')) {
-      this.router.navigate(['/logout']);
-    }
+    this.dialog.open(LogoutDialog, { width: '360px' })
+    .afterClosed()
+    .subscribe(confirmed => {
+      if (confirmed) this.router.navigate(['/logout']);
+    });
   }
 }
