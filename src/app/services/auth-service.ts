@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap, throwError } from 'rxjs';
+import { Observable, catchError, finalize, map, of, shareReplay, tap, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment.development';
 
@@ -8,8 +8,16 @@ import { environment } from '../../environments/environment.development';
   providedIn: 'root',
 })
 export class AuthService {
-  private baseUrl = environment.backendUrl + 'auth';
-  private oAuthurl = environment.backendUrl + 'oauth2/authorization'
+
+//   private baseUrl = 'https://formflow-production-eb1a.up.railway.app/formflow/auth';
+// private oAuthurl = 'https://formflow-production-eb1a.up.railway.app/formflow/oauth2/authorization';
+
+private baseUrl='http://localhost:8082/formflow/auth';
+private oAuthurl='http://localhost:8082/formflow/oauth2/authorization';
+
+  // private baseUrl = environment.backendUrl + 'auth';
+  // private oAuthurl = environment.backendUrl + 'oauth2/authorization';
+  private refreshSessionRequests: Observable<boolean> | null = null;
 
   isLoggedIn = signal(false);
 
@@ -114,6 +122,39 @@ export class AuthService {
       }),
     );
   }
+  initializeAuthSession(): Observable<boolean> {
+    const accessToken = this.getAccessToken();
+    if (accessToken) {
+      this.isLoggedIn.set(true);
+      return of(true);
+    }
+
+    const refreshToken = this.getRefreshToken();
+    if (!refreshToken) {
+      this.isLoggedIn.set(false);
+      return of(false);
+    }
+
+    if (!this.refreshSessionRequests) {
+      this.refreshSessionRequests = this.refreshToken().pipe(
+        tap(() => this.isLoggedIn.set(true)),
+        map(() => true),
+        catchError(() => {
+          this.clearTokens();
+          this.isLoggedIn.set(false);
+          return of(false);
+        }),
+        finalize(() => {
+          this.refreshSessionRequests = null;
+        }),
+        shareReplay(1),
+      );
+    }
+
+    return this.refreshSessionRequests;
+}
+
+
 
   googleLogin() {
     window.location.assign(`${this.oAuthurl}/google`);

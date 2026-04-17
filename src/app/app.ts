@@ -12,7 +12,7 @@ import { LoaderService } from './services/loader-service';
 })
 export class App {
   constructor(private authService: AuthService, private loaderService :LoaderService) {
-    this.authService.checkAuthStatus();
+    this.authService.initializeAuthSession().subscribe();
   }
   show = computed(() => this.loaderService.isLoading());
 
