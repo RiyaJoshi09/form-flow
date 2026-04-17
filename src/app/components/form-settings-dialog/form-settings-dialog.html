@@ -26,11 +26,22 @@
       <input matInput type="number" [(ngModel)]="data.maxResponses">
     </mat-form-field>
   </div>
-  <div>
-    <mat-slide-toggle [(ngModel)]="data.isPrivate" color="primary">
-      Private Form
-    </mat-slide-toggle>
-  </div>
+ <div class="flex items-center gap-6">
+  <mat-slide-toggle [(ngModel)]="data.isPrivate"  (change)="onQuizToggle()"  color="primary">
+    Private Form
+  </mat-slide-toggle>
+
+  <mat-slide-toggle [(ngModel)]="data.isQuiz" color="primary">
+    Quiz
+  </mat-slide-toggle>
+
+  <mat-slide-toggle 
+    *ngIf="data.isQuiz"
+    [(ngModel)]="data.showScore" 
+    color="primary">
+    Show Score
+  </mat-slide-toggle>
+</div>
 
 </mat-dialog-content>
 

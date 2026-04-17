@@ -17,31 +17,58 @@ export class FormService {
     private themeService: ThemeService,
   ) { }
 
-  mapToFormSchema(rawForm: any): Form {
-    return {
-      id: rawForm.id,
-      theme: localStorage.getItem('theme') || 'theme-pink',
-      title: rawForm.title,
-      description: rawForm.description,
-      published: rawForm.pubilshed,
-      settings: rawForm.settings,
-      mainParentId: rawForm.mainParentId,
-      sections: rawForm.sections.map((section: any, sectionIndex: number) => ({
-        id: section.id,
-        sectionTitle: section.title,
-        sectionOrder: sectionIndex + 1,
+mapToFormSchema(rawForm: any): Form {
+  return {
+    id: rawForm.id,
+    theme: localStorage.getItem('theme') || 'theme-pink',
+    title: rawForm.title,
+    description: rawForm.description,
+    published: rawForm.pubilshed,
+    settings: {
+    ...rawForm.settings,
+    scoreShow: rawForm.settings?.showScore ?? false
+    },
+    mainParentId: rawForm.mainParentId,
 
-        fields: section.fields.map((field: any, fieldIndex: number) => ({
+    sections: rawForm.sections.map((section: any, sectionIndex: number) => ({
+      id: section.id,
+      sectionTitle: section.title,
+      sectionOrder: sectionIndex + 1,
+
+      // ADD MARKS
+      positiveMarks: section.positiveMarks || 0,
+      negativeMarks: section.negativeMarks || 0,
+
+      fields: section.fields.map((field: any, fieldIndex: number) => {
+        
+        //Extract options as string[]
+        const optionsArray = (field.options || []).map((opt: any) => opt.label);
+
+        //Find correct answer for MCQ
+        const correctOption = (field.options || []).find((opt: any) => opt.isCorrect);
+
+        return {
           id: field.id,
           fieldType: field.type,
           fieldOrder: fieldIndex + 1,
 
           fieldConfig: {
             label: field.label,
-            validations: field.validations,
-            options: field.options,
-            placeholder: field.placeholder,
+
+            //convert required properly
+            required: field.validations?.required || false,
+
+            //send plain options array
+            options: optionsArray,
+
+            //answer logic
+            answer: field.type === 'TEXT'
+              ? field.correctAnswer || ''
+              : correctOption?.label || '',
+
+            placeholder: field.placeholder
           },
+
           fieldStyle: {
             color: field.color,
             fontSize: field.fontSize,

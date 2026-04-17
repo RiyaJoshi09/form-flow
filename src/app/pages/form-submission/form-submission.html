@@ -10,6 +10,11 @@
     @if (isSubmitted) {
     <div class="text-center p-20 bg-container shadow-xl border border-theme">
       <h1 class="text-3xl font-bold text-primary mb-2">Thank You!</h1>
+      @if (showScore) {
+      <div class="text-3xl font-bold text-green-600 mt-4">
+        Marks: {{ score }} 
+      </div>
+      }
       <p class="text-muted mb-8">Your response has been successfully recorded.</p>
       <button (click)="resetForm()" class="btn-primary px-6 py-2 rounded-xl font-bold">
         SUBMIT ANOTHER RESPONSE
@@ -56,7 +61,7 @@
           <label class="block text-sm font-bold text-muted uppercase tracking-wider mb-2"
             [ngStyle]="getFieldStyle(field.fieldStyle)">
             {{ field.fieldConfig?.label}}
-            <span *ngIf="field.fieldConfig.validations.required" class="text-red-500">*</span>
+            <span *ngIf="field.fieldConfig?.validations?.required" class="text-red-500">*</span>
           </label>
 
           <div [ngSwitch]="field.fieldType">

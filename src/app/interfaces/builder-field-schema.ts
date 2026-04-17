@@ -11,12 +11,17 @@ interface ValidationRules {
   max?: number;
   maxSize?: number;
   fileType?:string;
+  
 }
 
 export interface BuilderFieldSchema {
     type?: FieldType,
+        correctAnswer?: string;
     placeholder?: string,
-    options?: string[],
-    validations?:ValidationRules,
-    fieldLogic?: CondLogicSchema
+    options?: {
+      label: string;
+      isCorrect: boolean;
+
+    }[]; 
+  validations?:ValidationRules
 }
