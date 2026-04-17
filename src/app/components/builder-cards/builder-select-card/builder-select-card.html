@@ -20,6 +20,16 @@
           placeholder="Option label"
         />
 
+      @if (isQuiz) {
+    <button
+      (click)="setCorrect(i)"
+      class="px-2 py-1 text-xs rounded border"
+      [class.bg-green-500]="fieldData.options![i].isCorrect"
+      [class.text-white]="fieldData.options![i].isCorrect">
+      Answer
+    </button>
+  }
+        
         @if (fieldData.options!.length > 1) {
           <button
             (click)="removeOption(i)"
@@ -31,6 +41,7 @@
       </div>
     }
 
+    
     <button
       (click)="addOption()"
       class="text-primary text-sm font-medium mt-2 text-left hover:underline"
