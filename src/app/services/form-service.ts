@@ -224,6 +224,14 @@ deleteAllVersions(formId: string) {
     return this.http.post(this.url + `group/${groupId}/removeUsers`, users, {responseType: 'text'});
   }
 
+  addAdminsToGroup(groupId : string, emails : string[]) {
+    return this.http.post(this.url + `group/${groupId}/addAdmins`, emails, {responseType: 'text'});
+  }
+
+  getGroupAdmins(groupId : string) {
+    return this.http.get(this.url + `group/${groupId}/admins`);
+  }
+
 }
 
 

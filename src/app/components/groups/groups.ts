@@ -43,14 +43,39 @@ export class Groups implements OnInit {
 
   showAddMemberInput: boolean = false;
   newMemberInput: string = '';
+  showAddAdminInput: boolean = false;
+  newAdminInput: string = '';
 
-  selectGroup(group : any) {
+  isSidebarOpen: boolean = false;
+  selectedGroupDetails: any = null;
+
+  selectGroup(group: any) {
     this.selectedGroup = group;
 
     this.formService.getGroupMembers(group.groupId).subscribe({
       next: (res: any) => {
-        this.members = res.members || [];
-        console.log('Members:', this.members);
+        const members = res.members || [];
+
+        this.formService.getGroupAdmins(group.groupId).subscribe({
+          next: (adminRes: any) => {
+            const admins = adminRes.admins || [];
+
+            const adminUsernames = admins.map((a: any) => a.username);
+
+            this.members = members.map((m: any) => ({
+              ...m,
+              role: adminUsernames.includes(m.username) ? 'ADMIN' : 'MEMBER',
+              joined: new Date() // UI only (same as your requirement)
+            }));
+          },
+          error: () => {
+            this.members = members.map((m: any) => ({
+              ...m,
+              role: 'MEMBER',
+              joined: new Date()
+            }));
+          }
+        });
       },
       error: (err) => {
         console.error(err);
@@ -199,6 +224,50 @@ export class Groups implements OnInit {
           }
         });
     });
+  }
+
+  addAdmins() {
+    if (!this.selectedGroup || !this.selectedGroup.groupId) {
+      alert('Please select a group first');
+      return;
+    }
+
+    if (!this.newAdminInput) return;
+
+    const adminList = this.newAdminInput
+      .split(',')
+      .map(e => e.trim())
+      .filter(e => e.length > 0);
+
+    this.formService.addAdminsToGroup(this.selectedGroup.groupId, adminList)
+      .subscribe({
+        next: () => {
+          alert('Admin added successfully');
+
+          this.newAdminInput = '';
+          this.showAddAdminInput = false;
+
+          this.selectGroup(this.selectedGroup);
+        },
+        error: (err) => {
+          console.error(err);
+          alert(err.error || 'Error adding admins');
+        }
+      });
+  }
+
+  cancelAddAdmin() {
+    this.showAddAdminInput = false;
+    this.newAdminInput = '';
+  }
+
+  toggleGroupDetails(group: any) {
+    if (this.selectedGroupDetails?.groupId === group.groupId) {
+      this.isSidebarOpen = !this.isSidebarOpen;
+    } else {
+      this.selectedGroupDetails = group;
+      this.isSidebarOpen = true;
+    }
   }
   
 }
