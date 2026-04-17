@@ -7,6 +7,7 @@ import { CreateGroup } from '../create-group/create-group';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FormService } from '../../services/form-service';
 import { ViewChild, TemplateRef } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-groups',
@@ -19,7 +20,7 @@ export class Groups implements OnInit {
   @ViewChild('confirmDialog') confirmDialog!: TemplateRef<any>;
   dialogRef: any;
 
-  constructor (private dialog : MatDialog, private formService : FormService) {}
+  constructor (private dialog : MatDialog, private formService : FormService, private cdr : ChangeDetectorRef) {}
 
   ngOnInit() {
     this.loadGroups();
@@ -54,10 +55,13 @@ export class Groups implements OnInit {
 
     this.formService.getGroupMembers(group.groupId).subscribe({
       next: (res: any) => {
+        console.log('MEMBERS RESPONSE:', res);
         const members = res.members || [];
+        console.log('MEMBERS ARRAY:', members);
 
         this.formService.getGroupAdmins(group.groupId).subscribe({
           next: (adminRes: any) => {
+            console.log('ADMINS RESPONSE:', adminRes);
             const admins = adminRes.admins || [];
 
             const adminUsernames = admins.map((a: any) => a.username);
@@ -67,6 +71,8 @@ export class Groups implements OnInit {
               role: adminUsernames.includes(m.username) ? 'ADMIN' : 'MEMBER',
               joined: new Date() // UI only (same as your requirement)
             }));
+            this.cdr.detectChanges();
+            console.log('FINAL MEMBERS:', this.members);
           },
           error: () => {
             this.members = members.map((m: any) => ({
@@ -74,11 +80,13 @@ export class Groups implements OnInit {
               role: 'MEMBER',
               joined: new Date()
             }));
+            this.cdr.detectChanges();
           }
         });
       },
       error: (err) => {
         console.error(err);
+        console.log('MEMBERS ERROR:', err);
         this.members = [];
       }
     });
