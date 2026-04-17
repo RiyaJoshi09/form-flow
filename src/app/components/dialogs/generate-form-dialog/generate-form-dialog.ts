@@ -46,7 +46,7 @@ export class GenerateFormDialog implements OnDestroy {
       .subscribe(() => this.handleClose());
   }
 
-  /*
+
   onGenerate(): void {
     if (!this.prompt().trim() || this.loading()) return;
 
@@ -80,8 +80,8 @@ export class GenerateFormDialog implements OnDestroy {
         }
       });
   }
-*/
 
+/*
   onGenerate(): void {
     if (!this.prompt().trim() || this.loading()) return;
 
@@ -111,6 +111,8 @@ export class GenerateFormDialog implements OnDestroy {
       }
     }, 5000); // ⏳  5 seconds delay
   }
+*/
+
   onCancel(): void {
     this.handleClose();
   }
