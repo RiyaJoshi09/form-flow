@@ -5,12 +5,13 @@ import { Observable, of } from 'rxjs';
 import { ThemeService } from './theme-service';
 import { ChartData } from '../interfaces/chart-data-response-schema';
 import { FormResponseData } from '../interfaces/form-response-schema';
+import { environment } from '../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FormService {
-  url = 'http://localhost:8082/formflow/';
+  url = environment.backendUrl;
 
   constructor(
     private http: HttpClient,
@@ -107,7 +108,7 @@ export class FormService {
   }
 
   generateForm(promptText : string): Observable<any> {
-    return this.http.post(this.url + 'user/form/generate', {
+    return this.http.post(this.url + 'ai/generateForm', {
       prompt : promptText
     });
   }

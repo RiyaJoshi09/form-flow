@@ -2,13 +2,14 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap, throwError } from 'rxjs';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private baseUrl = 'http://localhost:8082/formflow/auth';
-  private oAuthurl = 'http://localhost:8082/formflow/oauth2/authorization'
+  private baseUrl = environment.backendUrl + 'auth';
+  private oAuthurl = environment.backendUrl + 'oauth2/authorization'
 
   isLoggedIn = signal(false);
 
