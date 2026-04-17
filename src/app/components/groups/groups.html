@@ -109,12 +109,27 @@
 
       <div class="member-actions">
         <button class="btn-outline">Add Admin</button>
-        <button class="btn-primary" (click)="addMembers()">+ Add Member</button>
+        <button class="btn-primary" (click)="showAddMemberInput = true">+ Add Member</button>
       </div>
     </div>
 
     <!-- Table -->
     <div class="table">
+
+      <div *ngIf="showAddMemberInput" class="table-row add-member-row">
+        <span colspan="4">
+          <input 
+            type="text"
+            placeholder="Enter emails (comma separated)"
+            [(ngModel)]="newMemberInput"
+          />
+        </span>
+
+        <span>
+          <button class="btn-primary" (click)="addMembers()">Add</button>
+          <button class="btn-outline" (click)="cancelAddMember()">Cancel</button>
+        </span>
+      </div>
 
       <div class="table-row header-row">
         <span>User</span>
@@ -144,8 +159,8 @@
         </span>
 
         <span>
-          <button class="icon-btn">
-            <mat-icon>edit</mat-icon>
+          <button class="icon-btn" (click)="removeMember(member)">
+            <mat-icon>delete</mat-icon>
           </button>
         </span>
       </div>
@@ -155,3 +170,15 @@
   </div>
 
 </div>
+
+<ng-template #confirmDialog let-data>
+  <div class="dialog-container">
+    <h3>Confirm Action</h3>
+    <p>{{ data.message }}</p>
+
+    <div class="dialog-actions">
+      <button class="btn-outline" (click)="dialogRef.close(false)">Cancel</button>
+      <button class="btn-primary" (click)="dialogRef.close(true)">Delete</button>
+    </div>
+  </div>
+</ng-template>

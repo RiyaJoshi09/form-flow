@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CreateGroup } from '../create-group/create-group';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FormService } from '../../services/form-service';
+import { ViewChild, TemplateRef } from '@angular/core';
 
 @Component({
   selector: 'app-groups',
@@ -14,6 +15,9 @@ import { FormService } from '../../services/form-service';
   styleUrl: './groups.css',
 })
 export class Groups implements OnInit {
+
+  @ViewChild('confirmDialog') confirmDialog!: TemplateRef<any>;
+  dialogRef: any;
 
   constructor (private dialog : MatDialog, private formService : FormService) {}
 
@@ -36,6 +40,9 @@ export class Groups implements OnInit {
   totalPages: number = 1;
 
   members : any[] = [];
+
+  showAddMemberInput: boolean = false;
+  newMemberInput: string = '';
 
   selectGroup(group : any) {
     this.selectedGroup = group;
@@ -134,24 +141,64 @@ export class Groups implements OnInit {
   }
 
   addMembers() {
-    if (!this.selectedGroup) return;
+    if (!this.selectedGroup || !this.selectedGroup.groupId) {
+      alert('Please select a group first');
+      return;
+    }
 
-    const usernames = prompt('Enter usernames (comma separated):');
+    if (!this.newMemberInput) return;
 
-    if (!usernames) return;
-
-    const memberList = usernames.split(',').map(u => u.trim());
+    const memberList = this.newMemberInput
+      .split(',')
+      .map(e => e.trim())
+      .filter(e => e.length > 0);
 
     this.formService.addMembersToGroup(this.selectedGroup.groupId, memberList)
       .subscribe({
         next: () => {
           alert('Members added successfully');
+
+          this.newMemberInput = '';
+          this.showAddMemberInput = false;
+
+          this.selectGroup(this.selectedGroup);
         },
         error: (err) => {
           console.error(err);
-          alert('Error adding members');
+          alert(err.error || 'Error adding members');
         }
       });
+  }
+
+  cancelAddMember() {
+    this.showAddMemberInput = false;
+    this.newMemberInput = '';
+  }
+
+  removeMember(member: any) {
+    this.dialogRef = this.dialog.open(this.confirmDialog, {
+      data: { message: `Are you sure you want to remove ${member.username}?` }
+    });
+
+    this.dialogRef.afterClosed().subscribe((result: boolean) => {
+      if (!result) return;
+
+      const payload = [member.username];
+
+      this.formService.removeUsersFromGroup(this.selectedGroup.groupId, payload)
+        .subscribe({
+          next: () => {
+            // instant UI update
+            this.members = this.members.filter(
+              m => m.username !== member.username
+            );
+          },
+          error: (err) => {
+            console.error(err);
+            alert(err.error || 'Error removing member');
+          }
+        });
+    });
   }
   
 }

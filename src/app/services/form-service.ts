@@ -220,6 +220,10 @@ deleteAllVersions(formId: string) {
     return this.http.get(`${this.url}group/${groupId}/members`);
   }
 
+  removeUsersFromGroup(groupId : string, users : string[]) {
+    return this.http.post(this.url + `group/${groupId}/removeUsers`, users, {responseType: 'text'});
+  }
+
 }
 
 
