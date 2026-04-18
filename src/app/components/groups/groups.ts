@@ -102,6 +102,19 @@ export class Groups implements OnInit {
     });
   }
 
+  openEditGroupDialog(group: any) {
+    const dialogRef = this.dialog.open(CreateGroup, {
+      width: '500px',
+      data: { group }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadGroups();
+      }
+    });
+  }
+
   loadGroups() {
     this.formService.getMyGroups().subscribe({
       next: (res: any) => {

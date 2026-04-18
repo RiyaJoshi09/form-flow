@@ -233,6 +233,10 @@ deleteAllVersions(formId: string) {
     return this.http.get(this.url + `group/${groupId}/admins`);
   }
 
+  updateGroup(groupId : string, data : any) {
+    return this.http.put(this.url + 'group/' + groupId + '/update', data, {responseType: 'text'});
+  }
+
 }
 
 

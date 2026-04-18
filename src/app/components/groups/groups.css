@@ -154,6 +154,12 @@
     cursor: pointer;
 }
 
+.action-buttons {
+  display: flex;
+  gap: 25px;
+  align-items: center;
+}
+
 /* Member header */
 .member-header {
     display: flex;

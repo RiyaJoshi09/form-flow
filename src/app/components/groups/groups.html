@@ -67,9 +67,12 @@
         <span>{{ group.groupName }}</span>
         <span>{{ group.maxMembers }}</span>
         <span>{{ group.createdAt | date:'dd MMM yyyy' }}</span>
-        <span>
+        <span class="action-buttons">
           <button class="icon-btn" (click)="toggleGroupDetails(group); $event.stopPropagation()">
             <mat-icon>visibility</mat-icon>
+          </button>
+          <button class="icon-btn" (click)="openEditGroupDialog(group); $event.stopPropagation()">
+            <mat-icon>edit</mat-icon>
           </button>
         </span>
       </div>
