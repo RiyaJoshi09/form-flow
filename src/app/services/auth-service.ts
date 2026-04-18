@@ -9,11 +9,11 @@ import { environment } from '../../environments/environment.development';
 })
 export class AuthService {
 
-//   private baseUrl = 'https://formflow-production-eb1a.up.railway.app/formflow/auth';
-// private oAuthurl = 'https://formflow-production-eb1a.up.railway.app/formflow/oauth2/authorization';
+  private baseUrl = 'https://formflow-production-eb1a.up.railway.app/formflow/auth';
+private oAuthurl = 'https://formflow-production-eb1a.up.railway.app/formflow/oauth2/authorization';
 
-private baseUrl='http://localhost:8082/formflow/auth';
-private oAuthurl='http://localhost:8082/formflow/oauth2/authorization';
+// private baseUrl='http://localhost:8082/formflow/auth';
+// private oAuthurl='http://localhost:8082/formflow/oauth2/authorization';
 
   // private baseUrl = environment.backendUrl + 'auth';
   // private oAuthurl = environment.backendUrl + 'oauth2/authorization';
