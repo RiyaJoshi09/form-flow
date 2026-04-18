@@ -146,10 +146,9 @@
         </span>
       </div>
 
-      <div class="table-row header-row">
+      <div class="table-row header-row member-table-row">
         <span>User</span>
         <span>Role</span>
-        <span>Joined</span>
         <span>Actions</span>
       </div>
 
@@ -157,7 +156,7 @@
         No members in this group
       </div>
 
-      <div class="table-row" *ngFor="let member of members">
+      <div class="table-row member-table-row" *ngFor="let member of members">
         <span class="user">
           <mat-icon>person</mat-icon>
           {{ member.username }}
@@ -167,10 +166,6 @@
           <span class="role" [ngClass]="member.role?.toLowerCase()">
             {{ member.role }}
           </span>
-        </span>
-
-        <span>
-          {{ member.joined | date:'dd MMM yyyy' }}
         </span>
 
         <span>

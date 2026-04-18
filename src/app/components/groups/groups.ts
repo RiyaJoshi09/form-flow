@@ -68,8 +68,7 @@ export class Groups implements OnInit {
 
             this.members = members.map((m: any) => ({
               ...m,
-              role: adminUsernames.includes(m.username) ? 'ADMIN' : 'MEMBER',
-              joined: new Date() // UI only (same as your requirement)
+              role: adminUsernames.includes(m.username) ? 'ADMIN' : 'MEMBER'
             }));
             this.cdr.detectChanges();
             console.log('FINAL MEMBERS:', this.members);
@@ -77,8 +76,7 @@ export class Groups implements OnInit {
           error: () => {
             this.members = members.map((m: any) => ({
               ...m,
-              role: 'MEMBER',
-              joined: new Date()
+              role: 'MEMBER'
             }));
             this.cdr.detectChanges();
           }
